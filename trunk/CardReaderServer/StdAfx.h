@@ -27,6 +27,10 @@
 #include <winbase.h>
 
 #pragma comment(lib, "WS2_32")
+#include "Reader.h"
+#include "Server.h"
+
+#define DEFAULT_PORT (20248)
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

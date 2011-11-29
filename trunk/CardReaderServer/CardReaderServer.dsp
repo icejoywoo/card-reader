@@ -103,6 +103,18 @@ SOURCE=.\CardReaderServerDlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Reader.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Server.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\SimpleLog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
 # End Source File
@@ -120,7 +132,15 @@ SOURCE=.\CardReaderServerDlg.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Reader.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Server.h
 # End Source File
 # Begin Source File
 
