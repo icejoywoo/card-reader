@@ -54,18 +54,42 @@ public:
 	 *		成功, 返回0
 	 */
 	int setPort(int port);
+
+	SOCKET getServer()
+	{
+		return this->server;
+	}
+
+	int getPort()
+	{
+		return this->port;
+	}
 private:
 	Server();
-	int port;
 	static Server* instance; // the singleton
 	WSADATA wsaData;
+	int port;
+
+public:
 	SOCKET server;
 
-	UINT (*clientHandler) (LPVOID pParam );
-	UINT defaultClientHandler (LPVOID pParam );
+	/************************************************************************/
+	/* 替换这两个handler可以改变服务器的行为                                */
+	/************************************************************************/
 
+	// 处理客户端请求
+	UINT (*clientHandler) (LPVOID pParam );
+	
+	// 服务器handler 接收请求
 	UINT (*serverHandler) (LPVOID pParam );
-	UINT defaultServerHandler (LPVOID pParam );
 };
+/************************************************************************/
+/* 默认的handlers                                                       */
+/************************************************************************/
+// 默认的请求处理
+UINT defaultClientHandler (LPVOID pParam );
+// 默认的服务器
+UINT defaultServerHandler (LPVOID pParam );
+
 
 #endif

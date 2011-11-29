@@ -11,6 +11,7 @@
 Reader::Reader(int i)
 {
 	_i = i;
+	this->hMutex = CreateMutex(NULL, FALSE, NULL);
 }
 
 Reader::~Reader()

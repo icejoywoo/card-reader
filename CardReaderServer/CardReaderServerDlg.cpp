@@ -63,7 +63,6 @@ CCardReaderServerDlg::CCardReaderServerDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CCardReaderServerDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CCardReaderServerDlg)
-		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 	// Note that LoadIcon does not require a subsequent DestroyIcon in Win32
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -73,7 +72,7 @@ void CCardReaderServerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CCardReaderServerDlg)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
+	DDX_Control(pDX, IDC_EDIT_LOG, m_logWindow);
 	//}}AFX_DATA_MAP
 }
 
@@ -83,6 +82,8 @@ BEGIN_MESSAGE_MAP(CCardReaderServerDlg, CDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON_START, OnButtonStart)
+	ON_BN_CLICKED(IDC_BUTTON_STOP, OnButtonStop)
+	ON_BN_CLICKED(IDC_BUTTON_RESTART, OnButtonRestart)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -174,5 +175,29 @@ HCURSOR CCardReaderServerDlg::OnQueryDragIcon()
 void CCardReaderServerDlg::OnButtonStart() 
 {
 	// TODO: Add your control notification handler code here
-	Server::getInstance()->start();
+	if (Server::getInstance()->start() != 0)
+	{
+		AfxMessageBox("开启失败");
+	}
+}
+
+// TODO: 停止按钮的点击响应
+void CCardReaderServerDlg::OnButtonStop() 
+{
+	// TODO: Add your control notification handler code here
+	if (Server::getInstance()->stop() != 0)
+	{
+		AfxMessageBox("关闭失败");
+	}
+	
+}
+
+// TODO: 重启按钮的点击响应
+void CCardReaderServerDlg::OnButtonRestart() 
+{
+	// TODO: Add your control notification handler code here
+	if (Server::getInstance()->restart() != 0)
+	{
+		AfxMessageBox("重启失败");
+	}
 }

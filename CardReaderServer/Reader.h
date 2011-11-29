@@ -35,16 +35,7 @@ public:
 /*	static HANDLE mutex;*/
 private:
 	int _i;
-};
-
-/**
- * 读卡器和mutex组成的结构体, 模拟互斥访问读卡器
- */
-typedef struct _CardReader{
-	/// 读卡器
-	Reader* reader;
-	/// 等待处理队列
 	HANDLE hMutex; 
-} CardReader, *p_CardReader;
+};
 
 #endif

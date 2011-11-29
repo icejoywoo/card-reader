@@ -20,7 +20,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CCardReaderServerDlg)
 	enum { IDD = IDD_CARDREADERSERVER_DIALOG };
-		// NOTE: the ClassWizard will add data members here
+	CEdit	m_logWindow;
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides
@@ -40,6 +40,8 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg void OnButtonStart();
+	afx_msg void OnButtonStop();
+	afx_msg void OnButtonRestart();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
