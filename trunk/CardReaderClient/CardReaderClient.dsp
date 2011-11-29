@@ -103,6 +103,14 @@ SOURCE=.\CardReaderClientDlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ClientConnection.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\SimpleLog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
 # End Source File
@@ -117,6 +125,10 @@ SOURCE=.\CardReaderClient.h
 # Begin Source File
 
 SOURCE=.\CardReaderClientDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ClientConnection.h
 # End Source File
 # Begin Source File
 
