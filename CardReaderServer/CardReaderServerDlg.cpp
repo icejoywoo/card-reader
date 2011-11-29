@@ -82,6 +82,7 @@ BEGIN_MESSAGE_MAP(CCardReaderServerDlg, CDialog)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BUTTON_START, OnButtonStart)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -167,4 +168,11 @@ void CCardReaderServerDlg::OnPaint()
 HCURSOR CCardReaderServerDlg::OnQueryDragIcon()
 {
 	return (HCURSOR) m_hIcon;
+}
+
+// TODO: 开始按钮的点击响应
+void CCardReaderServerDlg::OnButtonStart() 
+{
+	// TODO: Add your control notification handler code here
+	Server::getInstance()->start();
 }

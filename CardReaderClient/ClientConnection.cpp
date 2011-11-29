@@ -1,3 +1,9 @@
+//////////////////////////////////////////////////////////////////////////
+// FileName: ClientConnection.cpp
+// Creator: icejoywoo
+// Date: 2011.11.29
+// Comment: 客户端用来连接到服务器的封装, 并发送数据, 默认开启日志记录
+//////////////////////////////////////////////////////////////////////////
 #include "ClientConnection.h"
 
 ClientConnection::ClientConnection(char* servername, int p, int id)

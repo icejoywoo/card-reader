@@ -7,7 +7,7 @@ LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "CardReaderServer.h"
 
-ClassCount=4
+ClassCount=3
 Class1=CCardReaderServerApp
 Class2=CCardReaderServerDlg
 Class3=CAboutDlg
@@ -28,6 +28,9 @@ Type=0
 HeaderFile=CardReaderServerDlg.h
 ImplementationFile=CardReaderServerDlg.cpp
 Filter=D
+LastObject=CCardReaderServerDlg
+BaseClass=CDialog
+VirtualFilter=dWC
 
 [CLS:CAboutDlg]
 Type=0
@@ -47,10 +50,11 @@ Control4=IDOK,button,1342373889
 [DLG:IDD_CARDREADERSERVER_DIALOG]
 Type=1
 Class=CCardReaderServerDlg
-ControlCount=5
-Control1=IDC_EDIT1,edit,1350631552
-Control2=IDC_BUTTON_SENDCMD,button,1342242816
-Control3=IDC_STATIC,button,1342177287
-Control4=IDC_EDIT2,edit,1350631552
-Control5=IDC_BUTTON1,button,1342242816
+ControlCount=6
+Control1=IDC_EDIT2,edit,1350631552
+Control2=IDC_BUTTON1,button,1342242816
+Control3=IDC_BUTTON_START,button,1342242816
+Control4=IDC_BUTTON3,button,1342242816
+Control5=IDC_BUTTON4,button,1342242816
+Control6=IDC_BUTTON5,button,1342242816
 
