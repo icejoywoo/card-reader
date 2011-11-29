@@ -6,6 +6,27 @@
 --------------------Configuration: CardReaderClient - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPBA72.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\icejoywoo\Desktop\card-reader\CardReaderClient\SimpleLog.cpp"
+]
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPBA72.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPBA82.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderClient.pdb" /debug /machine:I386 /out:"Debug/CardReaderClient.exe" /pdbtype:sept 
+".\Debug\CardReaderClient.obj"
+".\Debug\CardReaderClientDlg.obj"
+".\Debug\StdAfx.obj"
+".\Debug\CardReaderClient.res"
+".\Debug\ClientConnection.obj"
+".\Debug\SimpleLog.obj"
+]
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPBA82.tmp"
+<h3>Output Window</h3>
+Compiling...
+SimpleLog.cpp
+Linking...
 
 
 
