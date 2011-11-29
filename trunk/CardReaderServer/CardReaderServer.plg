@@ -7,34 +7,20 @@
 </h3>
 <h3>Command Lines</h3>
 Creating command line "rc.exe /l 0x804 /fo"Debug/CardReaderServer.res" /d "_DEBUG" /d "_AFXDLL" "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServer.rc"" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP47EC.tmp" with contents
-[
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServerDlg.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Server.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\SimpleLog.cpp"
-]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP47EC.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP47FC.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPBC1A.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderServer.pdb" /debug /machine:I386 /out:"Debug/CardReaderServer.exe" /pdbtype:sept 
 ".\Debug\CardReaderServer.obj"
 ".\Debug\CardReaderServerDlg.obj"
+".\Debug\Reader.obj"
+".\Debug\Server.obj"
+".\Debug\SimpleLog.obj"
 ".\Debug\StdAfx.obj"
 ".\Debug\CardReaderServer.res"
-".\Debug\Server.obj"
-".\Debug\Reader.obj"
-".\Debug\SimpleLog.obj"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP47FC.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPBC1A.tmp"
 <h3>Output Window</h3>
 Compiling resources...
-Compiling...
-CardReaderServerDlg.cpp
-Server.cpp
-Generating Code...
-Skipping... (no relevant changes detected)
-SimpleLog.cpp
 Linking...
 
 

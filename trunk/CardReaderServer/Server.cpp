@@ -25,44 +25,17 @@ Server::~Server()
 
 int Server::start()
 {
-	//HANDLE thread = AfxBeginThread(this->serverHandler, 0);
-	if ((this->server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
-	{
-		return -1;
-	}
-	sockaddr_in local;
-	local.sin_family = AF_INET;
-	local.sin_addr.s_addr = INADDR_ANY;
-	local.sin_port = htons(this->port);
-	
-	if (bind(server, (sockaddr*)&local, sizeof(local)) != 0)
-	{
-		return -2;
-	}
-	
-	if (listen(server, 64) != 0)
-	{
-		return -3;
-	}
-	
-	SOCKET client;
-	sockaddr_in from;
-	int fromlen = sizeof(from);
-	SimpleLog::info("Server Ready");
-	while (true)
-	{
-		client = accept(server, (struct sockaddr*) &from, &fromlen);
-		SimpleLog::info(CString("接收到一个客户端请求, 来自") + inet_ntoa(from.sin_addr));
-	}
+	HANDLE thread = AfxBeginThread(this->serverHandler, this);
 	return 0;
 }
 
 int Server::stop()
 {
-	if (shutdown(this->server, SD_BOTH) != 0)
-	{
-		return -1;
-	}
+	// shutdown会失败
+// 	if (shutdown(this->server, SD_BOTH) != 0)
+// 	{
+// 		return -1;
+// 	}
 	if (closesocket(this->server) != 0)
 	{
 		return -2;
@@ -73,8 +46,7 @@ int Server::stop()
 int Server::restart()
 {
 	int result = 0;
-	if ((result = this->stop()) != 0)
-		return result;
+	this->stop();
 	if ((result = this->start()) != 0)
 		return result;
 	return 0;
@@ -85,8 +57,58 @@ int Server::setPort(int port)
 	this->port = port;
 	return this->restart();
 }
+/// Server定义结束
 
-UINT Server::defaultServerHandler(LPVOID pParam)
+//////////////////////////////////////////////////////////////////////////
+/// 默认的handlers定义 
+//////////////////////////////////////////////////////////////////////////
+
+UINT defaultServerHandler(LPVOID pParam)
 {
+	Server* serv = (Server*) pParam;
+	if ((serv->server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
+	{
+		return -1;
+	}
+	sockaddr_in local;
+	local.sin_family = AF_INET;
+	local.sin_addr.s_addr = INADDR_ANY;
+	local.sin_port = htons(serv->getPort());
+	
+	if (bind(serv->server, (sockaddr*)&local, sizeof(local)) != 0)
+	{
+		return -2;
+	}
+	
+	if (listen(serv->server, 64) != 0)
+	{
+		return -3;
+	}
+	
+	SOCKET client;
+	sockaddr_in from;
+	int fromlen = sizeof(from);
+	SimpleLog::info("Server Ready");
+	while (true)
+	{
+		client = accept(serv->server, (struct sockaddr*) &from, &fromlen);
+		SimpleLog::info(CString("接收到一个客户端请求, 来自") + inet_ntoa(from.sin_addr));
+		AfxBeginThread(serv->clientHandler, (LPVOID)client);
+	}
+	return 0;
+}
 
+UINT defaultClientHandler (LPVOID pParam)
+{
+	SOCKET client = (SOCKET) pParam;
+	
+	char buff[512];
+	
+	sprintf(buff, "Hello.");
+	int size = send(client, buff, strlen(buff), 0);
+	SimpleLog::info(CString("发送数据: ") + buff);
+	shutdown(client, SD_BOTH);
+	closesocket(client);
+	
+	return 0;
 }
