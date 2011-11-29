@@ -33,7 +33,8 @@ public:
 private:
 	/**
 	 * @brief 获得对应servername的主机地址
-	 * @return 主机地址(struct sockaddr_in&)
+	 * @param server 主机地址
+	 * @return None
 	 */
 	void getServerAddr(struct sockaddr_in& server);
 private:

@@ -14,8 +14,11 @@ ClientConnection::ClientConnection(char* servername, int p, int id)
 	struct sockaddr_in server;
 	this->getServerAddr(server);
 	connect(this->client, (struct sockaddr*)&server, sizeof(server)); // 连接socket
-
-	SimpleLog::info(CString("连接服务器") + this->serverName + "成功"); // log
+	if (this->isLogged())
+	{
+		SimpleLog::info(CString("连接服务器") + this->serverName + "成功"); // log
+	}
+	
 }
 
 ClientConnection::~ClientConnection()
@@ -48,16 +51,16 @@ int ClientConnection::recvData(char* data)
 {
 	char buff[512];
 	sprintf(buff, "%d", this->readerId); // 请求读卡器的id
-	
-	SimpleLog::info(CString("请求id: ") + buff);
+	if (this->isLogged())
+		SimpleLog::info(CString("请求id: ") + buff);
 	send(this->client, buff, sizeof(buff), 0);
 	
 	memset(buff, 0, 512);
 	int z = recv(this->client, buff, 512, 0);
 	ASSERT(z != -1); // 接收到的数据长度为-1, 表明程序错误
 	buff[z] = '\0'; // c-style字符串
-	
-	SimpleLog::info(CString("从服务器接收到的数据: ") + buff);
+	if (this->isLogged())
+		SimpleLog::info(CString("从服务器接收到的数据: ") + buff);
 	data = buff;
 	return z;
 }
