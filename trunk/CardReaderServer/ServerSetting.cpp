@@ -46,7 +46,6 @@ void ServerSetting::OnOK()
 {
 	// TODO: Add extra validation here
 	int oldPort = Server::getInstance()->getPort(); // 保存原来的端口
-	CDialog::OnOK();
 	UpdateData(TRUE);
 	Server::getInstance()->setPort(m_Port);
 	UpdateData(FALSE);
@@ -54,4 +53,6 @@ void ServerSetting::OnOK()
 	{
 		AfxMessageBox("需要重启服务器, 才可以生效!!!");
 	}
+
+	CDialog::OnOK();
 }

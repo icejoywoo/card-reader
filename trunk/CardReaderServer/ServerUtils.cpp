@@ -9,7 +9,9 @@ void appendTextToEdit(CEdit &mEdit, CString text)
 {
 	int len = mEdit.GetWindowTextLength();
 	mEdit.SetSel(len,len);
-    mEdit.ReplaceSel(text);
+	CString m_sCurrentTime = CTime::GetCurrentTime().Format("%Y-%m-%d %X");
+	CString log = CString("[") + m_sCurrentTime + "]: " + text;
+    mEdit.ReplaceSel(log);
 }
 
 // ½«int×ª»»ÎªCString
