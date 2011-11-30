@@ -55,7 +55,7 @@ public:
 	 *		失败, 返回非0, 具体参照restart
 	 *		成功, 返回0
 	 */
-	int setPort(int port);
+	int setPort(int &port);
 
 	SOCKET getServer()
 	{

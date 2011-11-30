@@ -22,6 +22,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CCardReaderServerDlg)
 	enum { IDD = IDD_CARDREADERSERVER_DIALOG };
+	CTreeCtrl	m_Tree;
 	CEdit	m_logWindow;
 	//}}AFX_DATA
 
@@ -46,6 +47,7 @@ protected:
 	afx_msg void OnButtonStop();
 	afx_msg void OnButtonRestart();
 	afx_msg void OnButtonSetting();
+	afx_msg void OnButtonClear();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

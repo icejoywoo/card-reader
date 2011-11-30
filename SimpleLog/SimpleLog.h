@@ -23,12 +23,8 @@
 class SimpleLog  
 {
 public:
-	// 获取日志文件名称
-	static CString GetFileName();
-
-	// 获取应用程序所在路径
-	static CString GetFilePath();
-	
+	// 获取日志保存路径
+	static char* GetlogFileLocation();
 	// 警告信息
 	static BOOL warn(CString logText);
 	// 普通信息
@@ -41,6 +37,11 @@ private:
 	virtual ~SimpleLog() {}
 	// 写日志到文件, 格式为 时间(%Y-%m-%d %X) 内容
 	static BOOL WriteLog(CString LogText);
+	// 获取日志文件名称
+	static CString GetFileName();
+	
+	// 获取应用程序所在路径
+	static CString GetFilePath();
 private:
 	// 保证只有一个线程在写日志, 防止日志输出混乱
 	static const HANDLE mutex;

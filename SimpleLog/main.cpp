@@ -37,14 +37,16 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 		SimpleLog::warn("警告你了");
 		SimpleLog::info("你有新消息了");
 		SimpleLog::error("你又错了");
-		Sleep(10000);
+		Sleep(100);
 		SimpleLog::warn("警告你了");
 		SimpleLog::info("你有新消息了");
 		SimpleLog::error("你又错了");
-		Sleep(1000);
+		Sleep(100);
 		SimpleLog::warn("警告你了");
 		SimpleLog::info("你有新消息了");
 		SimpleLog::error("你又错了");
+		//cout << SimpleLog::GetlogFileLocation() << endl;
+		WinExec(CString("notepad ") + SimpleLog::GetlogFileLocation(), SW_SHOWNORMAL);
 	}
 	
 	return nRetCode;

@@ -9,15 +9,16 @@
 #define IDD_SERVERSETTING_DIALOG        103
 #define IDR_MAINFRAME                   128
 #define IDC_EDIT1                       1000
+#define IDC_EDIT_PORT                   1000
 #define IDC_BUTTON_SENDCMD              1001
 #define IDC_EDIT_LOG                    1002
-#define IDC_BUTTON1                     1003
+#define IDC_BUTTON_CLEAR                1003
 #define IDC_BUTTON_START                1004
 #define IDC_BUTTON_STOP                 1005
 #define IDC_BUTTON4                     1006
 #define IDC_BUTTON_SETTING              1007
 #define IDC_BUTTON_RESTART              1008
-#define IDC_TREEVIEW                    1009
+#define IDC_TREE_VIEW                   1009
 
 // Next default values for new objects
 // 

@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=ServerSetting
+LastClass=CCardReaderServerDlg
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "CardReaderServer.h"
@@ -13,9 +13,9 @@ Class2=CCardReaderServerDlg
 Class3=CAboutDlg
 
 ResourceCount=4
-Resource1=IDD_CARDREADERSERVER_DIALOG
+Resource1=IDD_ABOUTBOX
 Resource2=IDR_MAINFRAME
-Resource3=IDD_ABOUTBOX
+Resource3=IDD_CARDREADERSERVER_DIALOG
 Class4=ServerSetting
 Resource4=IDD_SERVERSETTING_DIALOG
 
@@ -30,7 +30,7 @@ Type=0
 HeaderFile=CardReaderServerDlg.h
 ImplementationFile=CardReaderServerDlg.cpp
 Filter=D
-LastObject=CCardReaderServerDlg
+LastObject=IDC_TREE_VIEW
 BaseClass=CDialog
 VirtualFilter=dWC
 
@@ -57,10 +57,10 @@ Control1=IDC_EDIT_LOG,edit,1350631620
 Control2=IDC_BUTTON_START,button,1342242816
 Control3=IDC_BUTTON_STOP,button,1342242816
 Control4=IDC_BUTTON_RESTART,button,1342242816
-Control5=IDC_BUTTON1,button,1342242816
+Control5=IDC_BUTTON_CLEAR,button,1342242816
 Control6=IDC_BUTTON4,button,1342242816
 Control7=IDC_BUTTON_SETTING,button,1342242816
-Control8=IDC_TREEVIEW,SysTreeView32,1350631424
+Control8=IDC_TREE_VIEW,SysTreeView32,1350631424
 
 [DLG:IDD_SERVERSETTING_DIALOG]
 Type=1
@@ -69,7 +69,7 @@ ControlCount=4
 Control1=IDOK,button,1342242817
 Control2=IDCANCEL,button,1342242816
 Control3=IDC_STATIC,static,1342308353
-Control4=IDC_EDIT1,edit,1350631552
+Control4=IDC_EDIT_PORT,edit,1350631552
 
 [CLS:ServerSetting]
 Type=0
@@ -77,5 +77,6 @@ HeaderFile=ServerSetting.h
 ImplementationFile=ServerSetting.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=IDC_EDIT1
+LastObject=IDOK
+VirtualFilter=dWC
 

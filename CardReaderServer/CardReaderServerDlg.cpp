@@ -78,6 +78,7 @@ void CCardReaderServerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CCardReaderServerDlg)
+	DDX_Control(pDX, IDC_TREE_VIEW, m_Tree);
 	DDX_Control(pDX, IDC_EDIT_LOG, m_logWindow);
 	//}}AFX_DATA_MAP
 }
@@ -91,6 +92,7 @@ BEGIN_MESSAGE_MAP(CCardReaderServerDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_STOP, OnButtonStop)
 	ON_BN_CLICKED(IDC_BUTTON_RESTART, OnButtonRestart)
 	ON_BN_CLICKED(IDC_BUTTON_SETTING, OnButtonSetting)
+	ON_BN_CLICKED(IDC_BUTTON_CLEAR, OnButtonClear)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -217,4 +219,11 @@ void CCardReaderServerDlg::OnButtonSetting()
 	// TODO: Add your control notification handler code here
 	
 	settingDlg->ShowWindow(SW_SHOWNA);
+}
+
+// TODO: 单击清空按钮
+void CCardReaderServerDlg::OnButtonClear() 
+{
+	// TODO: Add your control notification handler code here
+	m_logWindow.SetWindowText(""); // 清空日志窗口
 }
