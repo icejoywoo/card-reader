@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "CardReaderServer.h"
 #include "ServerSetting.h"
+#include "Server.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -19,7 +20,7 @@ ServerSetting::ServerSetting(CWnd* pParent /*=NULL*/)
 	: CDialog(ServerSetting::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(ServerSetting)
-		// NOTE: the ClassWizard will add member initialization here
+	m_Port = Server::getInstance()->getPort();
 	//}}AFX_DATA_INIT
 }
 
@@ -28,16 +29,25 @@ void ServerSetting::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(ServerSetting)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
+	DDX_Text(pDX, IDC_EDIT_PORT, m_Port);
 	//}}AFX_DATA_MAP
 }
 
 
 BEGIN_MESSAGE_MAP(ServerSetting, CDialog)
 	//{{AFX_MSG_MAP(ServerSetting)
-		// NOTE: the ClassWizard will add message map macros here
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // ServerSetting message handlers
+
+void ServerSetting::OnOK() 
+{
+	// TODO: Add extra validation here
+	
+	CDialog::OnOK();
+	UpdateData(TRUE);
+	Server::getInstance()->setPort(m_Port);
+	UpdateData(FALSE);
+}

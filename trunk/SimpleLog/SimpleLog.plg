@@ -6,35 +6,24 @@
 --------------------Configuration: SimpleLog - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPF732.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP210E.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "_AFXDLL" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"C:\Users\icejoywoo\Desktop\mingsen\CardReader\SimpleLog\main.cpp"
-"C:\Users\icejoywoo\Desktop\mingsen\CardReader\SimpleLog\SimpleLog.cpp"
+"C:\Users\icejoywoo\Desktop\card-reader\SimpleLog\main.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPF732.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPF762.tmp" with contents
-[
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "_AFXDLL" /Fp"Debug/SimpleLog.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"C:\Users\icejoywoo\Desktop\mingsen\CardReader\SimpleLog\StdAfx.cpp"
-]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPF762.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPF782.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP210E.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP210F.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/SimpleLog.pdb" /debug /machine:I386 /out:"Debug/SimpleLog.exe" /pdbtype:sept 
-.\Debug\main.obj
-.\Debug\SimpleLog.obj
-.\Debug\StdAfx.obj
-.\Debug\SimpleLog.res
+".\Debug\main.obj"
+".\Debug\SimpleLog.obj"
+".\Debug\StdAfx.obj"
+".\Debug\SimpleLog.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPF782.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP210F.tmp"
 <h3>Output Window</h3>
 Compiling...
-StdAfx.cpp
-Compiling...
 main.cpp
-SimpleLog.cpp
-Generating Code...
 Linking...
 
 

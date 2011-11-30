@@ -19,7 +19,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(ServerSetting)
 	enum { IDD = IDD_SERVERSETTING_DIALOG };
-		// NOTE: the ClassWizard will add data members here
+	int		m_Port;
 	//}}AFX_DATA
 
 
@@ -35,7 +35,7 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(ServerSetting)
-		// NOTE: the ClassWizard will add member functions here
+	virtual void OnOK();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

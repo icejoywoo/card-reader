@@ -8,6 +8,15 @@
 #include "SimpleLog.h"
 #include <windows.h>
 
+char* SimpleLog::GetlogFileLocation()
+{
+	if (isLogFileCreated == TRUE)
+	{
+		return (LPTSTR)(LPCTSTR)logFileLocation;
+	}
+	return "";
+}
+
 //获取文件名称
 CString SimpleLog::GetFileName()
 {

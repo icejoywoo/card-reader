@@ -54,10 +54,13 @@ int Server::restart()
 	return 0;
 }
 
-int Server::setPort(int port)
+int Server::setPort(int &port)
 {
 	this->port = port;
-	return this->restart();
+	// return this->restart();
+	//WSACleanup();
+	//WSAStartup(MAKEWORD(2,2), &this->wsaData);
+	return 0;
 }
 /// Server定义结束
 
@@ -94,6 +97,10 @@ UINT defaultServerHandler(LPVOID pParam)
 	while (true)
 	{
 		client = accept(serv->server, (struct sockaddr*) &from, &fromlen);
+		if (client == INVALID_SOCKET)
+		{
+			break;
+		}
 		SimpleLog::info(CString("接收到一个客户端请求, 来自") + inet_ntoa(from.sin_addr));
 		AfxBeginThread(serv->clientHandler, (LPVOID)client);
 	}
