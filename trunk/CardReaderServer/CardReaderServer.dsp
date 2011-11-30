@@ -115,6 +115,10 @@ SOURCE=.\ServerSetting.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ServerUtils.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\SimpleLog.cpp
 # End Source File
 # Begin Source File
