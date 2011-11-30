@@ -5,7 +5,6 @@
 #include "CardReaderServer.h"
 #include "CardReaderServerDlg.h"
 #include "ServerSetting.h"
-#include "ServerUtils.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -93,6 +92,7 @@ BEGIN_MESSAGE_MAP(CCardReaderServerDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_RESTART, OnButtonRestart)
 	ON_BN_CLICKED(IDC_BUTTON_SETTING, OnButtonSetting)
 	ON_BN_CLICKED(IDC_BUTTON_CLEAR, OnButtonClear)
+	ON_BN_CLICKED(IDC_BUTTON_LOG, OnButtonLog)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -188,7 +188,7 @@ void CCardReaderServerDlg::OnButtonStart()
 	{
 		AfxMessageBox("开启失败");
 	}
-	appendTextToEdit(m_logWindow, "服务器已开启\n");
+	appendTextToEdit(m_logWindow, CString("服务器已开启, 端口") + i2str(Server::getInstance()->getPort()) + "\n");
 }
 
 // TODO: 停止按钮的点击响应
@@ -199,7 +199,7 @@ void CCardReaderServerDlg::OnButtonStop()
 	{
 		AfxMessageBox("关闭失败");
 	}
-	appendTextToEdit(m_logWindow, "服务器已关闭\n");
+	appendTextToEdit(m_logWindow, CString("服务器已关闭\n"));
 }
 
 // TODO: 重启按钮的点击响应
@@ -210,7 +210,7 @@ void CCardReaderServerDlg::OnButtonRestart()
 	{
 		AfxMessageBox("重启失败");
 	}
-	appendTextToEdit(m_logWindow, "服务器已重启\n");
+	appendTextToEdit(m_logWindow, CString("服务器已重启, 端口") + i2str(Server::getInstance()->getPort()) + "\n");
 }
 
 // TODO: 单击设置按钮
@@ -226,4 +226,10 @@ void CCardReaderServerDlg::OnButtonClear()
 {
 	// TODO: Add your control notification handler code here
 	m_logWindow.SetWindowText(""); // 清空日志窗口
+}
+
+void CCardReaderServerDlg::OnButtonLog() 
+{
+	// TODO: Add your control notification handler code here
+	WinExec(CString("notepad ") + SimpleLog::GetlogFileLocation(), SW_SHOWNORMAL);
 }

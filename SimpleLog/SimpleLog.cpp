@@ -38,7 +38,7 @@ CString SimpleLog::GetFilePath()
 	return m_FilePath;
 }
 
-	// 写日志到文件, 格式为 时间(%Y-%m-%d %X) 内容
+// 写日志到文件, 格式为 时间(%Y-%m-%d %X) 内容
 BOOL SimpleLog::WriteLog(CString LogText)
 {
 	WaitForSingleObject(mutex, INFINITE);

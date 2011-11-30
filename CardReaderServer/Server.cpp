@@ -8,6 +8,7 @@
 //////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 
+
 Server* Server::instance = new Server();
 
 Server::Server()
@@ -40,8 +41,10 @@ int Server::stop()
 // 	}
 	if (closesocket(this->server) != 0)
 	{
+		SimpleLog::error("关闭失败");
 		return -2;
 	}
+	SimpleLog::info("服务器已关闭");
 	return 0;
 }
 
@@ -50,7 +53,11 @@ int Server::restart()
 	int result = 0;
 	this->stop();
 	if ((result = this->start()) != 0)
+	{
+		SimpleLog::error("重启失败");
 		return result;
+	}
+	SimpleLog::info("服务器重启成功");
 	return 0;
 }
 
@@ -68,6 +75,7 @@ int Server::setPort(int &port)
 /// 默认的handlers定义 
 //////////////////////////////////////////////////////////////////////////
 
+// TODO: 修改handler
 UINT defaultServerHandler(LPVOID pParam)
 {
 	Server* serv = (Server*) pParam;
@@ -93,7 +101,7 @@ UINT defaultServerHandler(LPVOID pParam)
 	SOCKET client;
 	sockaddr_in from;
 	int fromlen = sizeof(from);
-	SimpleLog::info("Server Ready");
+	SimpleLog::info(CString("服务器启动成功, 端口: ") + i2str(serv->getPort()));
 	while (true)
 	{
 		client = accept(serv->server, (struct sockaddr*) &from, &fromlen);
@@ -107,13 +115,14 @@ UINT defaultServerHandler(LPVOID pParam)
 	return 0;
 }
 
+// TODO: 修改handler, 读取读卡器的数据
 UINT defaultClientHandler (LPVOID pParam)
 {
 	SOCKET client = (SOCKET) pParam;
 	
 	char buff[512];
 	
-	sprintf(buff, "Hello.");
+	sprintf(buff, "Hello."); // 测试数据, 仅发送Hello
 	int size = send(client, buff, strlen(buff), 0);
 	SimpleLog::info(CString("发送数据: ") + buff);
 	shutdown(client, SD_BOTH);
