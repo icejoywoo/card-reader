@@ -66,12 +66,13 @@ public:
 	{
 		return this->port;
 	}
+
 private:
 	Server();
 	static Server* instance; // the singleton
 	WSADATA wsaData;
 	int port;
-
+	CEdit mEdit; // 在界面中输出日志信息
 public:
 	SOCKET server;
 

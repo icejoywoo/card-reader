@@ -8,6 +8,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "ServerSetting.h"
+
 /////////////////////////////////////////////////////////////////////////////
 // CCardReaderServerDlg dialog
 
@@ -32,6 +34,7 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
+	ServerSetting* settingDlg; // …Ë÷√∂‘ª∞øÚ
 
 	// Generated message map functions
 	//{{AFX_MSG(CCardReaderServerDlg)
@@ -42,6 +45,7 @@ protected:
 	afx_msg void OnButtonStart();
 	afx_msg void OnButtonStop();
 	afx_msg void OnButtonRestart();
+	afx_msg void OnButtonSetting();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
