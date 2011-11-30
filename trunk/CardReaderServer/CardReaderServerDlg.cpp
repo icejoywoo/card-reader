@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "CardReaderServer.h"
 #include "CardReaderServerDlg.h"
+#include "ServerSetting.h"
 #include "ServerUtils.h"
 
 #ifdef _DEBUG
@@ -67,6 +68,10 @@ CCardReaderServerDlg::CCardReaderServerDlg(CWnd* pParent /*=NULL*/)
 	//}}AFX_DATA_INIT
 	// Note that LoadIcon does not require a subsequent DestroyIcon in Win32
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	
+	// 初始化设置窗口
+	settingDlg = new ServerSetting(this);
+	settingDlg->Create(IDD_SERVERSETTING_DIALOG);
 }
 
 void CCardReaderServerDlg::DoDataExchange(CDataExchange* pDX)
@@ -85,6 +90,7 @@ BEGIN_MESSAGE_MAP(CCardReaderServerDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_START, OnButtonStart)
 	ON_BN_CLICKED(IDC_BUTTON_STOP, OnButtonStop)
 	ON_BN_CLICKED(IDC_BUTTON_RESTART, OnButtonRestart)
+	ON_BN_CLICKED(IDC_BUTTON_SETTING, OnButtonSetting)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -203,4 +209,12 @@ void CCardReaderServerDlg::OnButtonRestart()
 		AfxMessageBox("重启失败");
 	}
 	appendTextToEdit(m_logWindow, "服务器已重启\n");
+}
+
+// TODO: 单击设置按钮
+void CCardReaderServerDlg::OnButtonSetting() 
+{
+	// TODO: Add your control notification handler code here
+	
+	settingDlg->ShowWindow(SW_SHOWNA);
 }
