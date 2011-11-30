@@ -64,9 +64,11 @@ Control7=IDC_BUTTON_RESTART,button,1342242816
 [DLG:IDD_SERVERSETTING_DIALOG]
 Type=1
 Class=ServerSetting
-ControlCount=2
+ControlCount=4
 Control1=IDOK,button,1342242817
 Control2=IDCANCEL,button,1342242816
+Control3=IDC_STATIC,static,1342308353
+Control4=IDC_EDIT1,edit,1350631552
 
 [CLS:ServerSetting]
 Type=0
