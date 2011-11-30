@@ -2,6 +2,8 @@
 // FileName: ClientConnection.h
 // Creator: icejoywoo
 // Date: 2011.11.29
+// $Revision$
+// $LastChangedDate$
 // Comment: 客户端用来连接到服务器的封装, 并发送数据, 默认开启日志记录
 //////////////////////////////////////////////////////////////////////////
 #ifndef _CLIENTCONNECTION_H_

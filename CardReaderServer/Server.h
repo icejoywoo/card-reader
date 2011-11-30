@@ -2,6 +2,8 @@
 // FileName: Server.h
 // Creator: icejoywoo
 // Date: 2011.11.29
+// $Revision$
+// $LastChangedDate$
 // Comment: 服务器端的简单封装
 //////////////////////////////////////////////////////////////////////////
 

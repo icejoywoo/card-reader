@@ -111,6 +111,10 @@ SOURCE=.\Server.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ServerSetting.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\SimpleLog.cpp
 # End Source File
 # Begin Source File
@@ -141,6 +145,14 @@ SOURCE=.\Resource.h
 # Begin Source File
 
 SOURCE=.\Server.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ServerSetting.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ServerUtils.h
 # End Source File
 # Begin Source File
 

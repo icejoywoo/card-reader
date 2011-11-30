@@ -2,20 +2,22 @@
 
 [General Info]
 Version=1
-LastClass=CCardReaderServerDlg
+LastClass=ServerSetting
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "CardReaderServer.h"
 
-ClassCount=3
+ClassCount=4
 Class1=CCardReaderServerApp
 Class2=CCardReaderServerDlg
 Class3=CAboutDlg
 
-ResourceCount=3
+ResourceCount=4
 Resource1=IDD_ABOUTBOX
 Resource2=IDR_MAINFRAME
 Resource3=IDD_CARDREADERSERVER_DIALOG
+Class4=ServerSetting
+Resource4=IDD_SERVERSETTING_DIALOG
 
 [CLS:CCardReaderServerApp]
 Type=0
@@ -28,7 +30,7 @@ Type=0
 HeaderFile=CardReaderServerDlg.h
 ImplementationFile=CardReaderServerDlg.cpp
 Filter=D
-LastObject=CCardReaderServerDlg
+LastObject=IDC_EDIT_LOG
 BaseClass=CDialog
 VirtualFilter=dWC
 
@@ -58,4 +60,18 @@ Control4=IDC_BUTTON_STOP,button,1342242816
 Control5=IDC_BUTTON4,button,1342242816
 Control6=IDC_BUTTON5,button,1342242816
 Control7=IDC_BUTTON_RESTART,button,1342242816
+
+[DLG:IDD_SERVERSETTING_DIALOG]
+Type=1
+Class=ServerSetting
+ControlCount=2
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
+
+[CLS:ServerSetting]
+Type=0
+HeaderFile=ServerSetting.h
+ImplementationFile=ServerSetting.cpp
+BaseClass=CDialog
+Filter=D
 
