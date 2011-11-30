@@ -46,6 +46,7 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 		SimpleLog::info("你有新消息了");
 		SimpleLog::error("你又错了");
 		//cout << SimpleLog::GetlogFileLocation() << endl;
+		// 在记事本中打开日志, 依赖系统变量PATH的notepad
 		WinExec(CString("notepad ") + SimpleLog::GetlogFileLocation(), SW_SHOWNORMAL);
 	}
 	

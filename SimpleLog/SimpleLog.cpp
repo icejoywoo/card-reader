@@ -2,6 +2,8 @@
 // FileName: SimpleLog.cpp
 // Creator: icejoywoo
 // Date: 2011.11.28
+// $Revision$
+// $LastChangedDate$
 // Comment: 一个简单的日志类的实现, 三等级日志: info, warn, error
 //			默认保存路径: 程序目录下的log, 文件名以日期为名字
 //////////////////////////////////////////////////////////////////////////
