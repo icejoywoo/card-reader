@@ -2,6 +2,8 @@
 // FileName: ClientConnection.cpp
 // Creator: icejoywoo
 // Date: 2011.11.29
+// $Revision$
+// $LastChangedDate$
 // Comment: 客户端用来连接到服务器的封装, 并发送数据, 默认开启日志记录
 //////////////////////////////////////////////////////////////////////////
 #include "ClientConnection.h"
@@ -66,7 +68,9 @@ int ClientConnection::recvData(char* data)
 	ASSERT(z != -1); // 接收到的数据长度为-1, 表明程序错误
 	buff[z] = '\0'; // c-style字符串
 	if (this->isLogged())
+	{
 		SimpleLog::info(CString("从服务器接收到的数据: ") + buff);
+	}
 	data = buff;
 	return z;
 }

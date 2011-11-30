@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "CardReaderServer.h"
 #include "CardReaderServerDlg.h"
+#include "ServerUtils.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -179,6 +180,7 @@ void CCardReaderServerDlg::OnButtonStart()
 	{
 		AfxMessageBox("开启失败");
 	}
+	appendTextToEdit(m_logWindow, "服务器已开启\n");
 }
 
 // TODO: 停止按钮的点击响应
@@ -189,7 +191,7 @@ void CCardReaderServerDlg::OnButtonStop()
 	{
 		AfxMessageBox("关闭失败");
 	}
-	
+	appendTextToEdit(m_logWindow, "服务器已关闭\n");
 }
 
 // TODO: 重启按钮的点击响应
@@ -200,4 +202,5 @@ void CCardReaderServerDlg::OnButtonRestart()
 	{
 		AfxMessageBox("重启失败");
 	}
+	appendTextToEdit(m_logWindow, "服务器已重启\n");
 }
