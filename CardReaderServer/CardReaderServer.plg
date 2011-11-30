@@ -6,13 +6,14 @@
 --------------------Configuration: CardReaderServer - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8D73.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP14F2.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Server.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerSetting.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8D73.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8D83.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP14F2.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1502.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderServer.pdb" /debug /machine:I386 /out:"Debug/CardReaderServer.exe" /pdbtype:sept 
 ".\Debug\CardReaderServer.obj"
@@ -20,17 +21,19 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8D83.tmp" with 
 ".\Debug\Reader.obj"
 ".\Debug\Server.obj"
 ".\Debug\ServerSetting.obj"
+".\Debug\ServerUtils.obj"
 ".\Debug\SimpleLog.obj"
 ".\Debug\StdAfx.obj"
 ".\Debug\CardReaderServer.res"
-".\Debug\ServerUtils.obj"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8D83.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1502.tmp"
 <h3>Output Window</h3>
 Compiling...
+Server.cpp
 ServerSetting.cpp
+Generating Code...
 Linking...
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP918A.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1C82.tmp" with contents
 [
 /nologo /o"Debug/CardReaderServer.bsc" 
 ".\Debug\StdAfx.sbr"
@@ -39,9 +42,9 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP918A.tmp" with 
 ".\Debug\Reader.sbr"
 ".\Debug\Server.sbr"
 ".\Debug\ServerSetting.sbr"
-".\Debug\SimpleLog.sbr"
-".\Debug\ServerUtils.sbr"]
-Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP918A.tmp"
+".\Debug\ServerUtils.sbr"
+".\Debug\SimpleLog.sbr"]
+Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1C82.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
 
