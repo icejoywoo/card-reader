@@ -48,6 +48,7 @@ protected:
 	afx_msg void OnButtonRestart();
 	afx_msg void OnButtonSetting();
 	afx_msg void OnButtonClear();
+	afx_msg void OnButtonLog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

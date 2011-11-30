@@ -29,7 +29,7 @@
 #pragma comment(lib, "WS2_32")
 #include "Reader.h"
 #include "Server.h"
-
+#include "ServerUtils.h"
 
 #define DEFAULT_PORT (20248)
 //{{AFX_INSERT_LOCATION}}

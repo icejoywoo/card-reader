@@ -15,7 +15,7 @@
 #define IDC_BUTTON_CLEAR                1003
 #define IDC_BUTTON_START                1004
 #define IDC_BUTTON_STOP                 1005
-#define IDC_BUTTON4                     1006
+#define IDC_BUTTON_LOG                  1006
 #define IDC_BUTTON_SETTING              1007
 #define IDC_BUTTON_RESTART              1008
 #define IDC_TREE_VIEW                   1009
