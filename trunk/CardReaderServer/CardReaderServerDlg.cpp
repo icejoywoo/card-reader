@@ -67,10 +67,6 @@ CCardReaderServerDlg::CCardReaderServerDlg(CWnd* pParent /*=NULL*/)
 	//}}AFX_DATA_INIT
 	// Note that LoadIcon does not require a subsequent DestroyIcon in Win32
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-	
-	// 初始化设置窗口
-	settingDlg = new ServerSetting(this);
-	settingDlg->Create(IDD_SERVERSETTING_DIALOG);
 }
 
 void CCardReaderServerDlg::DoDataExchange(CDataExchange* pDX)
@@ -128,6 +124,12 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 	
 	// TODO: Add extra initialization here
 	
+	// 初始化设置窗口
+	settingDlg = new ServerSetting(this);
+	settingDlg->Create(IDD_SERVERSETTING_DIALOG);
+
+	HTREEITEM root = m_Tree.InsertItem(_T("root"));
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
