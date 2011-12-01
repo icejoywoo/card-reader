@@ -7,7 +7,13 @@
 // Comment: 服务器端的简单封装
 //////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#include "CardReaderServerDlg.h"
 
+typedef struct _clientParam 
+{
+	Server* server;
+	SOCKET client;
+} ClientParam;
 
 Server* Server::instance = new Server();
 
@@ -15,6 +21,7 @@ Server::Server()
 {
 	WSAStartup(MAKEWORD(2,2), &this->wsaData); // init winsock
 	this->port = DEFAULT_PORT;
+	this->log = "";
 
 	this->clientHandler = defaultClientHandler;
 	this->serverHandler = defaultServerHandler;
@@ -79,6 +86,7 @@ int Server::setPort(int &port)
 UINT defaultServerHandler(LPVOID pParam)
 {
 	Server* serv = (Server*) pParam;
+	
 	if ((serv->server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
 	{
 		return -1;
@@ -102,6 +110,7 @@ UINT defaultServerHandler(LPVOID pParam)
 	sockaddr_in from;
 	int fromlen = sizeof(from);
 	SimpleLog::info(CString("服务器启动成功, 端口: ") + i2str(serv->getPort()));
+	serv->log += formatLog(CString("服务器启动成功, 端口: ") + i2str(serv->getPort()));
 	while (true)
 	{
 		client = accept(serv->server, (struct sockaddr*) &from, &fromlen);
@@ -110,7 +119,11 @@ UINT defaultServerHandler(LPVOID pParam)
 			break;
 		}
 		SimpleLog::info(CString("接收到一个客户端请求, 来自") + inet_ntoa(from.sin_addr));
-		AfxBeginThread(serv->clientHandler, (LPVOID)client);
+		serv->log += formatLog(CString("接收到一个客户端请求, 来自") + inet_ntoa(from.sin_addr));
+		ClientParam clientParam;
+		clientParam.server = serv;
+		clientParam.client = client;
+		AfxBeginThread(serv->clientHandler, (LPVOID)&clientParam);
 	}
 	return 0;
 }
@@ -118,15 +131,16 @@ UINT defaultServerHandler(LPVOID pParam)
 // TODO: 修改handler, 读取读卡器的数据
 UINT defaultClientHandler (LPVOID pParam)
 {
-	SOCKET client = (SOCKET) pParam;
-	
+	ClientParam* clientParam = (ClientParam *) pParam;
 	char buff[512];
 	
 	sprintf(buff, "Hello."); // 测试数据, 仅发送Hello
-	int size = send(client, buff, strlen(buff), 0);
+	int size = send(clientParam->client, buff, strlen(buff), 0);
 	SimpleLog::info(CString("发送数据: ") + buff);
-	shutdown(client, SD_BOTH);
-	closesocket(client);
+	clientParam->server->log += formatLog(CString("发送数据: ") + buff);
+	Sleep(10000);
+	shutdown(clientParam->client, SD_BOTH);
+	closesocket(clientParam->client);
 	
 	return 0;
 }

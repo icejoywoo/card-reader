@@ -174,10 +174,6 @@ SOURCE=.\SmartCom.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\SmartComServer.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\SmartComString.h
 # End Source File
 # Begin Source File

@@ -36,6 +36,7 @@ public:
 protected:
 	HICON m_hIcon;
 	ServerSetting* settingDlg; // …Ë÷√∂‘ª∞øÚ
+	BOOL m_start;
 
 	// Generated message map functions
 	//{{AFX_MSG(CCardReaderServerDlg)

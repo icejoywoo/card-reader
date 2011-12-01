@@ -128,7 +128,11 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 	settingDlg = new ServerSetting(this);
 	settingDlg->Create(IDD_SERVERSETTING_DIALOG);
 
-	HTREEITEM root = m_Tree.InsertItem(_T("root"));
+	HTREEITEM root = m_Tree.InsertItem(_T("server"));
+	m_start = FALSE;
+
+	// 记录日志的线程
+	AfxBeginThread(logHandler, &m_logWindow);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -186,40 +190,58 @@ HCURSOR CCardReaderServerDlg::OnQueryDragIcon()
 void CCardReaderServerDlg::OnButtonStart() 
 {
 	// TODO: Add your control notification handler code here
-	if (Server::getInstance()->start() != 0)
+	if (FALSE == m_start)
 	{
-		AfxMessageBox("开启失败");
-		appendTextToEdit(m_logWindow, CString("服务器开启失败\n"));
+		if (Server::getInstance()->start() != 0)
+		{
+			AfxMessageBox("开启失败");
+			appendTextToEdit(m_logWindow, CString("服务器开启失败\n"));
+		} else {
+			//appendTextToEdit(m_logWindow, CString("服务器已开启, 端口") + i2str(Server::getInstance()->getPort()) + "\n");
+		}
+		m_start = TRUE;
 	} else {
-		appendTextToEdit(m_logWindow, CString("服务器已开启, 端口") + i2str(Server::getInstance()->getPort()) + "\n");
+		AfxMessageBox("服务器已开启");
 	}
+	
 }
 
 // TODO: 停止按钮的点击响应
 void CCardReaderServerDlg::OnButtonStop() 
 {
 	// TODO: Add your control notification handler code here
-	if (Server::getInstance()->stop() != 0)
+	if (TRUE == m_start)
 	{
-		AfxMessageBox("关闭失败");
-		appendTextToEdit(m_logWindow, CString("服务器关闭失败\n"));
+		if (Server::getInstance()->stop() != 0)
+		{
+			AfxMessageBox("关闭失败");
+			appendTextToEdit(m_logWindow, CString("服务器关闭失败\n"));
+		} else {
+			appendTextToEdit(m_logWindow, CString("服务器已关闭\n"));
+		}
+		m_start = FALSE;
 	} else {
-		appendTextToEdit(m_logWindow, CString("服务器已关闭\n"));
+		AfxMessageBox("服务器未开启");
 	}
-	
 }
 
 // TODO: 重启按钮的点击响应
 void CCardReaderServerDlg::OnButtonRestart() 
 {
 	// TODO: Add your control notification handler code here
-	if (Server::getInstance()->restart() != 0)
+	if (TRUE == m_start) 
 	{
-		AfxMessageBox("重启失败");
-		appendTextToEdit(m_logWindow, CString("服务器重启失败\n"));
+		if (Server::getInstance()->restart() != 0)
+		{
+			AfxMessageBox("重启失败");
+			appendTextToEdit(m_logWindow, CString("服务器重启失败\n"));
+		} else {
+			//appendTextToEdit(m_logWindow, CString("服务器已重启, 端口") + i2str(Server::getInstance()->getPort()) + "\n");
+		}
 	} else {
-		appendTextToEdit(m_logWindow, CString("服务器已重启, 端口") + i2str(Server::getInstance()->getPort()) + "\n");
+		AfxMessageBox("服务器未开启");
 	}
+	
 }
 
 // TODO: 单击设置按钮
