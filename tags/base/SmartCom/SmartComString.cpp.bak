@@ -1,0 +1,128 @@
+#include "stdafx.h"
+#include "SmartComString.h"
+
+using namespace SmartCom;
+
+    string::string()
+	{
+		m_nlength=0;
+		m_pData=0;
+		size=0;
+	}
+
+	string::string(const char* str)
+	{
+		m_nlength=strlen(str);
+        m_pData=new char[m_nlength+1];
+		size=m_nlength+1;
+     	strcpy(m_pData,str);		
+	}
+
+	string::string(const string& rs)
+	{
+        length=rs.length;
+		m_pData=new char[length+1];
+		size=length+1;
+		strcpy(m_pData,rs.m_pData);
+	}
+
+	string::~string()
+	{
+		delete[] m_pData;
+	}
+
+	string& string::operator =(const char* str)
+	{
+		int len=strlen(str);
+		if(size-1<len)
+		{
+			delete m_pData;
+			m_pData=new char[len+1];
+			size=len+1;
+		}
+		length=len;
+		strcpy(m_pData,str);
+		return *this;
+	}
+	
+	string& string::operator =(const string& rs)
+	{
+		int len=rs.length;
+		if(size-1<len)
+		{
+			delete m_pData;
+			m_pData=new char[len+1];
+			size=len+1;
+		}
+		length=len;
+		strcpy(m_pData,rs.m_pData);
+		return *this;
+	}
+
+	string& string::operator +=(const char* str)
+	{
+		int len=strlen(str);
+		if(size-1<len+length)
+		{
+			delete[] m_pData;
+            m_pData=new char[len+length+1];
+			size=len+length+1;
+		}
+		length+=len;
+		strcat(m_pData,str);
+		return *this;
+	}
+
+	string& string::operator +=(const string& rs)
+	{
+        int len=strlen(rs.length);
+		if(size-1<len+length)
+		{
+			delete[] m_pData;
+            m_pData=new char[len+length+1];
+			size=len+length+1;
+		}
+		length+=len;
+		strcat(m_pData,rs.m_pData);
+		return *this;
+	}
+
+	string string::operator +(const char* str)
+	{
+		string temp(*this);
+		temp+=str;
+		return temp;
+	}
+	
+	string string::operator +(const string& rs)
+	{
+		string temp(*this);
+		temp+=rs;
+		return temp;
+	}
+
+	string operator+(const char* str,const string& rs)
+	{
+		string temp(str);
+		temp+=rs;
+		return temp;
+	}
+
+	char& string::operator [](int i)
+	{
+		if(i<0)
+			i=0;
+		if(i>length-1)
+			i=length-1;
+		return *(m_pData+i);
+	}
+
+	const char* string::c_str()
+	{
+		return m_pData;
+	}
+
+	int string::length()
+	{
+		return length;
+	}
