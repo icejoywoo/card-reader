@@ -30,7 +30,7 @@ Type=0
 HeaderFile=CardReaderServerDlg.h
 ImplementationFile=CardReaderServerDlg.cpp
 Filter=D
-LastObject=IDC_TREE_VIEW
+LastObject=CCardReaderServerDlg
 BaseClass=CDialog
 VirtualFilter=dWC
 
@@ -53,7 +53,7 @@ Control4=IDOK,button,1342373889
 Type=1
 Class=CCardReaderServerDlg
 ControlCount=8
-Control1=IDC_EDIT_LOG,edit,1350631620
+Control1=IDC_EDIT_LOG,edit,1353779396
 Control2=IDC_BUTTON_START,button,1342242816
 Control3=IDC_BUTTON_STOP,button,1342242816
 Control4=IDC_BUTTON_RESTART,button,1342242816
