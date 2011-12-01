@@ -1,10 +1,7 @@
 #include "ServerUtils.h"
 
+ServerParam* ServerParam::instance = new ServerParam();
 
-/**
- * @brief 向CEdit中末尾添加记录
- * @return None
- */
 void appendTextToEdit(CEdit &mEdit, CString text)
 {
 	int len = mEdit.GetWindowTextLength();
@@ -14,7 +11,6 @@ void appendTextToEdit(CEdit &mEdit, CString text)
     mEdit.ReplaceSel(log);
 }
 
-// 将int转换为CString
 CString i2str(int a)
 {
 	CString str;
@@ -22,7 +18,6 @@ CString i2str(int a)
 	return str;
 }
 
-// 记录日志的线程
 UINT logHandler (LPVOID pParam)
 {
 	while (TRUE)
@@ -41,7 +36,6 @@ UINT logHandler (LPVOID pParam)
 	return 0;
 }
 
-// 在日志前加时间
 CString formatLog(CString log)
 {
 	CString time;
@@ -49,3 +43,37 @@ CString formatLog(CString log)
 	return m_sCurrentTime + ": " + log + "\r\n";
 }
 
+void GetIpAndPort(CString& ip, int& port, int id, ServerParam* param)
+{
+	// 每个ip对应32个读卡器, 每个读卡器对应一个port, port默认从10000开始
+	const int defaultPort = 10000;
+	if(id<=32&&id>=1)
+	{
+        ip=param->ip1;
+		port=defaultPort+id;
+	}
+	else if(id>32&&id<=64)
+	{
+		ip=param->ip2;
+		port=defaultPort+id-32;
+	}
+	else if(id>64&&id<96)
+	{
+		ip=param->ip3;
+		port=defaultPort+id-64;
+	}
+	else if(id>96&&id<128)
+	{
+		ip=param->ip4;
+		port=defaultPort+id-96;
+	}
+}
+
+CString getIpAdress(CIPAddressCtrl& ip)
+{
+	BYTE b[4];
+	ip.GetAddress(b[0], b[1], b[2], b[3]);
+	CString result;
+	result.Format("%d.%d.%d.%d", b[0], b[1], b[2], b[3]);
+	return result;
+}

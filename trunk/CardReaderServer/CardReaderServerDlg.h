@@ -36,7 +36,7 @@ public:
 protected:
 	HICON m_hIcon;
 	ServerSetting* settingDlg; // 设置对话框
-	BOOL m_start;
+	BOOL m_start; // 服务器状态, 是否开启, 开启为true, 关闭为false
 
 	// Generated message map functions
 	//{{AFX_MSG(CCardReaderServerDlg)
