@@ -124,15 +124,28 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 	
 	// TODO: Add extra initialization here
 	
-	// 初始化设置窗口
-	settingDlg = new ServerSetting(this);
-	settingDlg->Create(IDD_SERVERSETTING_DIALOG);
+	
 
 	HTREEITEM root = m_Tree.InsertItem(_T("server"));
 	m_start = FALSE;
+	
 
 	// 记录日志的线程
 	AfxBeginThread(logHandler, &m_logWindow);
+
+	// 设置主窗口为当前对话框
+	ServerParam::instance->mainFrame = this->GetSafeHwnd();
+	/**
+	 * 初始化serverParam参数的一些参量
+	 */
+	ServerParam::instance->ip1 = "192.168.1.138";
+	ServerParam::instance->ip2 = "192.168.1.139";
+	ServerParam::instance->ip3 = "192.168.1.140";
+	ServerParam::instance->ip4 = "192.168.1.141";
+
+	// 初始化设置窗口
+	settingDlg = new ServerSetting(this);
+	settingDlg->Create(IDD_SERVERSETTING_DIALOG);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
