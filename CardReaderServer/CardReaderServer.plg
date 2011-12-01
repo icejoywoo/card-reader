@@ -6,26 +6,13 @@
 --------------------Configuration: CardReaderServer - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating command line "rc.exe /l 0x804 /fo"Debug/CardReaderServer.res" /d "_DEBUG" /d "_AFXDLL" "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServer.rc"" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB0F9.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7FE0.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServer.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServerDlg.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Reader.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Server.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerSetting.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerUtils.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\SimpleLog.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB0F9.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB0FA.tmp" with contents
-[
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Fp"Debug/CardReaderServer.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\StdAfx.cpp"
-]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB0FA.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB0FB.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7FE0.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7FE1.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderServer.pdb" /debug /machine:I386 /out:"Debug/CardReaderServer.exe" /pdbtype:sept 
 ".\Debug\CardReaderServer.obj"
@@ -38,20 +25,10 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB0FB.tmp" with 
 ".\Debug\StdAfx.obj"
 ".\Debug\CardReaderServer.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB0FB.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7FE1.tmp"
 <h3>Output Window</h3>
-Compiling resources...
 Compiling...
-StdAfx.cpp
-Compiling...
-CardReaderServer.cpp
 CardReaderServerDlg.cpp
-Reader.cpp
-Server.cpp
-ServerSetting.cpp
-ServerUtils.cpp
-SimpleLog.cpp
-Generating Code...
 Linking...
 
 

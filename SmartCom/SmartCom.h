@@ -1,22 +1,31 @@
-#ifndef __SmartComServer_h__
-#define __SmartComServer_h__
+#ifndef __SmartCom_h__
+#define __SmartCom_h__
 
-#include "SmartCom.h"
-// #include "Communicator.h"
-// #include "SmartComString.h"
+#include "Communicator.h"
+#include "SmartComString.h"
+// The following ifdef block is the standard way of creating macros which make exporting 
+// from a DLL simpler. All files within this DLL are compiled with the SMARTCOM_EXPORTS
+// symbol defined on the command line. this symbol should not be defined on any project
+// that uses this DLL. This way any other project whose source files include this file see 
+// SMARTCOM_API functions as being imported from a DLL, wheras this DLL sees symbols
+// defined with this macro as being exported.
+#ifdef SMARTCOM_EXPORTS_MACRO
+#define SMARTCOM_API __declspec(dllexport)
+#else
+#define SMARTCOM_API __declspec(dllimport)
+#endif
 
 #define USE_SMARTCOMSTRING
 /********************************************
 功能:
 初始化与卡片读写器的通信.
-入口参数：
-	cardId 读卡器id
+入口参数：无
 出口参数：无
 返回值：
 -1：初始化失败
 0：成功
 *********************************************/
-SMARTCOM_API int InitUDPComm(int cardId);
+SMARTCOM_API int InitUDPComm();
 
 
 
@@ -25,7 +34,6 @@ SMARTCOM_API int InitUDPComm(int cardId);
 功能：
 获取一个com通信器
 入口参数：
-cardId 读卡器id
 comPort:要通信的端口号
 rate:波特率，默认115200
 waitForSTX2Time：第一个字符超时，默认1000ms
@@ -35,20 +43,19 @@ normalWaitTime：中间字符超时，默认1000ms
 0：成功
 -1：失败
 /************************************************************************/
-SMARTCOM_API int GetOneCOMCommunicator(int cardId, Communicator& aCommunicator,int comPort,int rate=115200,
+SMARTCOM_API int GetOneCOMCommunicator(Communicator& aCommunicator,int comPort,int rate=115200,
 									   int waitForSTX2Time=1000,int normalWaitTime=1000 );
 
 /************************************************************************
 功能：
 关闭COM通信
-入口参数：
-cardId 读卡器id
+入口参数：无
 出口参数:无
 返回值：
 0：成功
 -1：失败
 ***********************************************************************/
-SMARTCOM_API int CloseCOMComm(int cardId);
+SMARTCOM_API int CloseCOMComm();
 
 /************************************************************************
 功能：
@@ -59,7 +66,7 @@ SMARTCOM_API int CloseCOMComm(int cardId);
 0：成功
 -1：失败
 ***********************************************************************/
-SMARTCOM_API int CloseUDPComm(int cardId);
+SMARTCOM_API int CloseUDPComm();
 
 /************************************************************************
 功能：
@@ -75,7 +82,7 @@ aCommunicator:返回的通信器
 0：成功
 -1：失败
 ***********************************************************************/
-SMARTCOM_API int GetOneUDPCommunicator(int cardId, Communicator& aCommunicator,const char* dstIP,int port,
+SMARTCOM_API int GetOneUDPCommunicator(Communicator& aCommunicator,const char* dstIP,int port,
 									   int waitForSTX2Time=1000,int normalWaitTime=1000);
 
 /************************************************************************
@@ -94,10 +101,10 @@ MacNo:1字节机号
 -3: 读取失败
 
 /************************************************************************/
-SMARTCOM_API int GetDevIDAndMacNo(int cardId, Communicator& comm,char* devID,int devIDBufLen,int& macNo);
+SMARTCOM_API int GetDevIDAndMacNo(Communicator& comm,char* devID,int devIDBufLen,int& macNo);
 
 #ifdef USE_SMARTCOMSTRING
-SMARTCOM_API int GetDevIDAndMacNo(int cardId, Communicator& comm, SmartCom::string& devID,int& macNo);
+SMARTCOM_API int GetDevIDAndMacNo(Communicator& comm, SmartCom::string& devID,int& macNo);
 #endif
 /************************************************************************/
 /*功能：
@@ -115,7 +122,7 @@ MacNo:要设置的机号
 -4：设置失败
                                                       */
 /************************************************************************/
-SMARTCOM_API int SetMacNoByDevID(int cardId, Communicator& comm,const char* devID,int macNo);
+SMARTCOM_API int SetMacNoByDevID(Communicator& comm,const char* devID,int macNo);
 
 /************************************************************************/
 /* 功能：
@@ -136,10 +143,10 @@ devType:终端类型
 -4：读取失败
                                                      */
 /************************************************************************/
-SMARTCOM_API int GetAppVerAndDevType(int cardId, Communicator& comm,char* appVersion,int Verlen,char* devType,int typeLen,
+SMARTCOM_API int GetAppVerAndDevType(Communicator& comm,char* appVersion,int Verlen,char* devType,int typeLen,
 									 int MacNo=255);
 #ifdef USE_SMARTCOMSTRING
-SMARTCOM_API int GetAppVerAndDevType(int cardId, Communicator& comm,SmartCom::string& appVersion,SmartCom::string& devType,
+SMARTCOM_API int GetAppVerAndDevType(Communicator& comm,SmartCom::string& appVersion,SmartCom::string& devType,
 									 int MacNo=255);
 #endif
 /************************************************************************/
@@ -156,7 +163,7 @@ macNo:机号，默认255
 -3:机号范围错误
                                                                     */
 /************************************************************************/
-SMARTCOM_API int ResetDev(int cardId, Communicator& comm,int macNo=255);
+SMARTCOM_API int ResetDev(Communicator& comm,int macNo=255);
 
 /************************************************************************/
 /* 功能：
@@ -175,10 +182,10 @@ chipID
 -4：读取失败
                                                                     */
 /************************************************************************/
-SMARTCOM_API int GetChipID(int cardId, Communicator& comm,char* chipID,int chipIDLen,int macNo=255);
+SMARTCOM_API int GetChipID(Communicator& comm,char* chipID,int chipIDLen,int macNo=255);
 
 #ifdef USE_SMARTCOMSTRING
-SMARTCOM_API int GetChipID(int cardId, Communicator& comm,SmartCom::string& chipID,int macNo=255);
+SMARTCOM_API int GetChipID(Communicator& comm,SmartCom::string& chipID,int macNo=255);
 #endif
 /************************************************************************/
 /* 功能：
@@ -197,7 +204,7 @@ cardB:1,B卡座有卡；0，B卡座无卡
 -4：检测失败
                                                                       */
 /************************************************************************/
-SMARTCOM_API int IsCardReady(int cardId, Communicator& comm,int& cardA,int& cardB,int macNo=255);
+SMARTCOM_API int IsCardReady(Communicator& comm,int& cardA,int& cardB,int macNo=255);
 
 /************************************************************************/
 /* 功能：
@@ -217,7 +224,7 @@ retCode="FD"：不可识别卡
 -3: 机号范围错误
  -4:复位失败                                                              */
 /************************************************************************/
-SMARTCOM_API int ResetCard(int cardId, Communicator& comm,SmartCom::string& retCode,int card=1,int macNo=255);
+SMARTCOM_API int ResetCard(Communicator& comm,SmartCom::string& retCode,int card=1,int macNo=255);
 
 /************************************************************************/
 /* 功能：
@@ -240,7 +247,7 @@ retCode="F0"： 没有先给卡进行上电复位
 -3: 机号范围错误
                                                                  */
 /************************************************************************/
-SMARTCOM_API int CardApdu(int cardId, Communicator& comm,const char* apdu,SmartCom::string& retCode,int card=1,int macNo=255);
+SMARTCOM_API int CardApdu(Communicator& comm,const char* apdu,SmartCom::string& retCode,int card=1,int macNo=255);
 
 
 /************************************************************************/
@@ -257,7 +264,7 @@ macNO:机号，默认255
 -4：下电失败
                                                     */
 /************************************************************************/
-SMARTCOM_API int ShutdownCard(int cardId, Communicator& comm,int macNo=255);
+SMARTCOM_API int ShutdownCard(Communicator& comm,int macNo=255);
 
 /************************************************************************/
 /* 功能：
@@ -276,7 +283,7 @@ macNO:机号，默认255
 -4：修改失败
                                                               */
 /************************************************************************/
-SMARTCOM_API int ModifyCardBraudRate(int cardId, Communicator& comm,int braudRate,int macNo=255);
+SMARTCOM_API int ModifyCardBraudRate(Communicator& comm,int braudRate,int macNo=255);
 
 /************************************************************************/
 /* 功能：
@@ -295,7 +302,7 @@ braudRate：当前卡的通信波特率
 
                                                             */
 /************************************************************************/
-SMARTCOM_API int GetCardBraudRate(int cardId, Communicator& comm,int& braudRate,int macNo=255);
+SMARTCOM_API int GetCardBraudRate(Communicator& comm,int& braudRate,int macNo=255);
 
 /************************************************************************/
 /* 功能：
@@ -314,7 +321,7 @@ macNO:机号，默认255
 -4:修改失败
                                                             */
 /************************************************************************/
-SMARTCOM_API int ModifyCardPower(int cardId, Communicator& comm,int power,int card=1,int macNo=255);
+SMARTCOM_API int ModifyCardPower(Communicator& comm,int power,int card=1,int macNo=255);
 
 /************************************************************************/
 /* 功能：
@@ -333,7 +340,7 @@ macNO:机号，默认255
 -4: 发送失败
                                                                */
 /************************************************************************/
-SMARTCOM_API int  ExcuteMulAPDU(int cardId, Communicator& comm,int cmdNum,int card=1,int macNo=255);
+SMARTCOM_API int  ExcuteMulAPDU(Communicator& comm,int cmdNum,int card=1,int macNo=255);
 
 /************************************************************************/
 /* 功能：
@@ -354,10 +361,10 @@ bytes:要读取的字节数
  -4: 读取失败
                                                               */
 /************************************************************************/
-SMARTCOM_API int GetScriptData(int cardId, Communicator& comm,int offset,unsigned char bytes,char* strData,int strDataLen,int macNo=255);
+SMARTCOM_API int GetScriptData(Communicator& comm,int offset,unsigned char bytes,char* strData,int strDataLen,int macNo=255);
 
 #ifdef USE_SMARTCOMSTRING
-SMARTCOM_API int GetScriptData(int cardId, Communicator& comm,int offset,unsigned char bytes,SmartCom::string& strData,int macNo=255);
+SMARTCOM_API int GetScriptData(Communicator& comm,int offset,unsigned char bytes,SmartCom::string& strData,int macNo=255);
 #endif
 /************************************************************************/
 /* 功能：
@@ -377,7 +384,7 @@ macNO:机号，默认255
 -5:文件打开失败
                                                            */
 /************************************************************************/
-SMARTCOM_API int DownloadFile(int cardId, Communicator& comm,int flag,const char* fileName,int macNo=255);
+SMARTCOM_API int DownloadFile(Communicator& comm,int flag,const char* fileName,int macNo=255);
 
 /************************************************************************/
 /* 功能：
@@ -395,7 +402,7 @@ retCode="F1": 未选定卡或无卡或卡复位失败(卡已失效)，APDU响应超时（或无效的APDU命
 -3：机号范围错误
                                                   */
 /************************************************************************/
-SMARTCOM_API int CheckBatchResult(int cardId, Communicator& comm,SmartCom::string& retCode,int macNo=255);
+SMARTCOM_API int CheckBatchResult(Communicator& comm,SmartCom::string& retCode,int macNo=255);
 
 /************************************************************************/
 /* 功能：
@@ -412,6 +419,6 @@ macNO:机号，默认255
 -4：擦除失败
 
 /************************************************************************/
-SMARTCOM_API int ClearMem(int cardId, Communicator& comm,int macNo=255);
+SMARTCOM_API int ClearMem(Communicator& comm,int macNo=255);
 
 #endif
