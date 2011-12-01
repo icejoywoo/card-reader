@@ -134,6 +134,7 @@ UINT defaultClientHandler (LPVOID pParam)
 	ClientParam* clientParam = (ClientParam *) pParam;
 	char buff[512];
 	
+
 	sprintf(buff, "Hello."); // 测试数据, 仅发送Hello
 	int size = send(clientParam->client, buff, strlen(buff), 0);
 	SimpleLog::info(CString("发送数据: ") + buff);

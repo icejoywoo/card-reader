@@ -42,6 +42,7 @@ void ServerSetting::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(ServerSetting, CDialog)
 	//{{AFX_MSG_MAP(ServerSetting)
+	ON_WM_PAINT()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -64,8 +65,30 @@ void ServerSetting::OnOK()
 	ServerParam::instance->ip2 = getIpAdress(m_IP2);
 	ServerParam::instance->ip3 = getIpAdress(m_IP3);
 	ServerParam::instance->ip4 = getIpAdress(m_IP4);
-	ServerParam::instance->readerCount = m_ReaderCount;
 
+	if (m_ReaderCount >= 0 && m_ReaderCount <= 128)
+	{
+		ServerParam::instance->readerCount = m_ReaderCount;
+	} else {
+		AfxMessageBox("读卡器数目设置有误, 范围为1-128.");
+	}
+	
 	UpdateData(FALSE);
 	CDialog::OnOK();
+}
+
+void ServerSetting::OnPaint() 
+{
+	CPaintDC dc(this); // device context for painting
+	
+	// TODO: Add your message handler code here
+	UpdateData(TRUE);
+	m_IP1.SetWindowText(ServerParam::instance->ip1);
+	m_IP2.SetWindowText(ServerParam::instance->ip2);
+	m_IP3.SetWindowText(ServerParam::instance->ip3);
+	m_IP4.SetWindowText(ServerParam::instance->ip4);
+
+	m_ReaderCount = ServerParam::instance->readerCount;
+	UpdateData(FALSE);
+	// Do not call CDialog::OnPaint() for painting messages
 }
