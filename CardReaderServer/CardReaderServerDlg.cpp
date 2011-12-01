@@ -142,6 +142,7 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 	ServerParam::instance->ip2 = "192.168.1.139";
 	ServerParam::instance->ip3 = "192.168.1.140";
 	ServerParam::instance->ip4 = "192.168.1.141";
+	ServerParam::instance->readerCount = 32;
 
 	// 初始化设置窗口
 	settingDlg = new ServerSetting(this);
@@ -262,7 +263,7 @@ void CCardReaderServerDlg::OnButtonSetting()
 {
 	// TODO: Add your control notification handler code here
 	
-	settingDlg->ShowWindow(SW_SHOWNA);
+	settingDlg->ShowWindow(SW_SHOWNORMAL);
 }
 
 // TODO: 单击清空按钮

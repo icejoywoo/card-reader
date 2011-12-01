@@ -37,6 +37,9 @@
 #include "SmartCom.h"
 #pragma comment(lib, "SmartCom")
 
+#include <map>  // ÒýÈëmap
+using namespace std;
+
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
