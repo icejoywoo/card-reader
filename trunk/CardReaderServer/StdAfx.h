@@ -31,7 +31,7 @@
 #include "Server.h"
 #include "ServerUtils.h"
 
-#define DEFAULT_PORT (20248)
+#define DEFAULT_PORT (60000) // 服务器默认端口号
 
 // 导入SmartCom
 #include "SmartCom.h"

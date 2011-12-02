@@ -273,8 +273,9 @@ void CCardReaderServerDlg::OnButtonClear()
 	m_logWindow.SetWindowText(""); // 清空日志窗口
 }
 
+// 日志button响应
 void CCardReaderServerDlg::OnButtonLog() 
 {
 	// TODO: Add your control notification handler code here
-	WinExec(CString("notepad ") + SimpleLog::GetlogFileLocation(), SW_SHOWNORMAL);
+	WinExec(CString("notepad ") + SimpleLog::GetlogFileLocation(), SW_SHOWNORMAL); // 在记事本里打开日志文件
 }
