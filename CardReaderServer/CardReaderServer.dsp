@@ -125,6 +125,10 @@ SOURCE=.\SimpleLog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\SplitStr.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
 # End Source File
@@ -175,6 +179,10 @@ SOURCE=.\SmartCom.h
 # Begin Source File
 
 SOURCE=.\SmartComString.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\SplitStr.h
 # End Source File
 # Begin Source File
 

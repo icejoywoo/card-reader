@@ -64,7 +64,7 @@ int Server::restart()
 		SimpleLog::error("重启失败");
 		return result;
 	}
-	SimpleLog::info("服务器重启成功");
+	SimpleLog::info(CString("服务器重启成功, 端口: ") + i2str(Server::getInstance()->getPort()));
 	return 0;
 }
 
@@ -133,15 +133,29 @@ UINT defaultClientHandler (LPVOID pParam)
 {
 	ClientParam* clientParam = (ClientParam *) pParam;
 	char buff[512];
-	
+	SOCKET client = clientParam->client;
 
-	sprintf(buff, "Hello."); // 测试数据, 仅发送Hello
-	int size = send(clientParam->client, buff, strlen(buff), 0);
-	SimpleLog::info(CString("发送数据: ") + buff);
-	clientParam->server->log += formatLog(CString("发送数据: ") + buff);
-	Sleep(10000);
+// 	sprintf(buff, "Hello."); // 测试数据, 仅发送Hello
+// 	int size = send(clientParam->client, buff, strlen(buff), 0);
+// 	SimpleLog::info(CString("发送数据: ") + buff);
+// 	clientParam->server->log += formatLog(CString("发送数据: ") + buff);
+
+	// 接收读卡器的cardId
+	int size = recv(client, buff, 512, 0);
+	buff[size] = '\0';
+	int cardId = atoi(buff);
+
+	CString ip; // 读卡器对应的ip
+	int port; // 读卡器对应的端口号
+	Communicator communicator; // 与读卡器通信的通信其
+	
+	GetIpAndPort(ip, port, cardId, ServerParam::instance); 
+	GetOneUDPCommunicator()
+
+
+	//Sleep(10000);
 	shutdown(clientParam->client, SD_BOTH);
 	closesocket(clientParam->client);
-	
+
 	return 0;
 }
