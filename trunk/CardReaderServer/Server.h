@@ -94,11 +94,4 @@ UINT defaultClientHandler (LPVOID pParam );
 // 默认的服务器
 UINT defaultServerHandler (LPVOID pParam );
 
-// 客户端需要的变量
-typedef struct _clientParam 
-{
-	Server* server;
-	SOCKET client;
-} ClientParam;
-
 #endif

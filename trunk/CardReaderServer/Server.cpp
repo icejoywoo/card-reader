@@ -104,7 +104,6 @@ UINT defaultServerHandler(LPVOID pParam)
 	sockaddr_in from;
 	int fromlen = sizeof(from);
 	SimpleLog::info(CString("服务器启动成功, 端口: ") + i2str(serv->getPort()));
-	//serv->log += formatLog(CString("服务器启动成功, 端口: ") + i2str(serv->getPort()));
 	while (true)
 	{
 		client = accept(serv->server, (struct sockaddr*) &from, &fromlen);
@@ -113,11 +112,7 @@ UINT defaultServerHandler(LPVOID pParam)
 			break;
 		}
 		SimpleLog::info(CString("接收到一个客户端请求, 来自") + inet_ntoa(from.sin_addr));
-		//serv->log += formatLog(CString("接收到一个客户端请求, 来自") + inet_ntoa(from.sin_addr));
-		ClientParam clientParam;
-		clientParam.server = serv;
-		clientParam.client = client;
-		AfxBeginThread(serv->clientHandler, (LPVOID)&clientParam);
+		AfxBeginThread(serv->clientHandler, (LPVOID)client);
 	}
 	return 0;
 }
@@ -125,9 +120,8 @@ UINT defaultServerHandler(LPVOID pParam)
 // TODO: 修改handler, 读取读卡器的数据
 UINT defaultClientHandler (LPVOID pParam)
 {
-	ClientParam* clientParam = (ClientParam *) pParam;
-	char buff[512];
-	SOCKET client = clientParam->client;
+	SOCKET client = (SOCKET) pParam;
+	char buff[512]; // buffer
 
 // 	sprintf(buff, "Hello."); // 测试数据, 仅发送Hello
 // 	int size = send(clientParam->client, buff, strlen(buff), 0);
@@ -139,17 +133,14 @@ UINT defaultClientHandler (LPVOID pParam)
 	buff[size] = '\0';
 
 	SimpleLog::info(CString("接收数据: ") + buff);
-	//clientParam->server->log += formatLog(CString("接收数据: ") + buff);
 
 	CString operationName;
 	int resultCode;
 	if ((resultCode= parseCommand(client, buff, operationName)) == 0)
 	{
 		SimpleLog::info(operationName + CString("操作成功"));
-		//clientParam->server->log += formatLog(operationName + CString("操作成功"));
 	} else {
 		SimpleLog::info("[" + operationName + CString("]操作失败, 错误码: ") + i2str(resultCode));
-		//clientParam->server->log += formatLog("[" + operationName + CString("]操作失败, 错误码: ") + i2str(resultCode));
 	}
 	
 	// 将结果发送到客户端
@@ -163,8 +154,8 @@ UINT defaultClientHandler (LPVOID pParam)
 	}
 
 	//Sleep(10000);
-	shutdown(clientParam->client, SD_BOTH);
-	closesocket(clientParam->client);
+	shutdown(client, SD_BOTH);
+	closesocket(client);
 
 	return 0;
 }

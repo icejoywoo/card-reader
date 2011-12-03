@@ -8,15 +8,6 @@ ServerParam::ServerParam()
 	split.SetSequenceAsOne(TRUE);
 }
 
-void appendTextToEdit(CEdit &mEdit, CString text)
-{
-	int len = mEdit.GetWindowTextLength();
-	mEdit.SetSel(len, len);
-	CString m_sCurrentTime = CTime::GetCurrentTime().Format("[%Y-%m-%d %X]");
-	CString log = m_sCurrentTime + ": " + text;
-    mEdit.ReplaceSel(log);
-}
-
 CString i2str(int a)
 {
 	CString str;
@@ -40,13 +31,6 @@ UINT logHandler (LPVOID pParam)
 	}
 	
 	return 0;
-}
-
-CString formatLog(CString log)
-{
-	CString time;
-	CString m_sCurrentTime = CTime::GetCurrentTime().Format("[%Y-%m-%d %X]");
-	return m_sCurrentTime + ": " + log + "\r\n";
 }
 
 void GetIpAndPort(CString& ip, int& port, int id, ServerParam* param)
