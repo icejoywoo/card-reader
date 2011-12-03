@@ -71,7 +71,7 @@ CString getIpAdress(CIPAddressCtrl& ip)
 int parseCommand(SOCKET client, char* command, CString& operationName)
 {
 	ServerParam::instance->split.SetData(CString(command));
-	CStringArray requestParam; // cardId, operationName, params
+	CStringArray requestParam; // operationName, cardId, params
 	ServerParam::instance->split.GetSplitStrArray(requestParam);
 	operationName = requestParam[0]; // 操作名称
 	int cardId = atoi(requestParam[1]); // 读卡器号
@@ -89,23 +89,55 @@ int parseCommand(SOCKET client, char* command, CString& operationName)
 		return -101; // 与卡片读写器的通信初始化失败
 	}
 
-	if (operationName == CString("reset")) { // 复位操作, 操作ip对应的32个读卡器
-		return ResetDev(communicator);
-	} else if (operationName == CString("shutdown")) { // 卡片下电, 操作ip对应的32个读卡器
-		return ShutdownCard(communicator);
+	if (operationName == CString("reset")) { // 复位操作
+		return ResetDev(communicator, cardId);
+	} else if (operationName == CString("shutdown")) { // 卡片下电
+		return ShutdownCard(communicator, cardId);
 	} else if (operationName == CString("clearMemory")) { // 对SST25VF016B存储器进行整片擦除
 		return ClearMem(communicator);
-	} else if (operationName == CString("modifyBraudRate")) { // 修改比特率, 操作ip对应的32个读卡器
+	} else if (operationName == CString("modifyBraudRate")) { // 修改比特率
 		int braudRate = atoi(requestParam[2]);
-		return ModifyCardBraudRate(communicator, braudRate);
-	} else if (operationName == CString("getBraudRate")) { // 获得比特率, 操作ip对应的32个读卡器
+		return ModifyCardBraudRate(communicator, braudRate, cardId);
+	} else if (operationName == CString("getBraudRate")) { // 获得比特率
 		int braudRate;
-		int resultCode = GetCardBraudRate(communicator, braudRate);
-		char buff[512];
-		sprintf(buff, i2str(braudRate));
-		int size = send(client, buff, strlen(buff), 0);
+		int resultCode = GetCardBraudRate(communicator, braudRate, cardId);
+		sendData(client, braudRate);
 		return resultCode;
 	}
 
+	if (CloseUDPComm() == -1)
+	{
+		AfxMessageBox("关闭udp通信失败");
+		SimpleLog::error("关闭udp通信失败");
+		return -102; // 关闭udp通信失败
+	}
+
 	return -100; // 命令找不到
+}
+
+int sendData(SOCKET s, char* data)
+{
+	char buff[512];
+	sprintf(buff, data);
+	int size = send(s, buff, strlen(buff), 0);
+	if (-1 == size) {
+		SimpleLog::info(CString("发送数据错误, 数据: ") + buff);
+	} else {
+		SimpleLog::info(CString("发送数据, 长度: ") + i2str(size) + ", 数据: " + buff);
+	}
+	
+	return size;
+}
+
+int sendData(SOCKET s, int data)
+{
+	char buff[512];
+	sprintf(buff, i2str(data));
+	int size = send(s, buff, strlen(buff), 0);
+	if (-1 == size) {
+		SimpleLog::info(CString("发送数据错误, 数据: ") + buff);
+	} else {
+		SimpleLog::info(CString("发送数据, 长度: ") + i2str(size) + ", 数据: " + buff);
+	}
+	return size;
 }

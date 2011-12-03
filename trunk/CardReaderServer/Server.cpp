@@ -17,7 +17,8 @@ Server::Server()
 	this->port = DEFAULT_PORT;
 	this->log = "";
 
-	this->clientHandler = defaultClientHandler;
+	//this->clientHandler = defaultClientHandler;
+	this->clientHandler = helloClientHandler;
 	this->serverHandler = defaultServerHandler;
 }
 
@@ -83,6 +84,7 @@ UINT defaultServerHandler(LPVOID pParam)
 	
 	if ((serv->server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
 	{
+		SimpleLog::error("服务器创建Socket失败");
 		return -1;
 	}
 	sockaddr_in local;
@@ -92,11 +94,13 @@ UINT defaultServerHandler(LPVOID pParam)
 	
 	if (bind(serv->server, (sockaddr*)&local, sizeof(local)) != 0)
 	{
+		SimpleLog::error("服务器绑定端口失败");
 		return -2;
 	}
 	
 	if (listen(serv->server, 64) != 0)
 	{
+		SimpleLog::error("服务器监听端口失败");
 		return -3;
 	}
 	
@@ -144,18 +148,30 @@ UINT defaultClientHandler (LPVOID pParam)
 	}
 	
 	// 将结果发送到客户端
-	sprintf(buff, i2str(resultCode));
-	if ((size = send(client, buff, strlen(buff), 0)) == -1)
-	{
-		AfxMessageBox("数据发送失败");
-		SimpleLog::error(CString("数据发送失败"));
-	} else {
-		SimpleLog::info(CString("发送数据, 长度: ") + i2str(size) + ", 数据: " + buff);
-	}
+	sendData(client, resultCode);
 
 	//Sleep(10000);
 	shutdown(client, SD_BOTH);
 	closesocket(client);
 
+	return 0;
+}
+
+//
+UINT helloClientHandler (LPVOID pParam)
+{
+	SOCKET client = (SOCKET) pParam;
+	char buff[512]; // buffer
+	
+ 	sprintf(buff, "Hello."); // 测试数据, 仅发送Hello
+// 	int size = send(client, buff, strlen(buff), 0);
+// 	SimpleLog::info(CString("发送数据: ") + buff);
+
+	sendData(client, buff);
+	
+	//Sleep(10000);
+	shutdown(client, SD_BOTH);
+	closesocket(client);
+	
 	return 0;
 }
