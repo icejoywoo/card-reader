@@ -5,15 +5,6 @@
 #include "SplitStr.h"
 
 /**
- * @brief 向CEdit中末尾添加记录
- * @param
- *	mEdit 要操作的CEdit
- *	text 需要添加的记录
- * @return None
- */
-void appendTextToEdit(CEdit &mEdit, CString text);
-
-/**
  * @brief 将int转换为CString
  * @param 
  * in a 需要转换的整型
@@ -25,14 +16,6 @@ CString i2str(int a);
  * @brief 记录日志的线程
  */
 UINT logHandler(LPVOID pParam);
-
-/**
- * @brief 在日志前加时间
- * @param 
- *	in log 需要格式化的日志
- * @return 返回添加了日期后的日志
- */
-CString formatLog(CString log);
 
 /**
  * @brief 用于存放服务器参数

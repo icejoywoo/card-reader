@@ -215,9 +215,6 @@ void CCardReaderServerDlg::OnButtonStart()
 		if (Server::getInstance()->start() != 0)
 		{
 			AfxMessageBox("开启失败");
-			//appendTextToEdit(m_logWindow, CString("服务器开启失败\n"));
-		} else {
-			//appendTextToEdit(m_logWindow, CString("服务器已开启, 端口") + i2str(Server::getInstance()->getPort()) + "\n");
 		}
 		m_start = TRUE;
 	} else {
@@ -235,9 +232,6 @@ void CCardReaderServerDlg::OnButtonStop()
 		if (Server::getInstance()->stop() != 0)
 		{
 			AfxMessageBox("关闭失败");
-			//appendTextToEdit(m_logWindow, CString("服务器关闭失败\n"));
-		} else {
-			//appendTextToEdit(m_logWindow, CString("服务器已关闭\n"));
 		}
 		m_start = FALSE;
 	} else {
@@ -254,9 +248,6 @@ void CCardReaderServerDlg::OnButtonRestart()
 		if (Server::getInstance()->restart() != 0)
 		{
 			AfxMessageBox("重启失败");
-			//appendTextToEdit(m_logWindow, CString("服务器重启失败\n"));
-		} else {
-			//appendTextToEdit(m_logWindow, CString("服务器已重启, 端口") + i2str(Server::getInstance()->getPort()) + "\n");
 		}
 	} else {
 		AfxMessageBox("服务器未开启");
