@@ -200,6 +200,10 @@ SOURCE=.\res\CardReaderServer.ico
 
 SOURCE=.\res\CardReaderServer.rc2
 # End Source File
+# Begin Source File
+
+SOURCE=.\res\network.ico
+# End Source File
 # End Group
 # Begin Source File
 
