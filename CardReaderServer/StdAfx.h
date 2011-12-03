@@ -27,7 +27,7 @@
 #include <winbase.h>
 
 #pragma comment(lib, "WS2_32")
-#include "Reader.h"
+//#include "Reader.h"
 #include "Server.h"
 #include "ServerUtils.h"
 
@@ -39,6 +39,8 @@
 
 #include <map>  // 引入map
 using namespace std;
+
+#include "SplitStr.h" // 分割字符串的类
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

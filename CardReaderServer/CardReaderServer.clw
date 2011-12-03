@@ -12,12 +12,13 @@ Class1=CCardReaderServerApp
 Class2=CCardReaderServerDlg
 Class3=CAboutDlg
 
-ResourceCount=4
+ResourceCount=5
 Resource1=IDD_ABOUTBOX
 Resource2=IDR_MAINFRAME
-Resource3=IDD_CARDREADERSERVER_DIALOG
+Resource3=IDD_SERVERSETTING_DIALOG
 Class4=ServerSetting
-Resource4=IDD_SERVERSETTING_DIALOG
+Resource4=IDD_CARDREADERSERVER_DIALOG
+Resource5=IDD_DIALOG1
 
 [CLS:CCardReaderServerApp]
 Type=0
@@ -91,4 +92,11 @@ BaseClass=CDialog
 Filter=D
 LastObject=ServerSetting
 VirtualFilter=dWC
+
+[DLG:IDD_DIALOG1]
+Type=1
+Class=?
+ControlCount=2
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
 

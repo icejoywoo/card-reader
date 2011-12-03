@@ -9,12 +9,6 @@
 #include "StdAfx.h"
 #include "CardReaderServerDlg.h"
 
-typedef struct _clientParam 
-{
-	Server* server;
-	SOCKET client;
-} ClientParam;
-
 Server* Server::instance = new Server();
 
 Server::Server()
@@ -64,7 +58,7 @@ int Server::restart()
 		SimpleLog::error("重启失败");
 		return result;
 	}
-	SimpleLog::info(CString("服务器重启成功, 端口: ") + i2str(Server::getInstance()->getPort()));
+	//SimpleLog::info(CString("服务器重启成功, 端口: ") + i2str(Server::getInstance()->getPort()));
 	return 0;
 }
 
@@ -110,7 +104,7 @@ UINT defaultServerHandler(LPVOID pParam)
 	sockaddr_in from;
 	int fromlen = sizeof(from);
 	SimpleLog::info(CString("服务器启动成功, 端口: ") + i2str(serv->getPort()));
-	serv->log += formatLog(CString("服务器启动成功, 端口: ") + i2str(serv->getPort()));
+	//serv->log += formatLog(CString("服务器启动成功, 端口: ") + i2str(serv->getPort()));
 	while (true)
 	{
 		client = accept(serv->server, (struct sockaddr*) &from, &fromlen);
@@ -119,7 +113,7 @@ UINT defaultServerHandler(LPVOID pParam)
 			break;
 		}
 		SimpleLog::info(CString("接收到一个客户端请求, 来自") + inet_ntoa(from.sin_addr));
-		serv->log += formatLog(CString("接收到一个客户端请求, 来自") + inet_ntoa(from.sin_addr));
+		//serv->log += formatLog(CString("接收到一个客户端请求, 来自") + inet_ntoa(from.sin_addr));
 		ClientParam clientParam;
 		clientParam.server = serv;
 		clientParam.client = client;
@@ -143,15 +137,30 @@ UINT defaultClientHandler (LPVOID pParam)
 	// 接收读卡器的cardId
 	int size = recv(client, buff, 512, 0);
 	buff[size] = '\0';
-	int cardId = atoi(buff);
 
-	CString ip; // 读卡器对应的ip
-	int port; // 读卡器对应的端口号
-	Communicator communicator; // 与读卡器通信的通信其
+	SimpleLog::info(CString("接收数据: ") + buff);
+	//clientParam->server->log += formatLog(CString("接收数据: ") + buff);
+
+	CString operationName;
+	int resultCode;
+	if ((resultCode= parseCommand(client, buff, operationName)) == 0)
+	{
+		SimpleLog::info(operationName + CString("操作成功"));
+		//clientParam->server->log += formatLog(operationName + CString("操作成功"));
+	} else {
+		SimpleLog::info("[" + operationName + CString("]操作失败, 错误码: ") + i2str(resultCode));
+		//clientParam->server->log += formatLog("[" + operationName + CString("]操作失败, 错误码: ") + i2str(resultCode));
+	}
 	
-	GetIpAndPort(ip, port, cardId, ServerParam::instance); 
-	GetOneUDPCommunicator()
-
+	// 将结果发送到客户端
+	sprintf(buff, i2str(resultCode));
+	if ((size = send(client, buff, strlen(buff), 0)) == -1)
+	{
+		AfxMessageBox("数据发送失败");
+		SimpleLog::error(CString("数据发送失败"));
+	} else {
+		SimpleLog::info(CString("发送数据, 长度: ") + i2str(size) + ", 数据: " + buff);
+	}
 
 	//Sleep(10000);
 	shutdown(clientParam->client, SD_BOTH);

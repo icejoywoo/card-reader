@@ -67,6 +67,7 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON    DISCARDABLE     "res\\CardReaderServer.ico"
+IDI_ICON_SERVER         ICON    DISCARDABLE     "res\\network.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -130,6 +131,15 @@ BEGIN
     LTEXT           "33-64机号IP",IDC_STATIC,188,99,44,8
     LTEXT           "65-96机号IP",IDC_STATIC,31,129,44,8
     LTEXT           "97-128机号IP",IDC_STATIC,185,131,48,8
+END
+
+IDD_DIALOG1 DIALOG DISCARDABLE  0, 0, 187, 96
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "6"
+FONT 10, "System"
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,130,7,50,14
+    PUSHBUTTON      "取消",IDCANCEL,130,24,50,14
 END
 
 
@@ -206,6 +216,14 @@ BEGIN
         RIGHTMARGIN, 352
         TOPMARGIN, 6
         BOTTOMMARGIN, 201
+    END
+
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 89
     END
 END
 #endif    // APSTUDIO_INVOKED

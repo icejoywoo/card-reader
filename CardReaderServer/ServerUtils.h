@@ -2,6 +2,7 @@
 #define _SERVER_UTILS_H_
 
 #include "StdAfx.h"
+#include "SplitStr.h"
 
 /**
  * @brief 向CEdit中末尾添加记录
@@ -39,7 +40,8 @@ CString formatLog(CString log);
 class ServerParam
 {
 private:
-	ServerParam() {}
+	ServerParam();
+	virtual ~ServerParam() {delete instance;}
 public:
 // 	CString ip1 = "192.168.1.138";
 // 	CString ip2 = "192.168.1.139";
@@ -49,6 +51,7 @@ public:
 	int readerCount; /// 读卡器的数量
 	int serverPort; /// 服务器的端口
 	HWND mainFrame; // 保存窗口
+	CSplitStr split;
 	static ServerParam* instance;
 };
 
@@ -71,5 +74,24 @@ void GetIpAndPort(CString& ip, int& port, int id, ServerParam* param);
  * @return ip点分字符串
  */
 CString getIpAdress(CIPAddressCtrl& ip);
+
+/**
+ * @brief 解析网络命令, 对读卡器进行相应的操作
+ * @param 
+ *	in command 命令
+ *	out operationName 操作名称, 下面是对照表
+ *		操作名称			对应操作			SmartCom函数
+ *		reset				复位操作			ResetDev
+ *		shutdown			卡片下电			ShutDownCard
+ *		clearMemory			擦除存储器			ClearMem
+ *		modifyBraudRate		修改波特率			ModifyCardBraudRate
+ 
+ *		shutdown			卡片下电			ShutDownCard
+ *		shutdown			卡片下电			ShutDownCard
+ *		shutdown			卡片下电			ShutDownCard
+ *		shutdown			卡片下电			ShutDownCard
+ * @return 成功为0, 失败为其他, 具体参考SmartCom和operationName
+ */
+int parseCommand(SOCKET client, char* command, CString& operationName);
 
 #endif
