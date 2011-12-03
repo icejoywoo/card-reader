@@ -77,4 +77,22 @@ CString getIpAdress(CIPAddressCtrl& ip);
  */
 int parseCommand(SOCKET client, char* command, CString& operationName);
 
+/**
+ * @brief 通过socket发送数据
+ * @param 
+ *	in s 需要发送数据的socket
+ *	in data 需要发送的数据
+ * @return 发送的字符数
+ */
+int sendData(SOCKET s, int data);
+
+/**
+ * @brief 通过socket发送数据
+ * @param 
+ *	in s 需要发送数据的socket
+ *	in data 需要发送的数据
+ * @return 发送的字符数
+ */
+int sendData(SOCKET s, char* data);
+
 #endif

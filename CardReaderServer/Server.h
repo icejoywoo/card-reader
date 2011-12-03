@@ -93,5 +93,7 @@ public:
 UINT defaultClientHandler (LPVOID pParam );
 // 默认的服务器
 UINT defaultServerHandler (LPVOID pParam );
+// 测试的请求处理器, 返回Hello
+UINT helloClientHandler (LPVOID pParam);
 
 #endif
