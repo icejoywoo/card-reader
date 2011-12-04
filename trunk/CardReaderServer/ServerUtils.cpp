@@ -162,10 +162,10 @@ int parseCommand(SOCKET client, char* command, CString& operationName)
 		int resultCode = IsCardReady(communicator, cardA, cardB, cardId);
 		sendData(client, SmartCom::string(i2str(cardA)) + "," + i2str(cardB));
 		return resultCode;
-	} else if (operationName == CString("resetDev")) { // 卡片复位应答
+	} else if (operationName == CString("resetCard")) { // 卡片复位应答
 		SmartCom::string retCode; // out 复位命令的返回值, "F9"：卡座无卡, "FD"：不可识别卡
 		int card = atoi(requestParam[2]); // 1 A卡, 2 B卡
-		int resultCode = ResetDev(communicator, retCode, card, cardId);
+		int resultCode = ResetCard(communicator, retCode, card, cardId);
 		sendData(client, retCode);
 		return resultCode;
 	}

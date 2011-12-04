@@ -17,8 +17,8 @@ Server::Server()
 	this->port = DEFAULT_PORT;
 	this->log = "";
 
-	//this->clientHandler = defaultClientHandler;
-	this->clientHandler = helloClientHandler;
+	this->clientHandler = defaultClientHandler;
+	//this->clientHandler = helloClientHandler;
 	this->serverHandler = defaultServerHandler;
 }
 
@@ -142,7 +142,7 @@ UINT defaultClientHandler (LPVOID pParam)
 	int resultCode;
 	if ((resultCode= parseCommand(client, buff, operationName)) == 0)
 	{
-		SimpleLog::info(operationName + CString("操作成功"));
+		SimpleLog::info("[" + operationName + CString("]操作成功"));
 	} else {
 		SimpleLog::info("[" + operationName + CString("]操作失败, 错误码: ") + i2str(resultCode));
 	}
