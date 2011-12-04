@@ -1,6 +1,8 @@
 #include "stdafx.h"
 
 #define SMARTCOMSTRING_EXPORTS_MACRO
+#define CARDREADERCLIENTDLL_EXPORTS
+
 #include "SmartComString.h"
 
 #define  INCREMENT (31)
