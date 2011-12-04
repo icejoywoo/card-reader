@@ -17,7 +17,7 @@
 #include <windows.h>
 
 // TODO: reference additional headers your program requires here
-
+#include "SmartComString.h"
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

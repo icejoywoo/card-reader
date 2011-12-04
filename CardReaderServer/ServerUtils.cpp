@@ -82,6 +82,7 @@ int parseCommand(SOCKET client, char* command, CString& operationName)
 	
 	GetIpAndPort(ip, port, cardId, ServerParam::instance); 
 	GetOneUDPCommunicator(communicator, ip, port); // 获得通信器
+	//GetOneCOMCommunicator(communicator, comPort); // 获取
 
 	if (InitUDPComm() == -1) {
 		AfxMessageBox("与卡片读写器的通信初始化失败");
