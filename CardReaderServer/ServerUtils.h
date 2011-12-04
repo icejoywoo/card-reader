@@ -80,7 +80,7 @@ CString getIpAdress(CIPAddressCtrl& ip);
  *		getAppVerAndDevType	读取程序版本和终端类型		GetAppVerAndDevType
  *		getChipID			获取读卡接口芯片ID号		GetChipID
  *		isCardReady			检测A卡和B卡座是否有卡		IsCardReady
- *		resetDev			卡片复位应答		ResetDev
+ *		resetCard			卡片复位应答		ResetCard
  * @return 
  *	成功为0
  *	部分错误码:
