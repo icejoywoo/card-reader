@@ -4,7 +4,8 @@
 #include "stdafx.h"
 #include "CardReaderServer.h"
 #include "CardReaderServerDlg.h"
-#include "ServerSetting.h"
+#include "ServerSettingDlg.h"
+#include "ServerUtils.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -127,11 +128,11 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 	
 
 	// 为树添加图标
-// 	CImageList cImageList;
-// 	cImageList.Create(16, 16,  ILC_COLOR32| ILC_MASK, 1, 2);
-// 	HICON hIcon= ::AfxGetApp()->LoadIcon(IDI_ICON_SERVER);
-// 	cImageList.Add(hIcon);
-// 	m_Tree.SetImageList(&cImageList, TVSIL_NORMAL);
+	CImageList cImageList;
+	cImageList.Create(8, 8,  ILC_COLOR32| ILC_MASK, 1, 2);
+	HICON hIcon= ::AfxGetApp()->LoadIcon(IDI_ICON_SERVER);
+	cImageList.Add(hIcon);
+	m_Tree.SetImageList(&cImageList, TVSIL_NORMAL);
 	HTREEITEM root = m_Tree.InsertItem(_T("server"));
 	m_start = FALSE;
 	
@@ -151,7 +152,7 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 	ServerParam::instance->readerCount = 32;
 
 	// 初始化设置窗口
-	settingDlg = new ServerSetting(this);
+	settingDlg = new ServerSettingDlg(this);
 	settingDlg->Create(IDD_SERVERSETTING_DIALOG);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control

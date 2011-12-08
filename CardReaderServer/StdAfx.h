@@ -27,9 +27,7 @@
 #include <winbase.h>
 
 #pragma comment(lib, "WS2_32")
-//#include "Reader.h"
 #include "Server.h"
-#include "ServerUtils.h"
 
 #define DEFAULT_PORT (60000) // 服务器默认端口号
 
@@ -41,6 +39,8 @@
 using namespace std;
 
 #include "SplitStr.h" // 分割字符串的类
+
+#include "CustomErrorCode.h"
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

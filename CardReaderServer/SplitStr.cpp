@@ -12,9 +12,9 @@
 //构造函数
 CSplitStr::CSplitStr()
 {
-SetData("");
-SetSequenceAsOne(TRUE);
-SetSplitFlag(",");
+	SetData("");
+	SetSequenceAsOne(TRUE);
+	SetSplitFlag(",");
 }
 
 CSplitStr::~CSplitStr()
@@ -24,9 +24,9 @@ CSplitStr::~CSplitStr()
 //设置文本函数
 void CSplitStr::SetData(CString sData)
 {
-m_sData = sData;
-m_sData.TrimLeft();
-m_sData.TrimRight();
+	m_sData = sData;
+	m_sData.TrimLeft();
+	m_sData.TrimRight();
 }
 
 CString CSplitStr::GetData()

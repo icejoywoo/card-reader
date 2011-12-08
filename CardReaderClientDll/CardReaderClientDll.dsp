@@ -68,8 +68,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CARDREADERCLIENTDLL_EXPORTS" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CARDREADERCLIENTDLL_EXPORTS" /D "SMARTCOMSTRING_EXPORTS_MACRO" /FD /GZ /c
-# SUBTRACT CPP /YX /Yc /Yu
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CARDREADERCLIENTDLL_EXPORTS" /D "SMARTCOMSTRING_EXPORTS_MACRO" /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x804 /d "_DEBUG"
@@ -96,6 +95,14 @@ SOURCE=.\CardReaderClientDll.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ClientParam.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ClientUtils.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\SmartComString.cpp
 # End Source File
 # Begin Source File
@@ -110,6 +117,18 @@ SOURCE=.\StdAfx.cpp
 # Begin Source File
 
 SOURCE=.\CardReaderClientDll.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ClientParam.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ClientUtils.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CustomErrorCode.h
 # End Source File
 # Begin Source File
 

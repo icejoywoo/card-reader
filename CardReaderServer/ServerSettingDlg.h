@@ -4,17 +4,17 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-// ServerSetting.h : header file
-//
+// ServerSettingDlg.h : header file
+// 服务器设置对话框
 
 /////////////////////////////////////////////////////////////////////////////
 // ServerSetting dialog
 
-class ServerSetting : public CDialog
+class ServerSettingDlg : public CDialog
 {
 // Construction
 public:
-	ServerSetting(CWnd* pParent = NULL);   // standard constructor
+	ServerSettingDlg(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(ServerSetting)

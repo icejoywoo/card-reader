@@ -3,7 +3,7 @@
 // Creator: icejoywoo
 // Date: 2011.11.28
 // Comment: 一个简单的日志类的实现, 三等级日志: info, warn, error
-//			默认保存路径: 程序目录下的log, 文件名以日期为名字
+//			默认保存路径: 程序目录下的log, 文件名以日期为名字, 是日志第一次写入的日期
 //////////////////////////////////////////////////////////////////////////
 #include "SimpleLog.h"
 #include <windows.h>
@@ -91,17 +91,17 @@ BOOL SimpleLog::WriteLog(CString LogText)
 
 BOOL SimpleLog::warn(CString logText)
 {
-	return WriteLog(" warn: " + logText);
+	return WriteLog(" 警告: " + logText);
 }
 
 BOOL SimpleLog::info(CString logText)
 {
-	return WriteLog(" info: " + logText);
+	return WriteLog(" 信息: " + logText);
 }
 
 BOOL SimpleLog::error(CString logText)
 {
-	return WriteLog(" error: " + logText);
+	return WriteLog(" 错误: " + logText);
 }
 
 const HANDLE SimpleLog::mutex = CreateMutex(NULL, FALSE, NULL);

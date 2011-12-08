@@ -8,6 +8,7 @@
 //////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "CardReaderServerDlg.h"
+#include "ServerUtils.h"
 
 Server* Server::instance = new Server();
 
@@ -16,10 +17,13 @@ Server::Server()
 	WSAStartup(MAKEWORD(2,2), &this->wsaData); // init winsock
 	this->port = DEFAULT_PORT;
 	this->log = "";
+	this->cardCount = 0;
 
 	this->clientHandler = defaultClientHandler;
 	//this->clientHandler = helloClientHandler;
 	this->serverHandler = defaultServerHandler;
+	this->waitListHandler = defaultWaitListHandler;
+	InitializeCriticalSection(&(this->g_cs));
 }
 
 Server::~Server()
@@ -71,107 +75,16 @@ int Server::setPort(int &port)
 	//WSAStartup(MAKEWORD(2,2), &this->wsaData);
 	return 0;
 }
+
+void Server::addToWaitList(int cardId, SOCKET s)
+{
+	this->waitList[cardId].push_back(s);
+}
+
+SOCKET Server::getSocketByCardId(int cardId)
+{
+	SOCKET result = this->waitList[cardId].at(0);
+	this->waitList[cardId].erase(this->waitList[cardId].begin());
+	return result;
+}
 /// Server定义结束
-
-//////////////////////////////////////////////////////////////////////////
-/// 默认的handlers定义 
-//////////////////////////////////////////////////////////////////////////
-
-// TODO: 修改handler
-UINT defaultServerHandler(LPVOID pParam)
-{
-	Server* serv = (Server*) pParam;
-	
-	if ((serv->server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
-	{
-		SimpleLog::error("服务器创建Socket失败");
-		return -1;
-	}
-	sockaddr_in local;
-	local.sin_family = AF_INET;
-	local.sin_addr.s_addr = INADDR_ANY;
-	local.sin_port = htons(serv->getPort());
-	
-	if (bind(serv->server, (sockaddr*)&local, sizeof(local)) != 0)
-	{
-		SimpleLog::error("服务器绑定端口失败");
-		return -2;
-	}
-	
-	if (listen(serv->server, 64) != 0)
-	{
-		SimpleLog::error("服务器监听端口失败");
-		return -3;
-	}
-	
-	SOCKET client;
-	sockaddr_in from;
-	int fromlen = sizeof(from);
-	SimpleLog::info(CString("服务器启动成功, 端口: ") + i2str(serv->getPort()));
-	while (true)
-	{
-		client = accept(serv->server, (struct sockaddr*) &from, &fromlen);
-		if (client == INVALID_SOCKET)
-		{
-			break;
-		}
-		SimpleLog::info(CString("接收到一个客户端请求, 来自") + inet_ntoa(from.sin_addr));
-		AfxBeginThread(serv->clientHandler, (LPVOID)client);
-	}
-	return 0;
-}
-
-// TODO: 修改handler, 读取读卡器的数据
-UINT defaultClientHandler (LPVOID pParam)
-{
-	SOCKET client = (SOCKET) pParam;
-	char buff[512]; // buffer
-
-// 	sprintf(buff, "Hello."); // 测试数据, 仅发送Hello
-// 	int size = send(clientParam->client, buff, strlen(buff), 0);
-// 	SimpleLog::info(CString("发送数据: ") + buff);
-// 	clientParam->server->log += formatLog(CString("发送数据: ") + buff);
-
-	// 接收读卡器的cardId
-	int size = recv(client, buff, 512, 0);
-	buff[size] = '\0';
-
-	SimpleLog::info(CString("接收数据: ") + buff);
-
-	CString operationName;
-	int resultCode;
-	if ((resultCode= parseCommand(client, buff, operationName)) == 0)
-	{
-		SimpleLog::info("[" + operationName + CString("]操作成功"));
-	} else {
-		SimpleLog::info("[" + operationName + CString("]操作失败, 错误码: ") + i2str(resultCode));
-	}
-	
-	// 将结果发送到客户端
-	sendData(client, resultCode);
-
-	//Sleep(10000);
-	shutdown(client, SD_BOTH);
-	closesocket(client);
-
-	return 0;
-}
-
-//
-UINT helloClientHandler (LPVOID pParam)
-{
-	SOCKET client = (SOCKET) pParam;
-	char buff[512]; // buffer
-	
- 	sprintf(buff, "Hello."); // 测试数据, 仅发送Hello
-// 	int size = send(client, buff, strlen(buff), 0);
-// 	SimpleLog::info(CString("发送数据: ") + buff);
-
-	sendData(client, buff);
-	
-	//Sleep(10000);
-	shutdown(client, SD_BOTH);
-	closesocket(client);
-	
-	return 0;
-}
