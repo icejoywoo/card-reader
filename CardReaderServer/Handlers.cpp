@@ -62,11 +62,11 @@ UINT defaultServerHandler(LPVOID pParam)
 	}
 	
 	// 对读卡器的访问控制, 在服务器启动的时候进行初始化设置
-	if (serv->cardCount != ServerParam::instance->readerCount) // 当读卡器数量发生变化时
+	if (serv->readerCount != ServerParam::instance->readerCount) // 当读卡器数量发生变化时
 	{
-		serv->cardCount = ServerParam::instance->readerCount;
-		serv->cardUsage.resize(serv->cardCount);
-		for (vector<int>::iterator iter = serv->cardUsage.begin(); iter != serv->cardUsage.end(); ++iter)
+		serv->readerCount = ServerParam::instance->readerCount;
+		serv->readerUsage.resize(serv->readerCount);
+		for (vector<int>::iterator iter = serv->readerUsage.begin(); iter != serv->readerUsage.end(); ++iter)
 		{
 			*iter = 0; // 初始化控制列表
 		}
@@ -94,7 +94,7 @@ UINT defaultServerHandler(LPVOID pParam)
 		buff[size] = '\0';
 		
 		int cardId = atoi(buff); // 读卡器号
-		if (cardId > 0 && cardId <= serv->cardCount) // 判断cardId是否合法
+		if (cardId > 0 && cardId <= serv->readerCount) // 判断cardId是否合法
 		{
 			SimpleLog::info(CString("接收读卡器号: ") + i2str(cardId));
 			serv->addToWaitList(cardId, client); // 添加到等待处理队列
@@ -116,12 +116,12 @@ UINT defaultWaitListHandler (LPVOID pParam )
 	{
 		// 进入临界区, 寻找是否有读卡器处在等待状态
 		EnterCriticalSection(&(Server::getInstance()->g_cs));
-		for (int i = 0; i < Server::getInstance()->cardUsage.size(); ++i) // 寻找未使用的读卡器
+		for (int i = 0; i < Server::getInstance()->readerUsage.size(); ++i) // 寻找未使用的读卡器
 		{
-			if (0 == Server::getInstance()->cardUsage[i] && !Server::getInstance()->waitList[i].empty())
+			if (0 == Server::getInstance()->readerUsage[i] && !Server::getInstance()->waitList[i].empty())
 			{
 				AfxBeginThread(Server::getInstance()->clientHandler, (LPVOID)i);
-				Server::getInstance()->cardUsage[i] = 1; // 标记读卡器为正在使用
+				Server::getInstance()->readerUsage[i] = 1; // 标记读卡器为正在使用
 			}
 		}
 		LeaveCriticalSection(&(Server::getInstance()->g_cs));
@@ -163,7 +163,7 @@ UINT defaultClientHandler (LPVOID pParam)
 
 	// 将读卡器设置为可用
 	EnterCriticalSection(&(Server::getInstance()->g_cs));
-	Server::getInstance()->cardUsage[cardId] = 0;  // 操作完成后, 设置为空闲状态
+	Server::getInstance()->readerUsage[cardId] = 0;  // 操作完成后, 设置为空闲状态
 	LeaveCriticalSection(&(Server::getInstance()->g_cs));
 
 	return 0;

@@ -60,7 +60,7 @@ CARDREADERCLIENTDLL_API int GetReader(Reader reader, long socketTimeout, long cu
 	struct sockaddr_in server;
 	struct hostent *hp;
 	unsigned int addr;
-	
+	// 设置server地址
 	if(inet_addr(ClientParam::instance->serverIp)==INADDR_NONE)
 	{
 		hp=gethostbyname(ClientParam::instance->serverIp);
@@ -74,18 +74,27 @@ CARDREADERCLIENTDLL_API int GetReader(Reader reader, long socketTimeout, long cu
 	server.sin_family=AF_INET;
 	server.sin_port=htons(ClientParam::instance->serverPort);
 	reader.s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+	// 设置socket延时
+	if(::setsockopt(reader.s, SOL_SOCKET, SO_SNDTIMEO, (char *)&socketTimeout,sizeof(socketTimeout))==SOCKET_ERROR){
+		return 0;
+	}
+
 	if (connect(reader.s, (struct sockaddr*)&server, sizeof(server)))
 	{
 		return CONNECT_FAILED;
 	}
-	// TODO: timeout的实现
+
+	// 将客户定制延时发送到服务器
+	sendData(reader.s, customTimeout);
 	return 0;
 }
 
 CARDREADERCLIENTDLL_API int ReleaseReader(Reader reader)
 {
 	ClientUtils::sendData(reader.s, "quit"); // 发出退出消息
-	closesocket(reader.s);
+	// 关闭资源
+	closesocket(reader.s); 
 	reader.readerId = 0;
 	return 0;
 }

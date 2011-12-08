@@ -102,9 +102,9 @@ public:
 	// 全局临界区 读卡器的访问控制
 	CRITICAL_SECTION g_cs;
 	// 保存目前读卡器使用情况, 1表示在使用, 0表示未使用
-	vector<int> cardUsage;
+	vector<int> readerUsage;
 	// 读卡器数量
-	int cardCount;
+	int readerCount;
 	// 等待队列
 	map< int, vector<SOCKET> > waitList;
 
