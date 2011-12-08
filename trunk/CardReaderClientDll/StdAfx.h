@@ -16,8 +16,14 @@
 
 #include <windows.h>
 
+#include <WINSOCK2.H> // win socket
+#include <conio.h> // 
+#include <winbase.h>
+
+#pragma comment(lib, "WS2_32")
 // TODO: reference additional headers your program requires here
 #include "SmartComString.h"
+#include "CustomErrorCode.h"
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

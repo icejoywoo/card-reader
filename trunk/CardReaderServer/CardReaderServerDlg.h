@@ -8,7 +8,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "ServerSetting.h"
+#include "ServerSettingDlg.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CCardReaderServerDlg dialog
@@ -35,7 +35,7 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
-	ServerSetting* settingDlg; // 设置对话框
+	ServerSettingDlg* settingDlg; // 设置对话框
 	BOOL m_start; // 服务器状态, 是否开启, 开启为true, 关闭为false
 
 	// Generated message map functions

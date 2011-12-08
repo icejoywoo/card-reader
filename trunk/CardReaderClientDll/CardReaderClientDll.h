@@ -1,16 +1,18 @@
+//////////////////////////////////////////////////////////////////////////
+// FileName:	CardReaderClientDll.h
+// Creator:		icejoywoo
+// Date:		2011.12.03
+// $Revision$
+// Comment: 客户端操作读卡器的接口定义
+//////////////////////////////////////////////////////////////////////////
 
-// The following ifdef block is the standard way of creating macros which make exporting 
-// from a DLL simpler. All files within this DLL are compiled with the CARDREADERCLIENTDLL_EXPORTS
-// symbol defined on the command line. this symbol should not be defined on any project
-// that uses this DLL. This way any other project whose source files include this file see 
-// CARDREADERCLIENTDLL_API functions as being imported from a DLL, wheras this DLL sees symbols
-// defined with this macro as being exported.
 #ifdef CARDREADERCLIENTDLL_EXPORTS
 #define CARDREADERCLIENTDLL_API __declspec(dllexport)
 #else
 #define CARDREADERCLIENTDLL_API __declspec(dllimport)
 #endif
 
+#include "StdAfx.h"
 #include "SmartComString.h"
 
 // This class is exported from the CardReaderClientDll.dll
@@ -25,33 +27,75 @@
 // CARDREADERCLIENTDLL_API int fnCardReaderClientDll(void);
 
 /**
- * @brief 初始化客户端的服务器配置
+ * @brief 读卡器(deprecated, 客户要求必须是函数式的API)
+ */
+// class CARDREADERCLIENTDLL_API CardReader {
+// public:
+// 	CardReader(int cardId, char* userId);
+// 	virtual ~CardReader(void);
+// 	/**
+// 	 * @brief 获取读卡器
+// 	 * @param	None
+// 	 * @return  
+// 	 *	0: 成功
+// 	 */int GetReader(void);
+// 
+// 	/**
+// 	 * @brief 释放读卡器
+// 	 * @param	None
+// 	 * @return  
+// 	 *	0: 成功
+// 	 */
+// 	int ReleaseReader(void);
+// private:
+// 	/// 读卡器连接到服务器的socket
+// 	SOCKET server; 
+// 	/// 读卡器号
+// 	int cardId;
+// 	/// 用户标识符
+// 	char* userId;
+// };
+
+// 修改记录:
+// TODO: 将读卡器号由cardId改为readerId
+
+typedef struct _Reader
+{
+	SOCKET s;
+	int readerId;
+} Reader;
+
+/**
+ * @brief 初始化客户端的服务器全局配置, Reader依赖这些配置建立与服务器的通信
  * @param
  *	serverIp	服务器ip
  *	serverPort	服务器端口号
  * @return 
  *	成功返回0
  */
-CARDREADERCLIENTDLL_API int initClient(char* serverIp, int serverPort);
+CARDREADERCLIENTDLL_API int InitClient(char* serverIp, int serverPort);
 
 /**
  * @brief 获取读卡器
  * @param
- *	cardId 读卡器号
- *	userId 用户标识符
+ *	cardId			读卡器号
+ *	s				输出参数, 标识本次连接
+ *	socketTimeout	socket连接的超时
+ *	customTimeout	应用本身需要的延时
  * @return  
  *	0: 成功
  */
-CARDREADERCLIENTDLL_API int getReader(int cardId, char* userId);
+CARDREADERCLIENTDLL_API int GetReader(Reader reader, long socketTimeout, long customTimeout);
 
 /**
  * @brief 释放读卡器
  * @param
- *	cardId 读卡器号
+ *	cardId	读卡器号
+ *	s		与服务器通信的socket
  * @return  
  *	0: 成功
  */
-CARDREADERCLIENTDLL_API int releaseReader(int cardId);
+CARDREADERCLIENTDLL_API int ReleaseReader(Reader reader);
 
 /**
  * @brief 读取终端设备id号和机号
@@ -70,8 +114,8 @@ CARDREADERCLIENTDLL_API int GetDevIDAndMacNo(char* devID, int devIDBufLen, int& 
 /**
  * @brief 通过终端设备ID号给终端设备设置机号
  * @param
- *	devID 存放7个字节的设备ID
- *	macNo 要设置的机号
+ *	devID	存放7个字节的设备ID
+ *	macNo	要设置的机号
  * @return
  *	 0: 设置成功
  *	-1: 通信超时错误
@@ -79,7 +123,7 @@ CARDREADERCLIENTDLL_API int GetDevIDAndMacNo(char* devID, int devIDBufLen, int& 
  *	-3: 机号范围错误
  *	-4: 设置失败
  */
-CARDREADERCLIENTDLL_API int SetMacNoByDevID(const char* devID,int macNo);
+CARDREADERCLIENTDLL_API int SetMacNoByDevID(const char* devID,int macNo = 255);
 
 
 /**
@@ -97,19 +141,19 @@ CARDREADERCLIENTDLL_API int SetMacNoByDevID(const char* devID,int macNo);
  *	-3: 机号范围错误
  *	-4: 读取失败
  */
-CARDREADERCLIENTDLL_API int GetAppVerAndDevType(char* appVersion,int Verlen,char* devType,int typeLen, int MacNo);
+CARDREADERCLIENTDLL_API int GetAppVerAndDevType(char* appVersion,int Verlen,char* devType,int typeLen, int MacNo = 255);
 
 /**
  * @brief 复位终端设备
  * @param
- *	macNo 机号
+ *	macNo	机号
  * @return
  *	 0: 成功
  *	-1: 通信超时错误
  *	-2: 通信器无效
  *	-3: 机号范围错误
  */
-CARDREADERCLIENTDLL_API int ResetDev(int macNo);
+CARDREADERCLIENTDLL_API int ResetDev(int macNo = 255);
 
 /** 
  * @brief 获取读卡接口芯片ID号
@@ -124,15 +168,14 @@ CARDREADERCLIENTDLL_API int ResetDev(int macNo);
  *	-3: 机号范围错误
  *	-4: 读取失败
  */
-CARDREADERCLIENTDLL_API int GetChipID(char* chipID, int chipIDLen,int macNo);
+CARDREADERCLIENTDLL_API int GetChipID(char* chipID, int chipIDLen,int macNo = 255);
 
 /**
  * @brief 检测A卡（大卡）座与B卡（SIM卡）座是否有卡
  * @param
- *	comm	用于通信的通信器
  *	macNO	机号
- *	cardA	1,A卡座有卡；0，A卡座无卡
- *	cardB	1,B卡座有卡；0，B卡座无卡
+ *	cardA	出口参数, 1,A卡座有卡；0，A卡座无卡
+ *	cardB	出口参数, 1,B卡座有卡；0，B卡座无卡
  * @return 
  *	 0: 检测成功
  *	-1: 通信超时错误
@@ -140,14 +183,14 @@ CARDREADERCLIENTDLL_API int GetChipID(char* chipID, int chipIDLen,int macNo);
  *	-3: 机号范围错误
  *	-4: 检测失败
  */
-CARDREADERCLIENTDLL_API int IsCardReady(int& cardA,int& cardB,int macNo);
+CARDREADERCLIENTDLL_API int IsCardReady(int& cardA,int& cardB,int macNo = 255);
 
 /**
  * @brief 卡片复位应答
  * @param
  *	card		1:A卡，2：B卡,默认选择A卡
  *	macNO		机号，默认255
- *	retCode		复位命令的返回值
+ *	retCode		出口参数, 复位命令的返回值
  *		retCode="F9"：卡座无卡
  *		retCode="FD"：不可识别卡
  *	返回值：
@@ -164,7 +207,7 @@ CARDREADERCLIENTDLL_API int ResetCard(SmartCom::string& retCode,int card=1,int m
  *	apdu		十六进制字符串表示的apdu命令
  *	card		1:A卡，2：B卡,默认选择A卡
  *	macNO		机号，默认255
- *	retCode		执行apdu指令的返回值
+ *	retCode		出口参数, 执行apdu指令的返回值
  *		retCode="F9"：卡座无卡
  *		retCode="FD"：不可识别卡
  *		retCode="F2"：无效7816命令包
@@ -180,7 +223,7 @@ CARDREADERCLIENTDLL_API int CardApdu(SmartCom::string& retCode,int card=1,int ma
 /**
  * @brief 卡片下电
  * @param
- *	macNO:机号，默认255
+ *	macNO	机号，默认255
  * @return
  *	 0: 下电成功
  *	-1: 通信超时错误
@@ -207,7 +250,6 @@ CARDREADERCLIENTDLL_API int ModifyCardBraudRate(int braudRate,int macNo=255);
 /**
  * @brief 读卡通信波特率
  * @param
- *	comm		用于通信的通信器
  *	macNO		机号，默认255
  *	braudRate	出口参数, 当前卡的通信波特率
  * @return
@@ -237,7 +279,6 @@ CARDREADERCLIENTDLL_API int ModifyCardPower(int power,int card=1,int macNo=255);
 /**
  * @brief 发送执行批处理APDU命令
  * @param
- *	comm	用于通信的通信器  
  *	card	选择执行的卡，card=1为A卡，2为B卡。默认A卡
  *	cmdNum	要执行的指令条数
  *	macNO	机号，默认255
@@ -253,7 +294,6 @@ CARDREADERCLIENTDLL_API int  ExcuteMulAPDU(int cmdNum,int card=1,int macNo=255);
 /**
  * @brief 读批处理二进制脚本文件
  * @param
- *	comm		用于通信的通信器
  *	bytes		要读取的字节数
  *	macNO		机号，默认255 
  *	offset		读取数据的文件偏移地址

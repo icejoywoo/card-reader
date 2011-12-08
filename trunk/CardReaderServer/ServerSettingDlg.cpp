@@ -1,10 +1,11 @@
 // ServerSetting.cpp : implementation file
-//
+// 服务器设置对话框
 
 #include "stdafx.h"
 #include "CardReaderServer.h"
-#include "ServerSetting.h"
+#include "ServerSettingDlg.h"
 #include "Server.h"
+#include "ServerUtils.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -16,8 +17,8 @@ static char THIS_FILE[] = __FILE__;
 // ServerSetting dialog
 
 
-ServerSetting::ServerSetting(CWnd* pParent /*=NULL*/)
-	: CDialog(ServerSetting::IDD, pParent)
+ServerSettingDlg::ServerSettingDlg(CWnd* pParent /*=NULL*/)
+	: CDialog(ServerSettingDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(ServerSetting)
 	m_Port = Server::getInstance()->getPort();
@@ -26,7 +27,7 @@ ServerSetting::ServerSetting(CWnd* pParent /*=NULL*/)
 }
 
 
-void ServerSetting::DoDataExchange(CDataExchange* pDX)
+void ServerSettingDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(ServerSetting)
@@ -40,7 +41,7 @@ void ServerSetting::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(ServerSetting, CDialog)
+BEGIN_MESSAGE_MAP(ServerSettingDlg, CDialog)
 	//{{AFX_MSG_MAP(ServerSetting)
 	ON_WM_PAINT()
 	//}}AFX_MSG_MAP
@@ -49,7 +50,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // ServerSetting message handlers
 
-void ServerSetting::OnOK() 
+void ServerSettingDlg::OnOK() 
 {
 	// TODO: Add extra validation here
 	int oldPort = Server::getInstance()->getPort(); // 保存原来的端口
@@ -77,7 +78,7 @@ void ServerSetting::OnOK()
 	CDialog::OnOK();
 }
 
-void ServerSetting::OnPaint() 
+void ServerSettingDlg::OnPaint() 
 {
 	CPaintDC dc(this); // device context for painting
 	

@@ -105,7 +105,7 @@ SOURCE=.\CardReaderServerDlg.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Reader.cpp
+SOURCE=.\Handlers.cpp
 # End Source File
 # Begin Source File
 
@@ -113,7 +113,11 @@ SOURCE=.\Server.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\ServerSetting.cpp
+SOURCE=.\ServerParam.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ServerSettingDlg.cpp
 # End Source File
 # Begin Source File
 
@@ -150,7 +154,11 @@ SOURCE=.\Communicator.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Reader.h
+SOURCE=.\CustomErrorCode.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Handlers.h
 # End Source File
 # Begin Source File
 
@@ -162,7 +170,11 @@ SOURCE=.\Server.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ServerSetting.h
+SOURCE=.\ServerParam.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ServerSettingDlg.h
 # End Source File
 # Begin Source File
 

@@ -1,9 +1,16 @@
+//////////////////////////////////////////////////////////////////////////
+// FileName: ServerUtils.h
+// Creator: icejoywoo
+// Date: 2011.12.05
+// Comment: 一些服务器的工具方法, 定义
+//////////////////////////////////////////////////////////////////////////
 #ifndef _SERVER_UTILS_H_
 #define _SERVER_UTILS_H_
 
 #include "StdAfx.h"
 #include "SplitStr.h"
 #include "SmartComString.h"
+#include "ServerParam.h"
 
 /**
  * @brief 将int转换为CString
@@ -12,32 +19,6 @@
  * @return 转换后的字符串
  */
 CString i2str(int a);
-
-/**
- * @brief 记录日志的线程
- */
-UINT logHandler(LPVOID pParam);
-
-/**
- * @brief 用于存放服务器参数
- */
-class ServerParam
-{
-private:
-	ServerParam();
-	virtual ~ServerParam() {delete instance;}
-public:
-// 	CString ip1 = "192.168.1.138";
-// 	CString ip2 = "192.168.1.139";
-// 	CString ip3 = "192.168.1.140";
-// 	CString ip4 = "192.168.1.141"; /// 读卡器的ip, 每32个读卡器对应一个ip
-	CString ip1, ip2, ip3, ip4;
-	int readerCount; /// 读卡器的数量
-	int serverPort; /// 服务器的端口
-	HWND mainFrame; // 保存窗口
-	CSplitStr split;
-	static ServerParam* instance;
-};
 
 
 /**
@@ -62,6 +43,8 @@ CString getIpAdress(CIPAddressCtrl& ip);
 /**
  * @brief 解析网络命令, 对读卡器进行相应的操作
  * @param 
+ *	in client 客户端请求的socket
+ *	in cardId 读卡器号
  *	in command 命令
  *	out operationName 操作名称, 下面是operationName对照表
  *		*操作名称*			*对应操作*			*SmartCom函数*
@@ -87,9 +70,9 @@ CString getIpAdress(CIPAddressCtrl& ip);
  *		-100, 命令找不到
  *		-101, 与卡片读写器的通信初始化失败
  *		-102, 关闭udp通信失败
- *	失败为其他, 具体参考SmartCom和operationName对照表
+ *		其他错误码, 具体参考SmartCom和operationName对照表中相应SmartCom函数中的错误码
  */
-int parseCommand(SOCKET client, char* command, CString& operationName);
+int parseCommand(SOCKET client, int cardId, char* command, CString& operationName);
 
 /**
  * @brief 通过socket发送数据
@@ -101,5 +84,24 @@ int parseCommand(SOCKET client, char* command, CString& operationName);
 int sendData(SOCKET s, int data);
 int sendData(SOCKET s, const char* data);
 int sendData(SOCKET s, SmartCom::string data);
+
+/**
+ * @brief 通过socket接收数据
+ * @param 
+ *	in s 需要接收数据的socket
+ *	out data , 出口参数, 需要接收的数据
+ *	len data的长度
+ * @return 接收的字符数
+ */
+int receiveData(SOCKET s, char* data, int len);
+
+/**
+ * @brief 通过socket接收int数据
+ * @param 
+ *	in s 需要接收数据的socket
+ *	out data , 出口参数, 需要接收的数据
+ * @return 接收的字符数
+ */
+int receiveData(SOCKET s, int data);
 
 #endif
