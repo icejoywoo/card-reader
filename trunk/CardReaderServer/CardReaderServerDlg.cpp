@@ -129,8 +129,8 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 
 	// ÎªÊ÷Ìí¼ÓÍ¼±ê
 	CImageList cImageList;
-	cImageList.Create(8, 8,  ILC_COLOR32| ILC_MASK, 1, 2);
-	HICON hIcon= ::AfxGetApp()->LoadIcon(IDI_ICON_SERVER);
+	cImageList.Create(16, 16,  ILC_COLOR32| ILC_MASK, 1, 2);
+	HICON hIcon= ::AfxGetApp()->LoadIcon(IDI_ICON_SERVERROOT);
 	cImageList.Add(hIcon);
 	m_Tree.SetImageList(&cImageList, TVSIL_NORMAL);
 	HTREEITEM root = m_Tree.InsertItem(_T("server"));
