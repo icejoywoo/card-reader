@@ -197,6 +197,7 @@ int receiveData(SOCKET s, char* data, int len)
 	if (-1 == size)
 	{
 		SimpleLog::error("接收数据出错");
+		return size;
 	}
 	data[size] = '\0';
 	SimpleLog::info(CString("接收数据: [") + data + "]");
