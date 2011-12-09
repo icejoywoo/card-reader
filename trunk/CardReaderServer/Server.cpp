@@ -41,10 +41,10 @@ int Server::start()
 int Server::stop()
 {
 	// shutdownª· ß∞‹
-// 	if (shutdown(this->server, SD_BOTH) != 0)
-// 	{
-// 		return -1;
-// 	}
+	if (shutdown(this->server, SD_SEND) != 0)
+	{
+		return -1;
+	}
 	if (closesocket(this->server) != 0)
 	{
 		SimpleLog::error("πÿ±’ ß∞‹");
