@@ -68,6 +68,7 @@ END
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON    DISCARDABLE     "res\\CardReaderServer.ico"
 IDI_ICON_SERVER         ICON    DISCARDABLE     "res\\network.ico"
+IDI_ICON_SERVERROOT     ICON    DISCARDABLE     "res\\server.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
