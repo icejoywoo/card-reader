@@ -38,6 +38,15 @@ UINT defaultServerHandler (LPVOID pParam );
 UINT defaultWaitListHandler (LPVOID pParam );
 
 /**
+ * @brief 处理服务器中的timeout队列
+ * @param 
+ *	pParam	未使用
+ * 
+ * 循环等待, 查看客户端的延时时间是否已到, 延时时间到后会自动关闭
+ */
+UINT defaultTimeoutListHandler (LPVOID pParam );
+
+/**
  * @brief 默认的请求处理
  * @param 
  *	pParam	请求的读卡器号cardId

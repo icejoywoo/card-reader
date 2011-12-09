@@ -23,6 +23,7 @@ Server::Server()
 	//this->clientHandler = helloClientHandler;
 	this->serverHandler = defaultServerHandler;
 	this->waitListHandler = defaultWaitListHandler;
+	this->timeoutListHandler = defaultTimeoutListHandler;
 	InitializeCriticalSection(&(this->g_cs));
 }
 
@@ -41,10 +42,10 @@ int Server::start()
 int Server::stop()
 {
 	// shutdown会失败
-	if (shutdown(this->server, SD_SEND) != 0)
-	{
-		return -1;
-	}
+// 	if (shutdown(this->server, SD_SEND) != 0)
+// 	{
+// 		return -1;
+// 	}
 	if (closesocket(this->server) != 0)
 	{
 		SimpleLog::error("关闭失败");
@@ -76,15 +77,21 @@ int Server::setPort(int &port)
 	return 0;
 }
 
-void Server::addToWaitList(int cardId, SOCKET s)
+void Server::addToWaitList(int readerId, SOCKET s)
 {
-	this->waitList[cardId].push_back(s);
+	this->waitList[readerId].push_back(s);
 }
 
-SOCKET Server::getSocketByCardId(int cardId)
+SOCKET Server::getSocketByReaderId(int readerId)
 {
-	SOCKET result = this->waitList[cardId].at(0);
-	this->waitList[cardId].erase(this->waitList[cardId].begin());
+	SOCKET result = this->waitList[readerId].at(0);
+	this->waitList[readerId].erase(this->waitList[readerId].begin());
 	return result;
+}
+
+void Server::releaseReader(int readerId) {
+	this->waitList[readerId].erase(this->waitList[readerId].begin());
+	this->readerUsage[readerId] = 0;
+	SimpleLog::info(CString("释放读卡器") + i2str(readerId));
 }
 /// Server定义结束

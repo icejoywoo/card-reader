@@ -66,10 +66,17 @@ UINT defaultServerHandler(LPVOID pParam)
 	if (serv->readerCount != ServerParam::instance->readerCount) // 当读卡器数量发生变化时
 	{
 		serv->readerCount = ServerParam::instance->readerCount;
+		// 初始化记录当前读卡器状态列表
 		serv->readerUsage.resize(serv->readerCount);
-		for (vector<int>::iterator iter = serv->readerUsage.begin(); iter != serv->readerUsage.end(); ++iter)
+		// 初始化timeout列表
+		serv->timeoutList.resize(serv->readerCount);
+
+		for (int i = 0; i < serv->readerCount; ++i)
 		{
-			*iter = 0; // 初始化控制列表
+			serv->readerUsage[i] = 0; // 初始化控制列表
+			serv->timeoutList[i] = GetTickCount();
+			serv->timeout[i] = 100000; // 延时初始化为100s
+			serv->clients[i] = INVALID_SOCKET; // 初始化当前客户端列表
 		}
 	}
 
@@ -78,11 +85,14 @@ UINT defaultServerHandler(LPVOID pParam)
 	memset(&from, 0, sizeof(from));
 	int fromlen = sizeof(from);
 	SimpleLog::info(CString("服务器启动成功, 端口: ") + i2str(serv->getPort()));
+
 	AfxBeginThread(serv->waitListHandler, NULL); // 启动等待队列线程, 处理等待队列的
+	AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程
+
 	while (true)
 	{
 		client = accept(serv->server, (struct sockaddr*) &from, &fromlen);
-		if (client == INVALID_SOCKET) // 接受客户端socket失败
+		if (client == INVALID_SOCKET) // 接受客户端socket失败, 是在关闭服务器的时候
 		{
 			SimpleLog::warn(CString("接收客户端请求失败, 来自") + inet_ntoa(from.sin_addr));
 			break;
@@ -133,39 +143,92 @@ UINT defaultWaitListHandler (LPVOID pParam )
 	return 0;
 }
 
+UINT defaultTimeoutListHandler (LPVOID pParam )
+{
+	while (true)
+	{
+		// 当前客户端socket
+		for (map<int, SOCKET>::iterator iter = Server::getInstance()->clients.begin(); 
+		iter != Server::getInstance()->clients.end(); ++iter)
+		{
+			if (iter->second != INVALID_SOCKET) // 判断是否是连接的socket
+			{	
+				if ((GetTickCount() - Server::getInstance()->timeoutList[iter->first]) > 
+					Server::getInstance()->timeout[iter->first])
+				{
+					SOCKET s = iter->second;
+					SimpleLog::warn(CString("读卡器") + i2str(iter->first) + "等待超时, 即刻关闭");
+					shutdown(s, SD_BOTH);
+					closesocket(s);
+					Server::getInstance()->releaseReader(iter->first); // 删除读卡器当前的socket连接
+				}
+			}
+		}
+		Sleep(100); // 休眠100ms, 根据情况适当修改
+	}
+	
+	return 0;
+}
 
 // TODO: 修改handler, 读取读卡器的数据
 UINT defaultClientHandler (LPVOID pParam)
 {
-	int cardId = ((int) pParam);
-	SOCKET client = Server::getInstance()->getSocketByCardId(cardId); // 取出相应读卡器队列中的socket
+	int readerId = ((int) pParam);
+	SOCKET client = Server::getInstance()->getSocketByReaderId(readerId); // 取出相应读卡器队列中的socket
+	Server::getInstance()->clients[readerId] = client; // 添加到当前客户端列表中
 	char buff[512]; // buffer
 
 	sendData(client, "Ready"); // 告诉客户端已经准备就绪可以操作
+
+	// 读取延时
+	int size = recv(client, buff, 512, 0);
+	if(size == -1) // 接收数据错误退出
+	{
+		Server::getInstance()->clients[readerId] = INVALID_SOCKET;
+		closesocket(client);
+		return 0;
+	}
+	buff[size] = '\0';
+	int timeout = atoi(buff); // 读卡器延时
+	SimpleLog::info(CString("读卡器") + i2str(readerId) + "的延时为: " + i2str(timeout));
+
+	Server::getInstance()->timeout[readerId] = timeout;
 
 	CString operationName;
 	int resultCode;
 	while(operationName != "quit")
 	{
 		// 接收客户端的请求
-		receiveData(client, buff, 512);
-		if ((resultCode= parseCommand(client, cardId, buff, operationName)) == 0)
+		if (receiveData(client, buff, 512) == -1) // 接收数据错误即刻关闭
+		{
+			Server::getInstance()->clients[readerId] = INVALID_SOCKET;
+			closesocket(client);
+			return 0;
+		}
+		if ((resultCode= parseCommand(client, readerId, buff, operationName)) == 0)
 		{
 			SimpleLog::info("[" + operationName + "]操作成功");
 		} else {
 			SimpleLog::info("[" + operationName + "]操作失败, 错误码: " + i2str(resultCode));
 		}
+		Server::getInstance()->timeoutList[readerId] = GetTickCount(); // 更新时间
 		// 将结果发送到客户端
-		sendData(client, resultCode);
+		if (sendData(client, resultCode) == -1) // 发送数据出错即刻关闭
+		{
+			Server::getInstance()->clients[readerId] = INVALID_SOCKET;
+			closesocket(client);
+			return 0;
+		}
 	}
 	
 	//Sleep(10000);
+	Server::getInstance()->clients[readerId] = INVALID_SOCKET;
 	shutdown(client, SD_BOTH);
 	closesocket(client);
 
 	// 将读卡器设置为可用
 	EnterCriticalSection(&(Server::getInstance()->g_cs));
-	Server::getInstance()->readerUsage[cardId] = 0;  // 操作完成后, 设置为空闲状态
+	Server::getInstance()->readerUsage[readerId] = 0;  // 操作完成后, 设置为空闲状态
 	LeaveCriticalSection(&(Server::getInstance()->g_cs));
 
 	return 0;

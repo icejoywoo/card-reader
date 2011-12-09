@@ -85,9 +85,11 @@ public:
 	/// 等待队列的方法
 
 	// 向队列添加socket
-	void addToWaitList(int cardId, SOCKET s);
+	void addToWaitList(int readerId, SOCKET s);
 	// 获取队列的首个元素
-	SOCKET getSocketByCardId(int cardId);
+	SOCKET getSocketByReaderId(int readerId);
+	// 释放当前读卡器的socket连接
+	void releaseReader(int readerId);
 
 private:
 	Server();
@@ -107,6 +109,12 @@ public:
 	int readerCount;
 	// 等待队列
 	map< int, vector<SOCKET> > waitList;
+	// 记录每个读卡器的延时时间
+	vector<ULONG> timeoutList;
+	// 保存每个客户端的延时时间, 由客户端发送
+	map< int, ULONG > timeout;
+	// 当前客户端列表
+	map <int, SOCKET> clients;
 
 	/************************************************************************/
 	/* 替换这两个handler可以改变服务器的行为                                */
@@ -118,8 +126,11 @@ public:
 	// 服务器handler 接收请求
 	UINT (*serverHandler) (LPVOID pParam );
 
-	// 服务器handler 接收请求
+	// 服务器等待队列waitList
 	UINT (*waitListHandler) (LPVOID pParam );
+
+	// 服务器timeoutList
+	UINT (*timeoutListHandler) (LPVOID pParam );
 };
 
 #endif
