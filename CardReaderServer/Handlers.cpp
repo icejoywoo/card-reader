@@ -44,12 +44,13 @@ UINT defaultServerHandler(LPVOID pParam)
 		return -1;
 	}
 
-	sockaddr_in local;
+	struct sockaddr_in local;
+	memset(&local, 0, sizeof(local));
 	local.sin_family = AF_INET;
 	local.sin_addr.s_addr = INADDR_ANY;
 	local.sin_port = htons(serv->getPort());
 	
-	if (bind(serv->server, (sockaddr*)&local, sizeof(local)) != 0)
+	if (bind(serv->server, (struct sockaddr*)&local, sizeof(local)) != 0)
 	{
 		SimpleLog::error("服务器绑定端口失败");
 		return -2;
@@ -73,7 +74,8 @@ UINT defaultServerHandler(LPVOID pParam)
 	}
 
 	SOCKET client;
-	sockaddr_in from;
+	struct sockaddr_in from;
+	memset(&from, 0, sizeof(from));
 	int fromlen = sizeof(from);
 	SimpleLog::info(CString("服务器启动成功, 端口: ") + i2str(serv->getPort()));
 	AfxBeginThread(serv->waitListHandler, NULL); // 启动等待队列线程, 处理等待队列的
@@ -89,7 +91,7 @@ UINT defaultServerHandler(LPVOID pParam)
 
 		char buff[512]; // buffer
 
-		// 接收客户端的请求
+		// 接收客户端的请求, 首先读取读卡器id
 		int size = recv(client, buff, 512, 0);
 		buff[size] = '\0';
 		

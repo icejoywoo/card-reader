@@ -205,7 +205,7 @@ int receiveData(SOCKET s, char* data, int len)
 
 int receiveData(SOCKET s, int &data)
 {
-	char* str;
+	char* str = NULL;
 	int size = receiveData(s, str, 5);
 	data = atoi(str);
 	return size;
