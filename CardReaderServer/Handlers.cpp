@@ -87,7 +87,7 @@ UINT defaultServerHandler(LPVOID pParam)
 	SimpleLog::info(CString("服务器启动成功, 端口: ") + i2str(serv->getPort()));
 
 	AfxBeginThread(serv->waitListHandler, NULL); // 启动等待队列线程, 处理等待队列的
-	AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程
+	//AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
 
 	while (true)
 	{
@@ -98,26 +98,26 @@ UINT defaultServerHandler(LPVOID pParam)
 			break;
 		}
 		SimpleLog::info(CString("接收到一个客户端请求, 来自") + inet_ntoa(from.sin_addr));
-
+		
 		char buff[512]; // buffer
 
 		// 接收客户端的请求, 首先读取读卡器id
 		int size = recv(client, buff, 512, 0);
 		buff[size] = '\0';
 		
-		int cardId = atoi(buff); // 读卡器号
-		if (cardId > 0 && cardId <= serv->readerCount) // 判断cardId是否合法
+		int readerId = atoi(buff); // 读卡器号
+		if (readerId > 0 && readerId <= serv->readerCount) // 判断cardId是否合法
 		{
-			SimpleLog::info(CString("接收读卡器号: ") + i2str(cardId));
-			serv->addToWaitList(cardId, client); // 添加到等待处理队列
-			SimpleLog::info(CString("将请求添加到读卡器[") + i2str(cardId) + "]等待队列中...");
+			SimpleLog::info(CString("接收读卡器号: ") + i2str(readerId));
+			serv->addToWaitList(readerId, client); // 添加到等待处理队列
+			SimpleLog::info(CString("将请求添加到读卡器[") + i2str(readerId) + "]等待队列中...");
 		}
 		else
 		{
-			SimpleLog::info(CString("接收读卡器号无效, 读卡器号: ") + i2str(cardId));
+			SimpleLog::info(CString("接收读卡器号无效, 读卡器号: ") + i2str(readerId));
 			closesocket(client); // 关闭socket
 		}
-		
+		Server::getInstance()->updateTimeout(readerId);
 	}
 	return 0;
 }
@@ -152,7 +152,7 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 		iter != Server::getInstance()->clients.end(); ++iter)
 		{
 			if (iter->second != INVALID_SOCKET) // 判断是否是连接的socket
-			{	
+			{
 				if ((GetTickCount() - Server::getInstance()->timeoutList[iter->first]) > 
 					Server::getInstance()->timeout[iter->first])
 				{
@@ -198,6 +198,7 @@ UINT defaultClientHandler (LPVOID pParam)
 	int resultCode;
 	while(operationName != "quit")
 	{
+		
 		// 接收客户端的请求
 		if (receiveData(client, buff, 512) == -1) // 接收数据错误即刻关闭
 		{
@@ -205,13 +206,13 @@ UINT defaultClientHandler (LPVOID pParam)
 			closesocket(client);
 			return 0;
 		}
+		Server::getInstance()->updateTimeout(readerId);
 		if ((resultCode= parseCommand(client, readerId, buff, operationName)) == 0)
 		{
 			SimpleLog::info("[" + operationName + "]操作成功");
 		} else {
 			SimpleLog::info("[" + operationName + "]操作失败, 错误码: " + i2str(resultCode));
 		}
-		Server::getInstance()->timeoutList[readerId] = GetTickCount(); // 更新时间
 		// 将结果发送到客户端
 		if (sendData(client, resultCode) == -1) // 发送数据出错即刻关闭
 		{
@@ -219,6 +220,7 @@ UINT defaultClientHandler (LPVOID pParam)
 			closesocket(client);
 			return 0;
 		}
+		Server::getInstance()->updateTimeout(readerId);
 	}
 	
 	//Sleep(10000);

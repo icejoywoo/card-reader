@@ -90,6 +90,8 @@ public:
 	SOCKET getSocketByReaderId(int readerId);
 	// 释放当前读卡器的socket连接
 	void releaseReader(int readerId);
+	// 更新延时
+	void updateTimeout(int readerId);
 
 private:
 	Server();
