@@ -58,8 +58,8 @@ CString getIpAdress(CIPAddressCtrl& ip);
  *		getScript			读取脚本文件		GetScriptData
  *		checkBatchResult	批处理APDU结果		CheckBatchResult
  *		modifyCardPower		修改卡片电源		ModifyCardPower
- *		getDevIdAndMacNo	获取设备id和机号	GetDevIdAndMacNo
- *		setMacNoByDevID		设置设备id和机号	SetMacNoByDevID
+ *		getDevIdAndReaderId	获取设备id和机号	GetDevIdAndMacNo
+ *		setReaderIdByDevID	设置设备id和机号	SetMacNoByDevID
  *		getAppVerAndDevType	读取程序版本和终端类型		GetAppVerAndDevType
  *		getChipID			获取读卡接口芯片ID号		GetChipID
  *		isCardReady			检测A卡和B卡座是否有卡		IsCardReady
@@ -72,7 +72,7 @@ CString getIpAdress(CIPAddressCtrl& ip);
  *		-102, 关闭udp通信失败
  *		其他错误码, 具体参考SmartCom和operationName对照表中相应SmartCom函数中的错误码
  */
-int parseCommand(SOCKET client, int cardId, char* command, CString& operationName);
+int parseCommand(SOCKET client, int readerId, char* command, CString& operationName);
 
 /**
  * @brief 通过socket发送数据

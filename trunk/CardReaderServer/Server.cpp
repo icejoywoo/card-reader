@@ -90,8 +90,14 @@ SOCKET Server::getSocketByReaderId(int readerId)
 }
 
 void Server::releaseReader(int readerId) {
-	this->waitList[readerId].erase(this->waitList[readerId].begin());
+	//this->waitList[readerId].erase(this->waitList[readerId].begin());
 	this->readerUsage[readerId] = 0;
+	this->timeoutList[readerId] = GetTickCount();
 	SimpleLog::info(CString("释放读卡器") + i2str(readerId));
+}
+
+void Server::updateTimeout(int readerId)
+{
+	this->timeoutList[readerId] = GetTickCount();
 }
 /// Server定义结束
