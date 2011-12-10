@@ -131,8 +131,12 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 		return retCode;
 	} else if (operationName == CString("setReaderIdByDevID")) { // 设置终端设备id号和机号
 		char* devID = (LPSTR)(LPCTSTR) requestParam[1]; 
-		int readerId = atoi(requestParam[2]);
-		return SetMacNoByDevID(communicator, devID, readerId);
+		int _readerId = atoi(requestParam[2]);
+		int ret = SetMacNoByDevID(communicator, devID, _readerId);
+		if (0 == ret) {
+			readerId = _readerId;
+		}
+		return ret;
 	} else if (operationName == CString("getAppVerAndDevType")) { // 读取程序版本和终端类型
 		SmartCom::string appVersion; // 程序版本
 		SmartCom::string devType; // 终端类型

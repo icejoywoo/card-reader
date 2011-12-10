@@ -14,7 +14,7 @@
 // Insert your headers here
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 
-#include <windows.h>
+//#include <windows.h>
 
 #include <WINSOCK2.H> // win socket
 #include <conio.h> // 

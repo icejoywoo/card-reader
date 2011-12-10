@@ -29,13 +29,31 @@ int ClientUtils::sendData(SOCKET server, const string data)
 
 int ClientUtils::sendData(SOCKET server, int data)
 {
-	return ClientUtils::sendData(server, ClientUtils::i2str(data).c_str());
+	return ClientUtils::sendData(server, ClientUtils::i2str(data));
 }
 
-string ClientUtils::i2str(int a)
+char* ClientUtils::i2str(int a)
 {
-	char temp[5];
-	itoa(a, temp, 5);
-	string str(temp);
+	char str[5];
+	sprintf(str, "%d", a);
 	return str;
+}
+
+int ClientUtils::receiveData(SOCKET s, char* data, int len)
+{
+	int size = recv(s, data, len, 0);
+	if (-1 == size)
+	{
+		return size;
+	}
+	data[size] = '\0';
+	return size;
+}
+
+int ClientUtils::receiveData(SOCKET s, int &data)
+{
+	char* str = NULL;
+	int size = receiveData(s, str, 5);
+	data = atoi(str);
+	return size;
 }

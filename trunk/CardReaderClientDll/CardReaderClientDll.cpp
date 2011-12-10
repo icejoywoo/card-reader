@@ -50,8 +50,19 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 
 CARDREADERCLIENTDLL_API int InitClient(char* serverIp, int serverPort)
 {
+	// 初始化winsock环境
+	WSADATA wsaData;
+	int wsaret=WSAStartup(0x101,&wsaData);
+
 	ClientParam::instance->serverIp = serverIp;
 	ClientParam::instance->serverPort = serverPort;
+	return 0;
+}
+
+CARDREADERCLIENTDLL_API int CleanUpClient()
+{
+	if (0 != WSACleanup())
+		return -1; 
 	return 0;
 }
 
@@ -60,8 +71,9 @@ CARDREADERCLIENTDLL_API int GetReader(Reader reader, long socketTimeout, long cu
 	struct sockaddr_in server;
 	struct hostent *hp;
 	unsigned int addr;
+
 	// 设置server地址
-	if(inet_addr(ClientParam::instance->serverIp)==INADDR_NONE)
+	if(inet_addr(ClientParam::instance->serverIp) == INADDR_NONE)
 	{
 		hp=gethostbyname(ClientParam::instance->serverIp);
 	}
@@ -70,23 +82,34 @@ CARDREADERCLIENTDLL_API int GetReader(Reader reader, long socketTimeout, long cu
 		addr=inet_addr(ClientParam::instance->serverIp);
 		hp=gethostbyaddr((char*)&addr,sizeof(addr),AF_INET);
 	}
+
 	server.sin_addr.s_addr=*((unsigned long*)hp->h_addr);
 	server.sin_family=AF_INET;
 	server.sin_port=htons(ClientParam::instance->serverPort);
+
 	reader.s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	// 设置socket延时
-	if(::setsockopt(reader.s, SOL_SOCKET, SO_SNDTIMEO, (char *)&socketTimeout,sizeof(socketTimeout))==SOCKET_ERROR){
-		return 0;
+	if(::setsockopt(reader.s, SOL_SOCKET, SO_SNDTIMEO, (char *)&socketTimeout,sizeof(socketTimeout)) == SOCKET_ERROR){
+		return SETSOCKOPT_FAILED;
 	}
 
-	if (connect(reader.s, (struct sockaddr*)&server, sizeof(server)))
+	if (connect(reader.s, (sockaddr*)&server, sizeof(server)))
 	{
 		return CONNECT_FAILED;
 	}
 
+	// 将读卡器id发送过去
+	ClientUtils::sendData(reader.s, reader.readerId);
+	char buf[512];
+	// 看是否Ready
+	ClientUtils::receiveData(reader.s, buf, 512);
+	if (buf != "Ready")
+	{
+		return -1; // 等待失败
+	}
 	// 将客户定制延时发送到服务器
-	sendData(reader.s, customTimeout);
+	ClientUtils::sendData(reader.s, customTimeout);
 	return 0;
 }
 
@@ -94,7 +117,46 @@ CARDREADERCLIENTDLL_API int ReleaseReader(Reader reader)
 {
 	ClientUtils::sendData(reader.s, "quit"); // 发出退出消息
 	// 关闭资源
-	closesocket(reader.s); 
+	closesocket(reader.s);
 	reader.readerId = 0;
+	WSACleanup();
+	return 0;
+}
+
+CARDREADERCLIENTDLL_API int GetDevIDAndReaderId(Reader reader, char* devID, int devIDBufLen, int& readerId)
+{
+	if (ClientUtils::sendData(reader.s, "getDevIdAndReaderId") == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+	char buf[512];
+	int size = ClientUtils::receiveData(reader.s, buf, 512);
+	if (size == -1)
+	{
+		return RECV_ERROR;
+	}
+
+	sscanf(buf, "%s,%d", devID, readerId);
+	int serverRet;
+	ClientUtils::receiveData(reader.s, serverRet);
+	return serverRet;
+}
+
+CARDREADERCLIENTDLL_API int SetReaderIdByDevID(Reader reader, const char* devID, int readerId)
+{
+	char cmd[512];
+	sprintf(cmd, "getDevIdAndReaderId,%s,%d", devID, readerId);
+	if (ClientUtils::sendData(reader.s, cmd) == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+	int serverRet;
+	ClientUtils::receiveData(reader.s, serverRet);
+	return serverRet;
+}
+
+CARDREADERCLIENTDLL_API int GetAppVerAndDevType(Reader reader, char* appVer, int appVerlen, char* devType, int devTypeLen)
+{
+
 	return 0;
 }
