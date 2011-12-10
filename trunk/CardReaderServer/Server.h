@@ -117,6 +117,8 @@ public:
 	map< int, ULONG > timeout;
 	// 当前客户端列表
 	map <int, SOCKET> clients;
+	// true表示正在运行, false表示停止
+	BOOL status;
 
 	/************************************************************************/
 	/* 替换这两个handler可以改变服务器的行为                                */

@@ -124,7 +124,7 @@ UINT defaultServerHandler(LPVOID pParam)
 
 UINT defaultWaitListHandler (LPVOID pParam )
 {
-	while (true)
+	while (Server::getInstance()->status == TRUE)
 	{
 		// 进入临界区, 寻找是否有读卡器处在等待状态
 		EnterCriticalSection(&(Server::getInstance()->g_cs));
@@ -145,7 +145,7 @@ UINT defaultWaitListHandler (LPVOID pParam )
 
 UINT defaultTimeoutListHandler (LPVOID pParam )
 {
-	while (true)
+	while (Server::getInstance()->status == TRUE)
 	{
 		// 当前客户端socket
 		for (map<int, SOCKET>::iterator iter = Server::getInstance()->clients.begin(); 

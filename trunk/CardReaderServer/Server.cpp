@@ -25,6 +25,7 @@ Server::Server()
 	this->waitListHandler = defaultWaitListHandler;
 	this->timeoutListHandler = defaultTimeoutListHandler;
 	InitializeCriticalSection(&(this->g_cs));
+	this->status = FALSE;
 }
 
 Server::~Server()
@@ -35,6 +36,7 @@ Server::~Server()
 
 int Server::start()
 {
+	this->status = TRUE;
 	HANDLE thread = AfxBeginThread(this->serverHandler, this);
 	return 0;
 }
@@ -51,6 +53,7 @@ int Server::stop()
 		SimpleLog::error("关闭失败");
 		return -2;
 	}
+	this->status = FALSE;
 	SimpleLog::info("服务器已关闭");
 	return 0;
 }
