@@ -2,7 +2,7 @@
 // FileName:	CardReaderClientDll.h
 // Creator:		icejoywoo
 // Date:		2011.12.03
-// $Revision$
+// $Revision: 37 $
 // Comment: 客户端操作读卡器的接口定义
 //////////////////////////////////////////////////////////////////////////
 
@@ -12,7 +12,8 @@
 #define CARDREADERCLIENTDLL_API __declspec(dllimport)
 #endif
 
-#include "StdAfx.h"
+#include <WINSOCK2.H> // win socket
+
 #include "SmartComString.h"
 
 // This class is exported from the CardReaderClientDll.dll

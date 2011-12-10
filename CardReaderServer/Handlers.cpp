@@ -75,7 +75,7 @@ UINT defaultServerHandler(LPVOID pParam)
 		{
 			serv->readerUsage[i] = 0; // 初始化控制列表
 			serv->timeoutList[i] = GetTickCount();
-			serv->timeout[i] = 100000; // 延时初始化为100s
+			serv->timeout[i] = 10000; // 延时初始化为10s
 			serv->clients[i] = INVALID_SOCKET; // 初始化当前客户端列表
 		}
 	}

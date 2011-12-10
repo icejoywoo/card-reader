@@ -8,5 +8,8 @@
 #define READER_ALREADY_USED (-103) // 读卡器已经被使用了
 #define IN_WAIT_LIST (-104) //加入到等待队列, 等待中
 #define CONNECT_FAILED (-105) // 连接服务器失败
+#define SETSOCKOPT_FAILED (-106) // 设置socket延时失败
+#define SEND_ERROR (-107) // socket发送数据错误
+#define RECV_ERROR (-108) // socket接收数据错误
 
 #endif
