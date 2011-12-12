@@ -341,3 +341,172 @@ CARDREADERCLIENTDLL_API int CardApdu(Reader* reader, char* apdu, SmartCom::strin
 	}
 	return ret;
 }
+
+CARDREADERCLIENTDLL_API int ShutdownCard(Reader* reader)
+{
+	if (ClientUtils::sendData(reader->s, "shutdown") == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+	
+	int ret;
+	if (ClientUtils::receiveData(reader->s, ret) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return ret;
+}
+
+CARDREADERCLIENTDLL_API int ModifyCardBraudRate(Reader* reader, int braudRate)
+{
+	char cmd[512];
+	sprintf(cmd, "modifyBraudRate,%d", braudRate);
+	if (ClientUtils::sendData(reader->s, cmd) == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+
+	int ret;
+	if (ClientUtils::receiveData(reader->s, ret) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return ret;
+}
+
+CARDREADERCLIENTDLL_API int GetCardBraudRate(Reader* reader, int& braudRate)
+{
+	if (ClientUtils::sendData(reader->s, "getBraudRate") == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+	
+	char buf[512];
+	int size = ClientUtils::receiveData(reader->s, buf, 512);
+	if (size == -1)
+	{
+		return RECV_ERROR;
+	}
+	braudRate = atoi(buf);
+
+	int ret;
+	if (ClientUtils::receiveData(reader->s, ret) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return ret;
+}
+
+CARDREADERCLIENTDLL_API int ModifyCardPower(Reader* reader, int power,int card)
+{
+	char cmd[512];
+	sprintf(cmd, "modifyCardPower,%d,%d", power, card);
+	if (ClientUtils::sendData(reader->s, cmd) == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+	
+	int ret;
+	if (ClientUtils::receiveData(reader->s, ret) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return ret;
+}
+
+CARDREADERCLIENTDLL_API int  ExcuteMulAPDU(Reader* reader, int cmdNum,int card)
+{
+	char cmd[512];
+	sprintf(cmd, "executeMulApdu,%d,%d", cmdNum, card);
+	if (ClientUtils::sendData(reader->s, cmd) == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+
+	int ret;
+	if (ClientUtils::receiveData(reader->s, ret) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return ret;
+}
+
+CARDREADERCLIENTDLL_API int GetScriptData(Reader* reader, int offset,unsigned char bytes,SmartCom::string& strData)
+{
+	char cmd[512];
+	sprintf(cmd, "getScript,%d,%d", offset, bytes);
+	if (ClientUtils::sendData(reader->s, cmd) == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+	
+	char buf[512];
+	int size = ClientUtils::receiveData(reader->s, buf, 512);
+	if (size == -1)
+	{
+		return RECV_ERROR;
+	}
+	strData = buf;
+
+	int ret;
+	if (ClientUtils::receiveData(reader->s, ret) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return ret;
+}
+
+CARDREADERCLIENTDLL_API int DownloadFile(Reader* reader, int flag, const char* fileName)
+{
+	char cmd[512];
+	sprintf(cmd, "downloadFile,%d,%s", flag, fileName);
+	if (ClientUtils::sendData(reader->s, cmd) == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+	
+	int ret;
+	if (ClientUtils::receiveData(reader->s, ret) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return ret;
+}
+
+CARDREADERCLIENTDLL_API int CheckBatchResult(Reader* reader, SmartCom::string& retCode)
+{
+	if (ClientUtils::sendData(reader->s, "checkBatchResult") == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+	
+	char buf[512];
+	int size = ClientUtils::receiveData(reader->s, buf, 512);
+	if (size == -1)
+	{
+		return RECV_ERROR;
+	}
+	retCode = buf;
+
+	int ret;
+	if (ClientUtils::receiveData(reader->s, ret) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return ret;
+}
+
+CARDREADERCLIENTDLL_API int ClearMem(Reader* reader)
+{
+	if (ClientUtils::sendData(reader->s, "clearMemory") == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+	
+	int ret;
+	if (ClientUtils::receiveData(reader->s, ret) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return ret;
+}

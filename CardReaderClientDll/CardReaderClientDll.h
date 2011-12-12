@@ -202,7 +202,7 @@ CARDREADERCLIENTDLL_API int CardApdu(Reader* reader, char* apdu, SmartCom::strin
 /**
  * @brief 卡片下电
  * @param
- *	readerId	机号，默认255
+ *	reader		读卡器
  * @return
  *	 0: 下电成功
  *	-1: 通信超时错误
@@ -210,13 +210,13 @@ CARDREADERCLIENTDLL_API int CardApdu(Reader* reader, char* apdu, SmartCom::strin
  *	-3: 机号范围错误
  *	-4: 下电失败
  */
-CARDREADERCLIENTDLL_API int ShutdownCard(int readerId=255);
+CARDREADERCLIENTDLL_API int ShutdownCard(Reader* reader);
 
 /**
  * @brief 修改卡通信波特率
  * @param
+ *	reader			读卡器
  *	braudRate		要修改的波特率，只能选如下值：115200，57600，38400，28800，23040，19200，14400，12800，9600
- *	readerId		机号，默认255
  * @return
  *	 0: 修改成功
  *	-1: 通信超时错误
@@ -224,12 +224,12 @@ CARDREADERCLIENTDLL_API int ShutdownCard(int readerId=255);
  *	-3: 机号范围错误
  *	-4: 修改失败
  */
-CARDREADERCLIENTDLL_API int ModifyCardBraudRate(int braudRate,int readerId=255);
+CARDREADERCLIENTDLL_API int ModifyCardBraudRate(Reader* reader, int braudRate);
 
 /**
  * @brief 读卡通信波特率
  * @param
- *	readerId		机号，默认255
+ *	reader			读卡器
  *	braudRate		出口参数, 当前卡的通信波特率
  * @return
  *	 0: 读取成功
@@ -238,14 +238,14 @@ CARDREADERCLIENTDLL_API int ModifyCardBraudRate(int braudRate,int readerId=255);
  *	-3: 机号范围错误
  *	-4: 读取失败
  */
-CARDREADERCLIENTDLL_API int GetCardBraudRate(int& braudRate,int readerId=255);
+CARDREADERCLIENTDLL_API int GetCardBraudRate(Reader* reader, int& braudRate);
 
 /**
  * @brief 修改卡片电源
  * @param
- *	power		电源：power=1: 5v，power=2: 3v，power=3: 1.8v
- *	card		1:A卡，2：B卡,默认选择A卡
- *	readerId	机号，默认255
+ *	reader			读卡器
+ *	power			电源：power=1: 5v，power=2: 3v，power=3: 1.8v
+ *	card			1:A卡，2：B卡,默认选择A卡
  * @return
  *	 0: 修改成功
  *	-1: 通信超时错误
@@ -253,14 +253,14 @@ CARDREADERCLIENTDLL_API int GetCardBraudRate(int& braudRate,int readerId=255);
  *	-3: 机号范围错误
  *	-4: 修改失败
  */
-CARDREADERCLIENTDLL_API int ModifyCardPower(int power,int card=1,int readerId=255);
+CARDREADERCLIENTDLL_API int ModifyCardPower(Reader* reader, int power,int card=1);
 
 /**
  * @brief 发送执行批处理APDU命令
  * @param
+ *	reader		读卡器
  *	card		选择执行的卡，card=1为A卡，2为B卡。默认A卡
  *	cmdNum		要执行的指令条数
- *	readerId	机号，默认255
  * @return
  *	 0: 成功
  *	-1: 通信超时错误
@@ -268,11 +268,12 @@ CARDREADERCLIENTDLL_API int ModifyCardPower(int power,int card=1,int readerId=25
  *	-3: 机号范围错误
  *	-4: 发送失败
  */
-CARDREADERCLIENTDLL_API int  ExcuteMulAPDU(int cmdNum,int card=1,int readerId=255);
+CARDREADERCLIENTDLL_API int  ExcuteMulAPDU(Reader* reader, int cmdNum,int card=1);
 
 /**
  * @brief 读批处理二进制脚本文件
  * @param
+ *	reader			读卡器
  *	bytes			要读取的字节数
  *	readerId		机号，默认255 
  *	offset			读取数据的文件偏移地址
@@ -284,14 +285,14 @@ CARDREADERCLIENTDLL_API int  ExcuteMulAPDU(int cmdNum,int card=1,int readerId=25
  *	 -3: 机号范围错误
  *	 -4: 读取失败
  */
-CARDREADERCLIENTDLL_API int GetScriptData(int offset,unsigned char bytes,SmartCom::string& strData,int readerId=255);
+CARDREADERCLIENTDLL_API int GetScriptData(Reader* reader, int offset,unsigned char bytes,SmartCom::string& strData);
 
 /**
  * @brief 下载文件
  * @param
+ *	reader			读卡器
  *	flag			flag=1,下载命令体文件，flag=2，下载命令头文件
  *	fileName		文件名
- *	readerId		机号，默认255 
  * @return
  *	 0: 下载成功
  *	-1: 通信超时错误
@@ -300,12 +301,12 @@ CARDREADERCLIENTDLL_API int GetScriptData(int offset,unsigned char bytes,SmartCo
  *	-4: 下载失败
  *	-5: 文件打开失败
  */
-CARDREADERCLIENTDLL_API int DownloadFile(int flag,const char* fileName,int readerId=255);
+CARDREADERCLIENTDLL_API int DownloadFile(Reader* reader, int flag,const char* fileName);
 
 /**
  * @brief 查询执行批处理APDU结果
  * @param
- *	readerId		机号，默认255 
+ *	reader			读卡器
  *	retCode			出口参数, 最后一条指令的返回值 
  *		retCode="F1": 未选定卡或无卡或卡复位失败(卡已失效)，APDU响应超时（或无效的APDU命令）等错误。
  * @return
@@ -314,12 +315,12 @@ CARDREADERCLIENTDLL_API int DownloadFile(int flag,const char* fileName,int reade
  *	 -2: 通信器无效 
  *	 -3: 机号范围错误
  */
-CARDREADERCLIENTDLL_API int CheckBatchResult(SmartCom::string& retCode,int readerId=255);
+CARDREADERCLIENTDLL_API int CheckBatchResult(Reader* reader, SmartCom::string& retCode);
 
 /**
  * @brief 对SST25VF016B存储器进行整片擦除
  * @param
- *	readerId	机号，默认255 
+ *	reader			读卡器
  * @return
  *	 0: 擦除成功
  *	-1: 通信超时错误
@@ -327,4 +328,4 @@ CARDREADERCLIENTDLL_API int CheckBatchResult(SmartCom::string& retCode,int reade
  *	-3: 机号范围错误
  *	-4: 擦除失败
  */
-CARDREADERCLIENTDLL_API int ClearMem(int readerId=255);
+CARDREADERCLIENTDLL_API int ClearMem(Reader* reader);
