@@ -216,8 +216,9 @@ void CCardReaderServerDlg::OnButtonStart()
 		if (Server::getInstance()->start() != 0)
 		{
 			AfxMessageBox("开启失败");
+		} else {
+			m_start = TRUE;
 		}
-		m_start = TRUE;
 	} else {
 		AfxMessageBox("服务器已开启");
 	}
@@ -233,8 +234,9 @@ void CCardReaderServerDlg::OnButtonStop()
 		if (Server::getInstance()->stop() != 0)
 		{
 			AfxMessageBox("关闭失败");
+		} else {
+			m_start = FALSE;
 		}
-		m_start = FALSE;
 	} else {
 		AfxMessageBox("服务器未开启");
 	}
