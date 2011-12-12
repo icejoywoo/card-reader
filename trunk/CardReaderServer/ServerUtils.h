@@ -20,26 +20,6 @@
  */
 CString i2str(int a);
 
-
-/**
- * @brief 获取对应读卡器号id的ip地址和端口号port
- * @param
- *	out ip 读卡器号id对应的ip地址
- *	out port 读卡器号id对应的port
- *	in id 读卡器号
- *	param 服务器端存放设置的参数
- * @return None
- */
-void GetIpAndPort(CString& ip, int& port, int id, ServerParam* param);
-
-/**
- * @brief 获取对应ip控件的ip字符串
- * @param
- *	in ip MFC的ip控件CIPAddressCtrl
- * @return ip点分字符串
- */
-CString getIpAdress(CIPAddressCtrl& ip);
-
 /**
  * @brief 解析网络命令, 对读卡器进行相应的操作
  * @param 

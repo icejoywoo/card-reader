@@ -6,11 +6,55 @@
 --------------------Configuration: CardReaderServer - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD9B1.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerSettingDlg.cpp"
+]
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD9B1.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD9C1.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderServer.pdb" /debug /machine:I386 /out:"Debug/CardReaderServer.exe" /pdbtype:sept 
+".\Debug\CardReaderServer.obj"
+".\Debug\CardReaderServerDlg.obj"
+".\Debug\Handlers.obj"
+".\Debug\Server.obj"
+".\Debug\ServerParam.obj"
+".\Debug\ServerSettingDlg.obj"
+".\Debug\ServerUtils.obj"
+".\Debug\SimpleLog.obj"
+".\Debug\SplitStr.obj"
+".\Debug\StdAfx.obj"
+".\Debug\CardReaderServer.res"
+]
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD9C1.tmp"
+<h3>Output Window</h3>
+Compiling...
+ServerSettingDlg.cpp
+Linking...
+LINK : fatal error LNK1168: cannot open Debug/CardReaderServer.exe for writing
+Ö´ÐÐ link.exe Ê±³ö´í.
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPDF00.tmp" with contents
+[
+/nologo /o"Debug/CardReaderServer.bsc" 
+".\Debug\StdAfx.sbr"
+".\Debug\CardReaderServer.sbr"
+".\Debug\CardReaderServerDlg.sbr"
+".\Debug\Handlers.sbr"
+".\Debug\Server.sbr"
+".\Debug\ServerParam.sbr"
+".\Debug\ServerSettingDlg.sbr"
+".\Debug\ServerUtils.sbr"
+".\Debug\SimpleLog.sbr"
+".\Debug\SplitStr.sbr"]
+Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPDF00.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
 
 
 
 <h3>Results</h3>
-CardReaderServer.exe - 0 error(s), 0 warning(s)
+CardReaderServer.exe - 1 error(s), 0 warning(s)
 </pre>
 </body>
 </html>

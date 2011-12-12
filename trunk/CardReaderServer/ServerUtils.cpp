@@ -13,41 +13,6 @@ CString i2str(int a)
 	return str;
 }
 
-void GetIpAndPort(CString& ip, int& port, int id, ServerParam* param)
-{
-	// 每个ip对应32个读卡器, 每个读卡器对应一个port, port默认从10000开始
-	const int defaultPort = 10000;
-	if(id<=32&&id>=1)
-	{
-        ip=param->ip1;
-		port=defaultPort+id;
-	}
-	else if(id>32&&id<=64)
-	{
-		ip=param->ip2;
-		port=defaultPort+id-32;
-	}
-	else if(id>64&&id<96)
-	{
-		ip=param->ip3;
-		port=defaultPort+id-64;
-	}
-	else if(id>96&&id<128)
-	{
-		ip=param->ip4;
-		port=defaultPort+id-96;
-	}
-}
-
-CString getIpAdress(CIPAddressCtrl& ip)
-{
-	BYTE b[4];
-	ip.GetAddress(b[0], b[1], b[2], b[3]);
-	CString result;
-	result.Format("%d.%d.%d.%d", b[0], b[1], b[2], b[3]);
-	return result;
-}
-
 int parseCommand(SOCKET client, int readerId, char* command, CString& operationName)
 {
 	ServerParam::instance->split.SetData(CString(command));
@@ -63,8 +28,6 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 	int port; // 读卡器对应的端口号
 	Communicator communicator; // 与读卡器通信的通信
 	
-	GetIpAndPort(ip, port, readerId, ServerParam::instance); 
-	//GetOneUDPCommunicator(communicator, ip, port); // 获得通信器
 	if (GetOneCOMCommunicator(communicator, 4) != 0)// 获取通信器, 第二个参数与
 	{
 		SimpleLog::error("通信器初始化失败");

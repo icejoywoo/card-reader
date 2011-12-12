@@ -65,7 +65,7 @@ public:
 	 * @brief 通过socket接收数据
 	 * @param 
 	 *	in s 需要接收数据的socket
-	 *	out data , 出口参数, 需要接收的数据
+	 *	out data 出口参数, 需要接收的数据
 	 *	len data的长度
 	 * @return 接收的字符数
 	 */
@@ -74,11 +74,22 @@ public:
 	/**
 	 * @brief 通过socket接收int数据
 	 * @param 
-	 *	in s 需要接收数据的socket
-	 *	out data , 出口参数, 需要接收的数据
+	 *	in s		需要接收数据的socket
+	 *	out data	出口参数, 需要接收的数据
 	 * @return 接收的字符数
 	 */
 	static int receiveData(SOCKET s, int& data);
+
+	/**
+	 * @brief 将buf中的字符串, delimiter为逗号, 进行分割
+	 * @param 
+	 *	in buf 需要切割的字符串
+	 *	out first 分割的第一个参数
+	 *	out second 分割出的第二个参数
+	 * @return 接收的字符数
+	 */
+	static void splitString(char* buf, string& first, string& second);
+	static void splitString(char* buf, string& first, int& second);
 };
 
 #endif
