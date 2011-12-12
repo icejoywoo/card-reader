@@ -96,7 +96,7 @@ CARDREADERCLIENTDLL_API int CleanUpClient();
  * @return  
  *	0: 成功
  */
-CARDREADERCLIENTDLL_API int GetReader(Reader reader, long socketTimeout, long customTimeout);
+CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long customTimeout);
 
 /**
  * @brief 释放读卡器
@@ -105,7 +105,7 @@ CARDREADERCLIENTDLL_API int GetReader(Reader reader, long socketTimeout, long cu
  * @return  
  *	0: 成功
  */
-CARDREADERCLIENTDLL_API int ReleaseReader(Reader reader);
+CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader);
 
 /**
  * @brief 读取终端设备id号和机号

@@ -213,10 +213,10 @@ int receiveData(SOCKET s, char* data, int len)
 	return size;
 }
 
-int receiveData(SOCKET s, int &data)
+int receiveData(SOCKET s, int& data)
 {
-	char* str = NULL;
-	int size = receiveData(s, str, 5);
+	char str[512];
+	int size = receiveData(s, str, 512);
 	data = atoi(str);
 	return size;
 }

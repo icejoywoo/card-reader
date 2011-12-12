@@ -55,6 +55,9 @@ int Server::stop()
 	}
 	this->status = FALSE;
 	SimpleLog::info("服务器已关闭");
+
+	// 恢复服务器的原始状态
+
 	return 0;
 }
 

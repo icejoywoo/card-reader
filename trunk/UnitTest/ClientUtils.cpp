@@ -17,8 +17,9 @@ ClientUtils::~ClientUtils() {}
 int ClientUtils::sendData(SOCKET server, const char* data)
 {
 	char buff[512];
+	memset(buff, 0, 512);
 	sprintf(buff, data);
-	int size = send(server, data, strlen(buff), 0);
+	int size = send(server, buff, strlen(buff), 0);
 	return size;
 }
 

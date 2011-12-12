@@ -102,6 +102,6 @@ int receiveData(SOCKET s, char* data, int len);
  *	out data , 出口参数, 需要接收的数据
  * @return 接收的字符数
  */
-int receiveData(SOCKET s, int data);
+int receiveData(SOCKET s, int& data);
 
 #endif

@@ -10,6 +10,10 @@
 #include "CardReaderClientDll.h"
 #include "ClientParam.h"
 #include "ClientUtils.h"
+#include <iostream>
+#include <string>
+
+using namespace std;
 
 // #define CARDREADERCLIENTDLL_EXPORTS
 // #define SMARTCOMSTRING_EXPORTS_MACRO
@@ -66,7 +70,7 @@ CARDREADERCLIENTDLL_API int CleanUpClient()
 	return 0;
 }
 
-CARDREADERCLIENTDLL_API int GetReader(Reader reader, long socketTimeout, long customTimeout)
+CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long customTimeout)
 {
 	struct sockaddr_in server;
 	struct hostent *hp;
@@ -87,39 +91,65 @@ CARDREADERCLIENTDLL_API int GetReader(Reader reader, long socketTimeout, long cu
 	server.sin_family=AF_INET;
 	server.sin_port=htons(ClientParam::instance->serverPort);
 
-	reader.s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	reader->s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	// 设置socket延时
-	if(::setsockopt(reader.s, SOL_SOCKET, SO_SNDTIMEO, (char *)&socketTimeout,sizeof(socketTimeout)) == SOCKET_ERROR){
+	if(::setsockopt(reader->s, SOL_SOCKET, SO_SNDTIMEO, (char *)&socketTimeout,sizeof(socketTimeout)) == SOCKET_ERROR){
 		return SETSOCKOPT_FAILED;
 	}
 
-	if (connect(reader.s, (sockaddr*)&server, sizeof(server)))
+	if (connect(reader->s, (sockaddr*)&server, sizeof(server)))
 	{
 		return CONNECT_FAILED;
 	}
-
-	// 将读卡器id发送过去
-	ClientUtils::sendData(reader.s, reader.readerId);
 	char buf[512];
-	// 看是否Ready
-	ClientUtils::receiveData(reader.s, buf, 512);
-	if (buf != "Ready")
+	// 将读卡器id发送过去
+	if (-1 == ClientUtils::sendData(reader->s, reader->readerId))
 	{
-		return -1; // 等待失败
+		return SEND_ERROR;
+	}
+	// 看是否成功
+	ClientUtils::receiveData(reader->s, buf, 512);
+	if (strcmp(buf, "id_ok") != 0)
+	{
+		closesocket(reader->s); // 关闭socket资源
+		return -1; // 读卡器id错误
 	}
 	// 将客户定制延时发送到服务器
-	ClientUtils::sendData(reader.s, customTimeout);
+	ClientUtils::sendData(reader->s, customTimeout);
+	ClientUtils::receiveData(reader->s, buf, 512);
+	if (strcmp(buf, "timeout_ok") != 0)
+	{
+		closesocket(reader->s); // 关闭socket资源
+		return -2; // 延时设置错误
+	}
+
+	// 看是否Ready
+	ClientUtils::receiveData(reader->s, buf, 512);
+	if (strcmp(buf, "Ready") != 0)
+	{
+		closesocket(reader->s); // 关闭socket资源
+		return -3; // 等待失败
+	}
+	
 	return 0;
 }
 
-CARDREADERCLIENTDLL_API int ReleaseReader(Reader reader)
+CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
 {
-	ClientUtils::sendData(reader.s, "quit"); // 发出退出消息
+	int retCode;
+	if (0 != ClientUtils::sendData(reader->s, "quit")) // 发出退出消息
+	{
+		cout << "发送数据出错" << endl;
+	}
+	ClientUtils::receiveData(reader->s, retCode);
+	if (retCode != 0)
+	{
+		cout << "接收数据出错" << endl;
+	}
 	// 关闭资源
-	closesocket(reader.s);
-	reader.readerId = 0;
-	WSACleanup();
+	closesocket(reader->s);
+	reader->readerId = 0;
 	return 0;
 }
 
