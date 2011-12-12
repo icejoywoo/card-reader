@@ -36,7 +36,9 @@ string ClientUtils::i2str(int a)
 {
 	char* str = new char[10];
 	sprintf(str, "%d", a);
-	return string(str);
+	string str2(str);
+	delete str; // 删除堆内存
+	return str2; // 返回string对象
 }
 
 int ClientUtils::receiveData(SOCKET s, char* data, int len)
@@ -56,4 +58,21 @@ int ClientUtils::receiveData(SOCKET s, int &data)
 	int size = receiveData(s, str, 512);
 	data = atoi(str);
 	return size;
+}
+
+void ClientUtils::splitString(char* buf, string& first, string& second)
+{
+	string str(buf);
+	string::size_type loc = str.find(",", 0);
+	first = str.substr(0, loc);
+	second = str.substr(loc + 1);
+}
+
+void ClientUtils::splitString(char* buf, string& first, int& second)
+{
+	string str(buf);
+	string::size_type loc = str.find(",", 0);
+	first = str.substr(0, loc);
+	string secondstr = str.substr(loc + 1);
+	second = atoi(secondstr.c_str());
 }

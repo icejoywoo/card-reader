@@ -37,7 +37,9 @@ string ClientUtils::i2str(int a)
 {
 	char* str = new char[10];
 	sprintf(str, "%d", a);
-	return string(str);
+	string str2(str);
+	delete str;
+	return str2;
 }
 
 int ClientUtils::receiveData(SOCKET s, char* data, int len)

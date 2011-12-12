@@ -138,7 +138,7 @@ CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long c
 CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
 {
 	int retCode;
-	if (0 != ClientUtils::sendData(reader->s, "quit")) // 发出退出消息
+	if (-1 == ClientUtils::sendData(reader->s, "quit")) // 发出退出消息
 	{
 		cout << "发送数据出错" << endl;
 	}
@@ -153,40 +153,191 @@ CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
 	return 0;
 }
 
-CARDREADERCLIENTDLL_API int GetDevIDAndReaderId(Reader reader, char* devID, int devIDBufLen, int& readerId)
+CARDREADERCLIENTDLL_API int GetDevIDAndReaderId(Reader* reader, char* devID, int devIDBufLen, int& readerId)
 {
-	if (ClientUtils::sendData(reader.s, "getDevIdAndReaderId") == SOCKET_ERROR)
+	if (ClientUtils::sendData(reader->s, "getDevIdAndReaderId") == SOCKET_ERROR)
 	{
 		return SEND_ERROR;
 	}
 	char buf[512];
-	int size = ClientUtils::receiveData(reader.s, buf, 512);
+	int size = ClientUtils::receiveData(reader->s, buf, 512);
 	if (size == -1)
 	{
 		return RECV_ERROR;
 	}
 
-	sscanf(buf, "%s,%d", devID, readerId);
+	// 处理返回结果
+	string first;
+	string second;
+	ClientUtils::splitString(buf, first, second);
+	strcpy(devID, first.c_str());
+	readerId = atoi(second.c_str());
+
 	int serverRet;
-	ClientUtils::receiveData(reader.s, serverRet);
+	ClientUtils::receiveData(reader->s, serverRet); // 接收服务器返回值
 	return serverRet;
 }
 
-CARDREADERCLIENTDLL_API int SetReaderIdByDevID(Reader reader, const char* devID, int readerId)
+CARDREADERCLIENTDLL_API int SetReaderIdByDevID(Reader* reader, const char* devID, int readerId)
 {
 	char cmd[512];
-	sprintf(cmd, "getDevIdAndReaderId,%s,%d", devID, readerId);
-	if (ClientUtils::sendData(reader.s, cmd) == SOCKET_ERROR)
+	sprintf(cmd, "setReaderIdByDevID,%s,%d", devID, readerId);
+	if (ClientUtils::sendData(reader->s, cmd) == SOCKET_ERROR)
 	{
 		return SEND_ERROR;
 	}
 	int serverRet;
-	ClientUtils::receiveData(reader.s, serverRet);
+	ClientUtils::receiveData(reader->s, serverRet);
+	if (serverRet == 0)
+	{
+		reader->readerId = readerId;
+	}
 	return serverRet;
 }
 
-CARDREADERCLIENTDLL_API int GetAppVerAndDevType(Reader reader, char* appVer, int appVerlen, char* devType, int devTypeLen)
+CARDREADERCLIENTDLL_API int GetAppVerAndDevType(Reader* reader, char* appVer, int appVerlen, char* devType, int devTypeLen)
 {
+	if (ClientUtils::sendData(reader->s, "getAppVerAndDevType") == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+	char buf[512];
+	int size = ClientUtils::receiveData(reader->s, buf, 512);
+	if (size == -1)
+	{
+		return RECV_ERROR;
+	}
 
-	return 0;
+	// 处理返回结果
+	string first;
+	string second;
+	ClientUtils::splitString(buf, first, second);
+	assert(appVerlen >= first.length());
+	strcpy(appVer, first.c_str());
+	assert(devTypeLen >= second.length());
+	strcpy(devType, second.c_str());
+	
+	int retCode;
+	size = ClientUtils::receiveData(reader->s, retCode);
+	if (size == -1)
+	{
+		return RECV_ERROR;
+	}
+	return retCode;
+}
+
+CARDREADERCLIENTDLL_API int ResetDev(Reader* reader)
+{
+	if (ClientUtils::sendData(reader->s, "reset") == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+
+	int retCode;
+	if (ClientUtils::receiveData(reader->s, retCode) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return retCode;
+}
+
+CARDREADERCLIENTDLL_API int GetChipID(Reader* reader, char* chipID, int chipIDLen)
+{
+	if (ClientUtils::sendData(reader->s, "getChipID") == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+	char buf[512];
+	if (ClientUtils::receiveData(reader->s, buf, 512) == -1)
+	{
+		return RECV_ERROR;
+	}
+	assert(chipIDLen >= strlen(buf));
+	strcpy(chipID, buf);
+
+	int retCode;
+	if (ClientUtils::receiveData(reader->s, retCode) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return retCode;
+}
+
+CARDREADERCLIENTDLL_API int IsCardReady(Reader* reader, int& cardA,int& cardB)
+{
+	if (ClientUtils::sendData(reader->s, "isCardReady") == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+
+	char buf[512];
+	int size = ClientUtils::receiveData(reader->s, buf, 512);
+	if (size == -1)
+	{
+		return RECV_ERROR;
+	}
+	
+	// 处理返回结果
+	string first;
+	string second;
+	ClientUtils::splitString(buf, first, second);
+	cardA = atoi(first.c_str());
+	cardB = atoi(second.c_str());
+
+	int retCode;
+	if (ClientUtils::receiveData(reader->s, retCode) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return retCode;
+}
+
+CARDREADERCLIENTDLL_API int ResetCard(Reader* reader, SmartCom::string& retCode,int card)
+{
+	char cmd[512];
+	sprintf(cmd, "resetCard,%d", card);
+	if (ClientUtils::sendData(reader->s, cmd) == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+	
+	char buf[512];
+	int size = ClientUtils::receiveData(reader->s, buf, 512);
+	if (size == -1)
+	{
+		return RECV_ERROR;
+	}
+	retCode = buf;
+
+	int ret;
+	if (ClientUtils::receiveData(reader->s, ret) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return ret;
+}
+
+CARDREADERCLIENTDLL_API int CardApdu(Reader* reader, char* apdu, SmartCom::string& retCode,int card)
+{
+	char cmd[512];
+	sprintf(cmd, "cardApdu,%s,%d", apdu, card);
+	if (ClientUtils::sendData(reader->s, cmd) == SOCKET_ERROR)
+	{
+		return SEND_ERROR;
+	}
+	
+	char buf[512];
+	int size = ClientUtils::receiveData(reader->s, buf, 512);
+	if (size == -1)
+	{
+		return RECV_ERROR;
+	}
+	retCode = buf;
+	
+	int ret;
+	if (ClientUtils::receiveData(reader->s, ret) == -1)
+	{
+		return RECV_ERROR;
+	}
+	return ret;
 }

@@ -21,6 +21,7 @@
 #include <winbase.h>
 
 #pragma comment(lib, "WS2_32")
+#include <cassert>
 // TODO: reference additional headers your program requires here
 #include "SmartComString.h"
 #include "CustomErrorCode.h"

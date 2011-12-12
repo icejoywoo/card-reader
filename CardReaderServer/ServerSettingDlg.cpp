@@ -62,18 +62,6 @@ void ServerSettingDlg::OnOK()
 		AfxMessageBox("修改了端口号, 需要重启服务器, 才可以生效!!!");
 	}
 	
-	ServerParam::instance->ip1 = getIpAdress(m_IP1);
-	ServerParam::instance->ip2 = getIpAdress(m_IP2);
-	ServerParam::instance->ip3 = getIpAdress(m_IP3);
-	ServerParam::instance->ip4 = getIpAdress(m_IP4);
-
-	if (m_ReaderCount >= 0 && m_ReaderCount <= 128)
-	{
-		ServerParam::instance->readerCount = m_ReaderCount;
-	} else {
-		AfxMessageBox("读卡器数目设置有误, 范围为1-128.");
-	}
-	
 	UpdateData(FALSE);
 	CDialog::OnOK();
 }
