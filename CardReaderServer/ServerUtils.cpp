@@ -57,7 +57,7 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 		return resultCode;
 	} else if (operationName == CString("downloadFile")) { // 下载文件
 		int flag = atoi(requestParam[1]); // 1 下载命令体文件, 2 下载命令头文件
-		char* fileName = (LPSTR)(LPCTSTR)requestParam[3]; // 文件名
+		char* fileName = (LPSTR)(LPCTSTR)requestParam[2]; // 文件名
 		return DownloadFile(communicator, flag, fileName, readerId);
 	} else if (operationName == CString("cardApdu")) { // 卡片操作-执行APDU命令
 		char* apdu = (LPSTR)(LPCTSTR)requestParam[1]; // apdu命令
