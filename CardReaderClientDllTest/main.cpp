@@ -177,6 +177,16 @@ int main(void)
 			printf("下载体文件失败\n");
 		}
 	}
+	
+	// 获取脚本数据(需要先下载文件)
+	{
+		SmartCom::string strData;
+		if (0 != GetScriptData(reader, 0, 128, strData))
+		{
+			printf("GetScriptData失败\n");
+		}
+		cout << strData.c_str() << endl;
+	}
 
 	// 执行多条apdu(需要先下载文件)
 	{
