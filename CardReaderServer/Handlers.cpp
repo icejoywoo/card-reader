@@ -91,7 +91,7 @@ UINT defaultServerHandler(LPVOID pParam)
 	SimpleLog::info(CString("服务器启动成功, ") + "端口: " + i2str(serv->getPort()));
 
 	AfxBeginThread(serv->waitListHandler, NULL); // 启动等待队列线程, 处理等待队列的
-	AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
+//	AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
 
 	while (true)
 	{
