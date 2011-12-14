@@ -56,6 +56,10 @@ int Server::stop()
 	SimpleLog::info("服务器已关闭");
 
 	// 恢复服务器的原始状态
+	readerUsage.clear();
+	timeoutList.clear();
+	timeout.clear();
+	clients.clear();
 
 	return 0;
 }
