@@ -74,8 +74,8 @@ void CCardReaderServerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CCardReaderServerDlg)
-	DDX_Control(pDX, IDC_TREE_VIEW, m_Tree);
 	DDX_Control(pDX, IDC_EDIT_LOG, m_logWindow);
+	DDX_Control(pDX, IDC_TREE_VIEW, m_Tree);
 	//}}AFX_DATA_MAP
 }
 
@@ -138,6 +138,7 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 	
 
 	// 记录日志的线程
+	m_logWindow.SetLimitText(4294967295);
 	AfxBeginThread(logHandler, &m_logWindow);
 
 	// 设置主窗口为当前对话框

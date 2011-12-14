@@ -23,6 +23,10 @@ UINT logHandler (LPVOID pParam)
 			logWindow->SetSel(len,len);
 			logWindow->ReplaceSel(Server::getInstance()->log);
 			Server::getInstance()->log = ""; // 清空日志
+			if (logWindow->GetLineCount() > 400) // 超过50行清空一次
+			{
+				logWindow->SetWindowText("");
+			}
 		}
 		Sleep(500); // 延迟0.5s
 	}
@@ -160,7 +164,7 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 					Server::getInstance()->timeout[iter->first])
 				{
 					SOCKET s = iter->second;
-					SimpleLog::warn(CString("读卡器") + i2str(iter->first) + "等待超时, 即刻关闭");
+					SimpleLog::error(CString("读卡器") + i2str(iter->first) + "等待超时, 即刻关闭");
 					shutdown(s, SD_BOTH);
 					closesocket(s);
 					Server::getInstance()->releaseReader(iter->first); // 删除读卡器当前的socket连接
@@ -199,7 +203,7 @@ UINT defaultClientHandler (LPVOID pParam)
 			if (Server::getInstance()->status == TRUE)
 				SimpleLog::info("[" + operationName + "]操作成功");
 		} else {
-			SimpleLog::info("[" + operationName + "]操作失败, 错误码: " + i2str(resultCode));
+			SimpleLog::error("[" + operationName + "]操作失败, 错误码: " + i2str(resultCode));
 		}
 		// 将结果发送到客户端
 		if (sendData(client, resultCode) == -1) // 发送数据出错即刻关闭

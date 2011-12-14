@@ -25,20 +25,31 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 	operationName.TrimRight();
 
 	Communicator communicator; // 与读卡器通信的通信
-	
+
+	if (InitUDPComm() == -1) {
+		AfxMessageBox("与卡片读写器的通信初始化失败");
+		SimpleLog::error("与卡片读写器的通信初始化失败");
+		return -101; // 与卡片读写器的通信初始化失败
+	}
+
+
 	// readerId的含义, 表示读卡器相应的com号
-	if (GetOneCOMCommunicator(communicator, readerId) != 0) // 获取通信器, 第二个参数与
+// 	if (GetOneCOMCommunicator(communicator, readerId) != 0) // 获取通信器, 第二个参数与
+// 	{
+// 		SimpleLog::error("通信器初始化失败");
+// 		return GET_COMMUNICATOR_FAILED;
+// 	}
+	// 测试使用, 使用udp通信器
+	const char* dstIP = "192.168.1.138";
+	int port = 10000 + readerId;
+	if (GetOneUDPCommunicator(communicator, dstIP, port) != 0)// 获取通信器, 第二个参数与
 	{
 		SimpleLog::error("通信器初始化失败");
 		return GET_COMMUNICATOR_FAILED;
 	}
+
 	SimpleLog::info("通信器初始化完成");
 
-// 	if (InitUDPComm() == -1) {
-// 		AfxMessageBox("与卡片读写器的通信初始化失败");
-// 		SimpleLog::error("与卡片读写器的通信初始化失败");
-// 		return -101; // 与卡片读写器的通信初始化失败
-// 	}
 
 	SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]正在进行[" + operationName + "]操作...");
 
@@ -123,7 +134,12 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 		SmartCom::string retCode; // out 复位命令的返回值, "F9"：卡座无卡, "FD"：不可识别卡
 		int card = atoi(requestParam[1]); // 1 A卡, 2 B卡
 		int resultCode = ResetCard(communicator, retCode, card, readerId);
-		sendData(client, retCode);
+		if (resultCode != 0)
+		{
+			sendData(client, "ResetCard_wrong");
+		} else {
+			sendData(client, retCode);
+		}
 		return resultCode;
 	} else if (operationName == CString("quit")) { // 退出
 		// 退出直接返回没什么好说的
@@ -148,7 +164,7 @@ int sendData(SOCKET s, const char* data)
 	int size = send(s, buff, strlen(buff), 0);
 
 	if (-1 == size) {
-		SimpleLog::info(CString("发送数据错误, 数据: [") + buff + "]");
+		SimpleLog::error(CString("发送数据错误, 数据: [") + buff + "]");
 	} else {
 		SimpleLog::info(CString("发送数据, 长度: ") + i2str(size) + ", 数据: [" + buff + "]");
 	}

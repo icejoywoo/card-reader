@@ -22,8 +22,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CCardReaderServerDlg)
 	enum { IDD = IDD_CARDREADERSERVER_DIALOG };
-	CTreeCtrl	m_Tree;
 	CEdit	m_logWindow;
+	CTreeCtrl	m_Tree;
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides
