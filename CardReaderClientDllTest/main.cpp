@@ -39,7 +39,7 @@ int main(void)
 // 	return 0;
 
 	Reader* reader = new Reader();
-	reader->readerId = 4;
+	reader->readerId = 3;
 
 	// 初始化客户端
 	InitClient("127.0.0.1", 60000);

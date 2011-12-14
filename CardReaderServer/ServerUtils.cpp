@@ -26,9 +26,6 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 
 	Communicator communicator; // 与读卡器通信的通信
 
-	
-
-
 	// readerId的含义, 表示读卡器相应的com号
 // 	if (GetOneCOMCommunicator(communicator, readerId) != 0) // 获取通信器, 第二个参数与
 // 	{
@@ -43,8 +40,7 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 		SimpleLog::error("通信器初始化失败");
 		return GET_COMMUNICATOR_FAILED;
 	}
-
-	SimpleLog::info("通信器初始化完成");
+	SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]通信器初始化完成");
 
 
 	SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]正在进行[" + operationName + "]操作...");
