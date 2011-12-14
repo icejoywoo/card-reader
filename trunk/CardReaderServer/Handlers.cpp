@@ -63,9 +63,9 @@ UINT defaultServerHandler(LPVOID pParam)
 	}
 	
 	// 对读卡器的访问控制, 在服务器启动的时候进行初始化设置
-	if (serv->readerCount != ServerParam::instance->readerCount) // 当读卡器数量发生变化时
+	if (serv->readerCount != 32) // 当读卡器数量发生变化时
 	{
-		serv->readerCount = ServerParam::instance->readerCount;
+		serv->readerCount = 32;
 		// 初始化记录当前读卡器状态列表
 		serv->readerUsage.resize(serv->readerCount);
 		// 初始化timeout列表
@@ -84,7 +84,8 @@ UINT defaultServerHandler(LPVOID pParam)
 	struct sockaddr_in from;
 	memset(&from, 0, sizeof(from));
 	int fromlen = sizeof(from);
-	SimpleLog::info(CString("服务器启动成功, 端口: ") + i2str(serv->getPort()));
+//	SimpleLog::info(CString("服务器启动成功, ") + "IP:" + inet_ntoa(local.sin_addr) + ", 端口: " + i2str(serv->getPort()));
+	SimpleLog::info(CString("服务器启动成功, ") + "端口: " + i2str(serv->getPort()));
 
 	AfxBeginThread(serv->waitListHandler, NULL); // 启动等待队列线程, 处理等待队列的
 	//AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
@@ -104,30 +105,21 @@ UINT defaultServerHandler(LPVOID pParam)
 		int readerId; // 读卡器号
 		receiveData(client, readerId);
 		
-		if (readerId > 0 && readerId <= serv->readerCount) // 判断cardId是否合法
-		{
-			SimpleLog::info(CString("接收读卡器号: ") + i2str(readerId));
-			serv->addToWaitList(readerId, client); // 添加到等待处理队列
-			SimpleLog::info(CString("将请求添加到读卡器[") + i2str(readerId) + "]等待队列中...");
-			sendData(client, "id_ok");
-		}
-		else
-		{
-			SimpleLog::info(CString("接收读卡器号无效, 读卡器号: ") + i2str(readerId));
-			sendData(client, "id_wrong");
-			closesocket(client); // 关闭socket
-		}
+		SimpleLog::info(CString("接收读卡器com号: [") + i2str(readerId) + "]");			
+		sendData(client, "id_ok");
 
 		// 读取延时
 		int timeout; // 读卡器延时
 		receiveData(client, timeout);
 		
-		SimpleLog::info(CString("读卡器") + i2str(readerId) + "的延时为: " + i2str(timeout));
+		SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]的延时为: " + i2str(timeout));
 		
 		Server::getInstance()->timeout[readerId] = timeout;
 		sendData(client, "timeout_ok");
 		Server::getInstance()->updateTimeout(readerId);
 
+		serv->addToWaitList(readerId, client); // 添加到等待处理队列
+		SimpleLog::info(CString("将请求添加到[读卡器 ") + i2str(readerId) + "]等待队列中...");
 	}
 	return 0;
 }
@@ -142,7 +134,7 @@ UINT defaultWaitListHandler (LPVOID pParam )
 		{
 			if (0 == Server::getInstance()->readerUsage[i] && !Server::getInstance()->waitList[i].empty())
 			{
-				SimpleLog::info(CString("开始处理读卡器") + i2str(i) + "的请求");
+				SimpleLog::info(CString("开始处理[读卡器 ") + i2str(i) + "]的请求...");
 				AfxBeginThread(Server::getInstance()->clientHandler, (LPVOID)i);
 				Server::getInstance()->readerUsage[i] = 1; // 标记读卡器为正在使用
 			}

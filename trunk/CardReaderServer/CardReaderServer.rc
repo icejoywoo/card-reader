@@ -118,20 +118,6 @@ BEGIN
     EDITTEXT        IDC_EDIT_PORT,79,18,40,14,ES_AUTOHSCROLL
     GROUPBOX        "读卡器设置",IDC_STATIC,16,51,329,115
     GROUPBOX        "服务器设置",IDC_STATIC,17,6,329,41
-    EDITTEXT        IDC_EDIT_READERCOUNT,80,68,40,14,ES_AUTOHSCROLL
-    LTEXT           "读卡器数量",IDC_STATIC,36,71,38,8
-    CONTROL         "IPAddress1",IDC_IPADDRESS1,"SysIPAddress32",WS_TABSTOP,
-                    76,95,100,15
-    CONTROL         "IPAddress2",IDC_IPADDRESS2,"SysIPAddress32",WS_TABSTOP,
-                    238,94,100,15
-    CONTROL         "IPAddress3",IDC_IPADDRESS3,"SysIPAddress32",WS_TABSTOP,
-                    76,126,100,15
-    CONTROL         "IPAddress4",IDC_IPADDRESS4,"SysIPAddress32",WS_TABSTOP,
-                    238,125,100,15
-    LTEXT           "1-32机号IP",IDC_STATIC,34,100,40,8
-    LTEXT           "33-64机号IP",IDC_STATIC,188,99,44,8
-    LTEXT           "65-96机号IP",IDC_STATIC,31,129,44,8
-    LTEXT           "97-128机号IP",IDC_STATIC,185,131,48,8
 END
 
 IDD_DIALOG1 DIALOG DISCARDABLE  0, 0, 187, 96

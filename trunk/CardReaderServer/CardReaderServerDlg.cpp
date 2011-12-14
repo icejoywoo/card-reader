@@ -142,14 +142,7 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 
 	// 设置主窗口为当前对话框
 	ServerParam::instance->mainFrame = this->GetSafeHwnd();
-	/**
-	 * 初始化serverParam参数的一些参量
-	 */
-	ServerParam::instance->ip1 = "192.168.1.138";
-	ServerParam::instance->ip2 = "192.168.1.139";
-	ServerParam::instance->ip3 = "192.168.1.140";
-	ServerParam::instance->ip4 = "192.168.1.141";
-	ServerParam::instance->readerCount = 32;
+
 
 	// 初始化设置窗口
 	settingDlg = new ServerSettingDlg(this);

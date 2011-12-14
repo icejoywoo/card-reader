@@ -24,21 +24,23 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 	operationName.TrimLeft();
 	operationName.TrimRight();
 
-	CString ip; // 读卡器对应的ip
-	int port; // 读卡器对应的端口号
 	Communicator communicator; // 与读卡器通信的通信
 	
-	if (GetOneCOMCommunicator(communicator, 4) != 0)// 获取通信器, 第二个参数与
+	// readerId的含义, 表示读卡器相应的com号
+	if (GetOneCOMCommunicator(communicator, readerId) != 0) // 获取通信器, 第二个参数与
 	{
 		SimpleLog::error("通信器初始化失败");
+		return GET_COMMUNICATOR_FAILED;
 	}
 	SimpleLog::info("通信器初始化完成");
 
-	if (InitUDPComm() == -1) {
-		AfxMessageBox("与卡片读写器的通信初始化失败");
-		SimpleLog::error("与卡片读写器的通信初始化失败");
-		return -101; // 与卡片读写器的通信初始化失败
-	}
+// 	if (InitUDPComm() == -1) {
+// 		AfxMessageBox("与卡片读写器的通信初始化失败");
+// 		SimpleLog::error("与卡片读写器的通信初始化失败");
+// 		return -101; // 与卡片读写器的通信初始化失败
+// 	}
+
+	SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]正在进行[" + operationName + "]操作...");
 
 	// refer to SmartCom.h
 	if (operationName == CString("reset")) { // 复位操作
@@ -125,6 +127,7 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 		return resultCode;
 	} else if (operationName == CString("quit")) { // 退出
 		// 退出直接返回没什么好说的
+		SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]操作完毕");
 		return 0;
 	}
 

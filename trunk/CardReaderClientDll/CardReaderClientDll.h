@@ -28,6 +28,8 @@
 
 /**
  * @brief 保存读卡器id和与服务器连接的socket
+ *
+ * 通过读卡器id和socket的绑定, 可以方便调试, 查看当前读卡器id
  */
 typedef struct _Reader
 {
