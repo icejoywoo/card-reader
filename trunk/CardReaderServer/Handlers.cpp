@@ -63,21 +63,13 @@ UINT defaultServerHandler(LPVOID pParam)
 	}
 	
 	// 对读卡器的访问控制, 在服务器启动的时候进行初始化设置
-	if (serv->readerCount != 32) // 当读卡器数量发生变化时
+	for (set<int>::iterator iter = ServerParam::instance->readerIdSet.begin(); 
+			iter != ServerParam::instance->readerIdSet.end(); ++iter) // 遍历当前读卡器id的集合
 	{
-		serv->readerCount = 32;
-		// 初始化记录当前读卡器状态列表
-		serv->readerUsage.resize(serv->readerCount);
-		// 初始化timeout列表
-		serv->timeoutList.resize(serv->readerCount);
-
-		for (int i = 0; i < serv->readerCount; ++i)
-		{
-			serv->readerUsage[i] = 0; // 初始化控制列表
-			serv->timeoutList[i] = GetTickCount();
-			serv->timeout[i] = 10000; // 延时初始化为10s
-			serv->clients[i] = INVALID_SOCKET; // 初始化当前客户端列表
-		}
+		serv->readerUsage[*iter] = 0; // 初始化控制列表
+		serv->timeoutList[*iter] = GetTickCount();
+		serv->timeout[*iter] = 10000; // 延时初始化为10s
+		serv->clients[*iter] = INVALID_SOCKET; // 初始化当前客户端列表
 	}
 
 	SOCKET client;
@@ -104,9 +96,17 @@ UINT defaultServerHandler(LPVOID pParam)
 		// 接收客户端的请求, 首先读取读卡器id
 		int readerId; // 读卡器号
 		receiveData(client, readerId);
+		if (ServerParam::instance->readerIdSet.count(readerId) > 0 )
+		{
+			SimpleLog::info(CString("接收读卡器com号: [") + i2str(readerId) + "]");			
+			sendData(client, "id_ok");
+		} else {
+			SimpleLog::error(CString("接收读卡器com号: [") + i2str(readerId) + "], 读卡器不存在");			
+			sendData(client, "id_wrong");
+			closesocket(client);
+			continue;
+		}
 		
-		SimpleLog::info(CString("接收读卡器com号: [") + i2str(readerId) + "]");			
-		sendData(client, "id_ok");
 
 		// 读取延时
 		int timeout; // 读卡器延时
