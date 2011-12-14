@@ -23,7 +23,7 @@ UINT logHandler (LPVOID pParam)
 			logWindow->SetSel(len,len);
 			logWindow->ReplaceSel(Server::getInstance()->log);
 			Server::getInstance()->log = ""; // 清空日志
-			if (logWindow->GetLineCount() > 400) // 超过50行清空一次
+			if (logWindow->GetLineCount() > 1000) // 超过1000行清空一次
 			{
 				logWindow->SetWindowText("");
 			}
