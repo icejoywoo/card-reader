@@ -106,13 +106,12 @@ public:
 	// 全局临界区 读卡器的访问控制
 	CRITICAL_SECTION g_cs;
 	// 保存目前读卡器使用情况, 1表示在使用, 0表示未使用
-	vector<int> readerUsage;
-	// 读卡器数量
-	int readerCount;
+	map<int, int> readerUsage;
+
 	// 等待队列
 	map< int, vector<SOCKET> > waitList;
 	// 记录每个读卡器的延时时间
-	vector<ULONG> timeoutList;
+	map<int, ULONG> timeoutList;
 	// 保存每个客户端的延时时间, 由客户端发送
 	map< int, ULONG > timeout;
 	// 当前客户端列表

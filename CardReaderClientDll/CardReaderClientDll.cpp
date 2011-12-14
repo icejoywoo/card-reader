@@ -130,7 +130,7 @@ CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long c
 	{
 		closesocket(reader->s); // 关闭socket资源
 		return -3; // 等待失败
-	}
+	} 
 	
 	return 0;
 }
