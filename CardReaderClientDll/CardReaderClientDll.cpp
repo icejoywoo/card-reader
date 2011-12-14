@@ -153,7 +153,7 @@ CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
 	return 0;
 }
 
-CARDREADERCLIENTDLL_API int GetDevIDAndReaderId(Reader* reader, char* devID, int devIDBufLen, int& readerId)
+CARDREADERCLIENTDLL_API int GetDevIDAndReaderId(Reader* reader, char* devID, int devIDBufLen, int& readerMacId)
 {
 	if (ClientUtils::sendData(reader->s, "getDevIdAndReaderId") == SOCKET_ERROR)
 	{
@@ -171,17 +171,17 @@ CARDREADERCLIENTDLL_API int GetDevIDAndReaderId(Reader* reader, char* devID, int
 	string second;
 	ClientUtils::splitString(buf, first, second);
 	strcpy(devID, first.c_str());
-	readerId = atoi(second.c_str());
+	readerMacId = atoi(second.c_str());
 
 	int serverRet;
 	ClientUtils::receiveData(reader->s, serverRet); // 接收服务器返回值
 	return serverRet;
 }
 
-CARDREADERCLIENTDLL_API int SetReaderIdByDevID(Reader* reader, const char* devID, int readerId)
+CARDREADERCLIENTDLL_API int SetReaderIdByDevID(Reader* reader, const char* devID, int readerMacId)
 {
 	char cmd[512];
-	sprintf(cmd, "setReaderIdByDevID,%s,%d", devID, readerId);
+	sprintf(cmd, "setReaderIdByDevID,%s,%d", devID, readerMacId);
 	if (ClientUtils::sendData(reader->s, cmd) == SOCKET_ERROR)
 	{
 		return SEND_ERROR;
@@ -190,7 +190,7 @@ CARDREADERCLIENTDLL_API int SetReaderIdByDevID(Reader* reader, const char* devID
 	ClientUtils::receiveData(reader->s, serverRet);
 	if (serverRet == 0)
 	{
-		reader->readerId = readerId;
+		reader->readerId = readerMacId;
 	}
 	return serverRet;
 }
