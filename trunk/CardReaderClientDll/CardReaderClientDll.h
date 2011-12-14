@@ -124,7 +124,7 @@ CARDREADERCLIENTDLL_API int SetReaderIdByDevID(Reader* reader, const char* devID
 CARDREADERCLIENTDLL_API int GetAppVerAndDevType(Reader* reader, char* appVer, int appVerlen, char* devType, int devTypeLen);
 
 /**
- * @brief 复位终端设备(过时函数, 不要使用)
+ * @brief 复位终端设备(过时函数, 不要使用, 请使用ResetCard函数来进行复位)
  * @param
  *	reader		读卡器
  * @return
