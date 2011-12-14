@@ -39,7 +39,7 @@ int main(void)
 // 	return 0;
 
 	Reader* reader = new Reader();
-	reader->readerId = 1;
+	reader->readerId = 4;
 
 	// 初始化客户端
 	InitClient("127.0.0.1", 60000);
@@ -51,6 +51,23 @@ int main(void)
 	}
 
 
+	// 修改读卡器id
+// 	{
+// 		char devID[512];
+// 		int readerId;
+// 		if (0 != GetDevIDAndReaderId(reader, devID, 512, readerId))
+// 		{
+// 			printf("GetDevIDAndReaderId Failed.");
+// 		}
+// 		cout << devID << ", " << readerId << endl;
+// 	
+// 		
+// 		if (0 != SetReaderIdByDevID(reader, devID, 4))
+// 		{
+// 			printf("SetReaderIdByDevID Failed.");
+// 		}
+// 	}
+	
 	// 获取读卡器id
 	{
 		char devID[512];
@@ -59,25 +76,8 @@ int main(void)
 		{
 			printf("GetDevIDAndReaderId Failed.");
 		}
-		cout << devID << ", " << readerId << endl;
+ 		cout << devID << ", " << readerId << endl;
 	}
-	
-	// 修改读卡器id
-// 	{
-// 		if (0 != SetReaderIdByDevID(reader, devID, 1))
-// 		{
-// 			printf("SetReaderIdByDevID Failed.");
-// 		}
-// 	}
-	
-	// 获取读卡器id
-// 	{
-// 		if (0 != GetDevIDAndReaderId(reader, devID, 512, readerId))
-// 		{
-// 			printf("GetDevIDAndReaderId Failed.");
-// 		}
-//  		cout << devID << ", " << readerId << endl;
-// 	}
 	
 	// 读取程序版本和终端类型
 // 	{

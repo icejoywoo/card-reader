@@ -9,6 +9,12 @@
 ServerParam* ServerParam::instance = new ServerParam();
 ServerParam::ServerParam()
 {
+	// TODO: 测试使用
+	readerIdSet.insert(1);
+	readerIdSet.insert(2);
+	readerIdSet.insert(3);
+	readerIdSet.insert(4);
+
 	// 设置默认的split参数
 	split.SetSplitFlag(",");
 	split.SetSequenceAsOne(TRUE);
