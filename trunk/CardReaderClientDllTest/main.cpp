@@ -167,16 +167,16 @@ int main(void)
 	}
 
 	// 下载文件(Attention:文件应该放在服务器端的)
-	{
-		if (0 != DownloadFile(reader, 2, "apdu_head.bin")) // 下载头文件
-		{
-			printf("下载头文件失败\n");
-		}
-		if (0 != DownloadFile(reader, 1, "apdu_body.bin")) // 下载体文件
-		{
-			printf("下载体文件失败\n");
-		}
-	}
+// 	{
+// 		if (0 != DownloadFile(reader, 2, "apdu_head.bin")) // 下载头文件
+// 		{
+// 			printf("下载头文件失败\n");
+// 		}
+// 		if (0 != DownloadFile(reader, 1, "apdu_body.bin")) // 下载体文件
+// 		{
+// 			printf("下载体文件失败\n");
+// 		}
+// 	}
 	
 	// 获取脚本数据(需要先下载文件)
 	{

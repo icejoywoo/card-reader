@@ -47,6 +47,13 @@ UINT defaultServerHandler(LPVOID pParam)
 		SimpleLog::error("服务器创建Socket失败");
 		return -1;
 	}
+	
+	// 初始化读卡器(用udp测试的时候使用)
+	if (InitUDPComm() == -1) {
+		AfxMessageBox("与卡片读写器的通信初始化失败");
+		SimpleLog::error("与卡片读写器的通信初始化失败");
+		return INIT_FAILED; // 与卡片读写器的通信初始化失败
+	}
 
 	struct sockaddr_in local;
 	memset(&local, 0, sizeof(local));
