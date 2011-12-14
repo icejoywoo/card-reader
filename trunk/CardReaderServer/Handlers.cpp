@@ -91,7 +91,7 @@ UINT defaultServerHandler(LPVOID pParam)
 	SimpleLog::info(CString("服务器启动成功, ") + "端口: " + i2str(serv->getPort()));
 
 	AfxBeginThread(serv->waitListHandler, NULL); // 启动等待队列线程, 处理等待队列的
-	//AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
+	AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
 
 	while (true)
 	{
@@ -205,12 +205,12 @@ UINT defaultClientHandler (LPVOID pParam)
 			break;
 		}
 		Server::getInstance()->updateTimeout(readerId);
-		if ((resultCode= parseCommand(client, readerId, buff, operationName)) == 0)
+		if ((resultCode= parseCommand(client, readerId, buff, operationName)) >= 0)
 		{
 			if (Server::getInstance()->status == TRUE)
-				SimpleLog::info("[" + operationName + "]操作成功");
+				SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "][" + operationName + "]操作成功");
 		} else {
-			SimpleLog::error("[" + operationName + "]操作失败, 错误码: " + i2str(resultCode));
+			SimpleLog::error(CString("[读卡器 ") + i2str(readerId) + "][" + operationName + "]操作失败, 错误码: " + i2str(resultCode));
 		}
 		// 将结果发送到客户端
 		if (sendData(client, resultCode) == -1) // 发送数据出错即刻关闭
