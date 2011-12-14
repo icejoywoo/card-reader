@@ -81,7 +81,7 @@ CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader);
  *	reader			读卡器, 使用reader来和服务器通信
  *	devID			输出参数, 存放7字节id号
  *	devIDBufLen		devID缓冲的长度
- *	readerMacId		输出参数, 1字节机号(这个机号不是readerId, 请不要混淆)
+ *	readerMacId		输出参数, 1字节机号(这个机号不是readerId, 请不要混淆, 这个是在udp通信中使用的)
  * @return 
  *	 0: 读取成功
  *	-1: 通信超时错误
@@ -95,7 +95,7 @@ CARDREADERCLIENTDLL_API int GetDevIDAndReaderId(Reader* reader, char* devID, int
  * @param
  *	reader		读卡器, 使用reader来和服务器通信
  *	devID		存放7个字节的设备ID
- *	readerMacId	要设置的机号(这个机号不是readerId, 请不要混淆)
+ *	readerMacId	要设置的机号(这个机号不是readerId, 请不要混淆, 这个是在udp通信中使用的)
  * @return
  *	 0: 设置成功
  *	-1: 通信超时错误
