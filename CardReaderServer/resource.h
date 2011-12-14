@@ -23,10 +23,6 @@
 #define IDC_BUTTON_RESTART              1008
 #define IDC_TREE_VIEW                   1009
 #define IDC_EDIT_READERCOUNT            1018
-#define IDC_IPADDRESS1                  1019
-#define IDC_IPADDRESS2                  1020
-#define IDC_IPADDRESS3                  1021
-#define IDC_IPADDRESS4                  1022
 
 // Next default values for new objects
 // 

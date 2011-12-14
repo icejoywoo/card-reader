@@ -19,12 +19,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(ServerSetting)
 	enum { IDD = IDD_SERVERSETTING_DIALOG };
-	CIPAddressCtrl	m_IP4;
-	CIPAddressCtrl	m_IP3;
-	CIPAddressCtrl	m_IP2;
-	CIPAddressCtrl	m_IP1;
 	int		m_Port;
-	int		m_ReaderCount;
 	//}}AFX_DATA
 
 

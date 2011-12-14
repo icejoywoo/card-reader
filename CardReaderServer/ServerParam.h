@@ -21,12 +21,7 @@ private:
 	ServerParam();
 	virtual ~ServerParam() {delete instance;}
 public:
-// 	CString ip1 = "192.168.1.138";
-// 	CString ip2 = "192.168.1.139";
-// 	CString ip3 = "192.168.1.140";
-// 	CString ip4 = "192.168.1.141"; /// 读卡器的ip, 每32个读卡器对应一个ip
-	CString ip1, ip2, ip3, ip4;
-	int readerCount; /// 读卡器的数量
+
 	int serverPort; /// 服务器的端口
 	HWND mainFrame; // 保存窗口
 	CSplitStr split;

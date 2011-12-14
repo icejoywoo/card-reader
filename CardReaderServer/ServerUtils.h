@@ -24,7 +24,7 @@ CString i2str(int a);
  * @brief 解析网络命令, 对读卡器进行相应的操作
  * @param 
  *	in client 客户端请求的socket
- *	in cardId 读卡器号
+ *	in cardId 读卡器号, 用com号来表示, 因为串口通信方式一个com对应一个读卡器
  *	in command 命令
  *	out operationName 操作名称, 下面是operationName对照表
  *		*操作名称*			*对应操作*			*SmartCom函数*
