@@ -88,12 +88,20 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 		char bytes = (char) atoi(requestParam[2]); // 要读取的字节数
 		SmartCom::string strData; // 输出参数 读取的转换成十六进制字符串的数据
 		int resultCode = GetScriptData(communicator, offset, bytes, strData, readerId);
-		sendData(client, strData);
+		if (resultCode == 0) {
+			sendData(client, strData);
+		} else {
+			sendData(client, "getScript_wrong");
+		}
 		return resultCode;
 	} else if (operationName == CString("checkBatchResult")) { // 查询执行批处理APDU结果
 		SmartCom::string retCode; // 输出参数, 最后一条指令的返回值
 		int resultCode = CheckBatchResult(communicator, retCode, readerId);
-		sendData(client, retCode);
+		if (resultCode > 0) {
+			sendData(client, retCode);
+		} else {
+			sendData(client, "checkBatchResult_wrong");
+		}
 		return resultCode;
 	} else if (operationName == CString("modifyCardPower")) { // 修改卡片电源
 		int power = atoi(requestParam[1]); // 
@@ -153,6 +161,13 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 // 		SimpleLog::error("关闭udp通信失败");
 // 		return -102; // 关闭udp通信失败
 // 	}
+
+	if (CloseUDPComm() == -1)
+	{
+		AfxMessageBox("关闭udp通信失败");
+		SimpleLog::error("关闭udp通信失败");
+		return -102; // 关闭udp通信失败
+	}
 
 	return COMMAND_NOT_FOUND; // 命令找不到
 }
