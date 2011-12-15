@@ -125,29 +125,30 @@ UINT defaultServerHandler(LPVOID pParam)
 		
 		SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]的延时为: " + i2str(timeout));
 		
-		Server::getInstance()->timeout[readerId] = timeout;
+		Server::getInstance()->timeout[client] = timeout;
 		sendData(client, "timeout_ok");
-		Server::getInstance()->updateTimeout(readerId);
-
+		
+		serv->timeout[client] = timeout;
 		serv->addToWaitList(readerId, client); // 添加到等待处理队列
 		SimpleLog::info(CString("将请求添加到[读卡器 ") + i2str(readerId) + "]等待队列中...");
 	}
 	return 0;
 }
 
-UINT defaultWaitListHandler (LPVOID pParam )
+UINT defaultWaitListHandler (LPVOID pParam ) 
 {
 	while (Server::getInstance()->status == TRUE)
 	{
 		// 进入临界区, 寻找是否有读卡器处在等待状态
 		EnterCriticalSection(&(Server::getInstance()->g_cs));
-		for (int i = 0; i < Server::getInstance()->readerUsage.size(); ++i) // 寻找未使用的读卡器
+		for (int readerId = 0; readerId < Server::getInstance()->readerUsage.size(); ++readerId) // 寻找未使用的读卡器
 		{
-			if (0 == Server::getInstance()->readerUsage[i] && !Server::getInstance()->waitList[i].empty())
+			if (0 == Server::getInstance()->readerUsage[readerId] && !Server::getInstance()->waitList[readerId].empty())
 			{
-				SimpleLog::info(CString("开始处理[读卡器 ") + i2str(i) + "]的请求...");
-				AfxBeginThread(Server::getInstance()->clientHandler, (LPVOID)i);
-				Server::getInstance()->readerUsage[i] = 1; // 标记读卡器为正在使用
+				SimpleLog::info(CString("开始处理[读卡器 ") + i2str(readerId) + "]的请求...");
+				Server::getInstance()->updateTimeout(readerId); // 开始处理, 更新延时开始时间
+				AfxBeginThread(Server::getInstance()->clientHandler, (LPVOID)readerId);
+				Server::getInstance()->readerUsage[readerId] = 1; // 标记读卡器为正在使用
 			}
 		}
 		LeaveCriticalSection(&(Server::getInstance()->g_cs));
@@ -159,7 +160,7 @@ UINT defaultWaitListHandler (LPVOID pParam )
 
 UINT defaultTimeoutListHandler (LPVOID pParam )
 {
-	while (Server::getInstance()->status == TRUE)
+	while (Server::getInstance()->status == TRUE) // 读卡器的延时队列只针对当前访问读卡器的客户端
 	{
 		// 当前客户端socket
 		for (map<int, SOCKET>::iterator iter = Server::getInstance()->clients.begin(); 
