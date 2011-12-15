@@ -1,0 +1,21 @@
+# -.- coding:utf-8 -.-
+import os
+import random
+import threading
+import time
+
+class ReaderTest(threading.Thread):
+	def run(self):
+		for _ in xrange(100):
+			readerId = random.randint(1,4)
+			print "reader id:", readerId
+			# 这个是只运行一条简单的apdu命令
+			cmd = "CardReaderClientDllTest.exe " + str(readerId)
+			os.system(cmd)
+			time.sleep(0.1)
+
+if __name__ == "__main__":
+	ReaderTest().start()
+	ReaderTest().start()
+	ReaderTest().start()
+	ReaderTest().start()

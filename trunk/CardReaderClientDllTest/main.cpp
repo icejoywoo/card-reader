@@ -15,7 +15,7 @@ string i2str(int a)
 	return string(str);
 }
 
-int main(void)
+int main(int argc, char* args[])
 {
 // 	int   number   =   12345;  
 // 	char   string[25];  
@@ -39,7 +39,7 @@ int main(void)
 // 	return 0;
 
 	Reader* reader = new Reader();
-	reader->readerId = 3;
+	reader->readerId = atoi(args[1]);
 
 	// 初始化客户端
 	InitClient("127.0.0.1", 60000);
@@ -122,15 +122,15 @@ int main(void)
 	}
 
 	// 执行单条命令(执行前需要先复位应答)
-// 	{
-// 		SmartCom::string retCode;
-// 		char* apdu = "00820000083132333435363738";
-// 		if (0 != CardApdu(reader, apdu, retCode, 1))
-// 		{
-// 			printf("CardApdu failed.");
-// 		}
-// 		cout << retCode.c_str() << endl;
-// 	}
+	{
+		SmartCom::string retCode;
+		char* apdu = "00820000083132333435363738";
+		if (0 != CardApdu(reader, apdu, retCode, 1))
+		{
+			printf("CardApdu failed.");
+		}
+		cout << retCode.c_str() << endl;
+	}
 
 	// 修改波特率
 // 	{
@@ -159,14 +159,14 @@ int main(void)
 // 	}
 	
 	// 擦除存储器
-	{
-		if (0 != ClearMem(reader)) 
-		{
-			printf("擦除存储器失败\n");
-		}
-	}
+// 	{
+// 		if (0 != ClearMem(reader)) 
+// 		{
+// 			printf("擦除存储器失败\n");
+// 		}
+// 	}
 
-	// 下载文件(Attention:文件应该放在服务器端的)
+	// 下载文件(Attention:文件应该放在服务器端的, 下载文件之前先擦除存储器)
 // 	{
 // 		if (0 != DownloadFile(reader, 2, "apdu_head.bin")) // 下载头文件
 // 		{

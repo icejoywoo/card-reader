@@ -110,11 +110,11 @@ public:
 
 	// 等待队列
 	map< int, vector<SOCKET> > waitList;
-	// 记录每个读卡器的延时时间
+	// 当前每个读卡器的开始时间, 用现在时间-开始时间, 计算已经延时的时间
 	map<int, ULONG> timeoutList;
 	// 保存每个客户端的延时时间, 由客户端发送
-	map< int, ULONG > timeout;
-	// 当前客户端列表
+	map< SOCKET, ULONG > timeout;
+	// 当前正在操作客户端列表
 	map <int, SOCKET> clients;
 	// true表示正在运行, false表示停止
 	BOOL status;

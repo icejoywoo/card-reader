@@ -6,7 +6,7 @@
 --------------------Configuration: CardReaderServer - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E37.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5DD2.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServer.cpp"
@@ -18,14 +18,14 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E37.tmp" with 
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerUtils.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\SimpleLog.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E37.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E86.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5DD2.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5DE3.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/CardReaderServer.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\StdAfx.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E86.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E87.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5DE3.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5DF4.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderServer.pdb" /debug /machine:I386 /out:"Debug/CardReaderServer.exe" /pdbtype:sept 
 ".\Debug\CardReaderServer.obj"
@@ -40,13 +40,29 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E87.tmp" with 
 ".\Debug\StdAfx.obj"
 ".\Debug\CardReaderServer.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E87.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5DF4.tmp"
 <h3>Output Window</h3>
 Compiling...
 StdAfx.cpp
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\stdafx.h(25) : fatal error C1083: Cannot open include file: 'vld.h': No such file or directory
-执行 cl.exe 时出错.
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP251D.tmp" with contents
+warning C4786: 'std::_Tree<int,std::pair<int const ,std::vector<unsigned int,std::allocator<unsigned int> > >,std::map<int,std::vector<unsigned int,std::allocator<unsigned int> >,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Kfn,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >' : identifier was truncated to '255' characters in the debug information
+warning C4786: 'std::_Tree<int,std::pair<int const ,std::vector<unsigned int,std::allocator<unsigned int> > >,std::map<int,std::vector<unsigned int,std::allocator<unsigned int> >,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Kfn,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::const_iterator' : identifier was truncated to '255' characters in the debug information
+warning C4786: 'std::_Tree<int,std::pair<int const ,std::vector<unsigned int,std::allocator<unsigned int> > >,std::map<int,std::vector<unsigned int,std::allocator<unsigned int> >,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Kfn,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::iterator' : identifier was truncated to '255' characters in the debug information
+warning C4786: 'std::_Tree<int,std::pair<int const ,std::vector<unsigned int,std::allocator<unsigned int> > >,std::map<int,std::vector<unsigned int,std::allocator<unsigned int> >,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Kfn,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Node' : identifier was truncated to '255' characters in the debug information
+warning C4786: 'std::_Tree<int,std::pair<int const ,std::vector<unsigned int,std::allocator<unsigned int> > >,std::map<int,std::vector<unsigned int,std::allocator<unsigned int> >,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Kfn,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Redbl' : identifier was truncated to '255' characters in the debug information
+Compiling...
+CardReaderServer.cpp
+CardReaderServerDlg.cpp
+Handlers.cpp
+Server.cpp
+ServerParam.cpp
+ServerSettingDlg.cpp
+ServerUtils.cpp
+SimpleLog.cpp
+Generating Code...
+Linking...
+LINK : fatal error LNK1168: cannot open Debug/CardReaderServer.exe for writing
+执行 link.exe 时出错.
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP863C.tmp" with contents
 [
 /nologo /o"Debug/CardReaderServer.bsc" 
 ".\Debug\StdAfx.sbr"
@@ -59,10 +75,8 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP251D.tmp" with 
 ".\Debug\ServerUtils.sbr"
 ".\Debug\SimpleLog.sbr"
 ".\Debug\SplitStr.sbr"]
-Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP251D.tmp"
+Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP863C.tmp"
 Creating browse info file...
-BSCMAKE: error BK1506 : cannot open file '.\Debug\StdAfx.sbr': No such file or directory
-执行 bscmake.exe 时出错.
 <h3>Output Window</h3>
 
 
