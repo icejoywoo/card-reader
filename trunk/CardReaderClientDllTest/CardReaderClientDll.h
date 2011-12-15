@@ -2,7 +2,7 @@
 // FileName:	CardReaderClientDll.h
 // Creator:		icejoywoo
 // Date:		2011.12.03
-// $Revision: 48 $
+// $Revision: 60 $
 // Comment: 客户端操作读卡器的接口定义
 //////////////////////////////////////////////////////////////////////////
 
@@ -28,6 +28,8 @@
 
 /**
  * @brief 保存读卡器id和与服务器连接的socket
+ *
+ * 通过读卡器id和socket的绑定, 可以方便调试, 查看当前读卡器id
  */
 typedef struct _Reader
 {
@@ -62,7 +64,7 @@ CARDREADERCLIENTDLL_API int CleanUpClient();
  * @return  
  *	0: 成功
  */
-CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long customTimeout);
+CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout = 5000, long customTimeout = 10000);
 
 /**
  * @brief 释放读卡器
@@ -79,21 +81,21 @@ CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader);
  *	reader			读卡器, 使用reader来和服务器通信
  *	devID			输出参数, 存放7字节id号
  *	devIDBufLen		devID缓冲的长度
- *	readerId		输出参数, 1字节机号
+ *	readerMacId		输出参数, 1字节机号(这个机号不是readerId, 请不要混淆, 为将来扩展读卡器而准备的)
  * @return 
  *	 0: 读取成功
  *	-1: 通信超时错误
  *	-2: 通信器无效
  *	-3: 读取失败
  */
-CARDREADERCLIENTDLL_API int GetDevIDAndReaderId(Reader* reader, char* devID, int devIDBufLen, int& readerId);
+CARDREADERCLIENTDLL_API int GetDevIDAndReaderId(Reader* reader, char* devID, int devIDBufLen, int& readerMacId);
 
 /**
  * @brief 通过终端设备ID号给终端设备设置机号
  * @param
  *	reader		读卡器, 使用reader来和服务器通信
  *	devID		存放7个字节的设备ID
- *	readerId	要设置的机号
+ *	readerMacId	要设置的机号(这个机号不是readerId, 请不要混淆, 为将来扩展读卡器而准备的)
  * @return
  *	 0: 设置成功
  *	-1: 通信超时错误
@@ -101,7 +103,7 @@ CARDREADERCLIENTDLL_API int GetDevIDAndReaderId(Reader* reader, char* devID, int
  *	-3: 机号范围错误
  *	-4: 设置失败
  */
-CARDREADERCLIENTDLL_API int SetReaderIdByDevID(Reader* reader, const char* devID, int readerId);
+CARDREADERCLIENTDLL_API int SetReaderIdByDevID(Reader* reader, const char* devID, int readerMacId);
 
 
 /**
@@ -122,7 +124,7 @@ CARDREADERCLIENTDLL_API int SetReaderIdByDevID(Reader* reader, const char* devID
 CARDREADERCLIENTDLL_API int GetAppVerAndDevType(Reader* reader, char* appVer, int appVerlen, char* devType, int devTypeLen);
 
 /**
- * @brief 复位终端设备(过时函数, 不要使用)
+ * @brief 复位终端设备(过时函数, 不要使用, 请使用ResetCard函数来进行复位)
  * @param
  *	reader		读卡器
  * @return

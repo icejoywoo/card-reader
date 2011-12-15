@@ -11,7 +11,8 @@ class ReaderTest(threading.Thread):
 			print "reader id:", readerId
 			# 这个是只运行一条简单的apdu命令
 			cmd = "CardReaderClientDllTest.exe " + str(readerId)
-			os.system(cmd)
+			for line in os.popen(cmd).readlines():
+				print line
 			time.sleep(0.1)
 
 if __name__ == "__main__":
