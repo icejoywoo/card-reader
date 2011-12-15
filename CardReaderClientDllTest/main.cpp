@@ -80,36 +80,36 @@ int main(int argc, char* args[])
 	}
 	
 	// 读取程序版本和终端类型
-// 	{
-// 		char appVer[512];
-// 		char devType[512];
-// 		if (0 != GetAppVerAndDevType(reader, appVer, 512, devType, 512))
-// 		{
-// 			printf("GetAppVerAndDevType Failed.");
-// 		}
-// 		cout << appVer << ", " << devType << endl;
-// 	}
+	{
+		char appVer[512];
+		char devType[512];
+		if (0 != GetAppVerAndDevType(reader, appVer, 512, devType, 512))
+		{
+			printf("GetAppVerAndDevType Failed.");
+		}
+		cout << appVer << ", " << devType << endl;
+	}
 
 	// 获取芯片id(调用复位之后调用这个, 会出错)
-// 	{
-// 		char chipID[512];
-// 		if (0 != GetChipID(reader, chipID, 512))
-// 		{
-// 			printf("GetChipID failed.");
-// 		}
-// 		cout << chipID << endl;
-// 	}
+	{
+		char chipID[512];
+		if (0 != GetChipID(reader, chipID, 512))
+		{
+			printf("GetChipID failed.");
+		}
+		cout << chipID << endl;
+	}
 
 	// 检测A卡和B卡座是否有卡
-// 	{
-// 		int cardA;
-// 		int cardB;
-// 		if (0 != IsCardReady(reader, cardA, cardB))
-// 		{
-// 			printf("IsCardReady failed.");
-// 		}
-// 		cout << cardA << ", " << cardB << endl;
-// 	}
+	{
+		int cardA;
+		int cardB;
+		if (0 != IsCardReady(reader, cardA, cardB))
+		{
+			printf("IsCardReady failed.");
+		}
+		cout << cardA << ", " << cardB << endl;
+	}
 	
 	// 复位应答
 	{
@@ -141,14 +141,14 @@ int main(int argc, char* args[])
 // 	}
 
 	// 查看波特率
-// 	{
-// 		int braudRate;
-// 		if (0 != GetCardBraudRate(reader, braudRate))
-// 		{
-// 			printf("ModifyCardBraudRate failed.");
-// 		}
-// 		cout << braudRate << endl;
-// 	}
+	{
+		int braudRate = 0;
+		if (0 != GetCardBraudRate(reader, braudRate))
+		{
+			printf("ModifyCardBraudRate failed.");
+		}
+		cout << braudRate << endl;
+	}
 
 	// 修改电源
 // 	{
@@ -159,24 +159,24 @@ int main(int argc, char* args[])
 // 	}
 	
 	// 擦除存储器
-// 	{
-// 		if (0 != ClearMem(reader)) 
-// 		{
-// 			printf("擦除存储器失败\n");
-// 		}
-// 	}
+	{
+		if (0 != ClearMem(reader)) 
+		{
+			printf("擦除存储器失败\n");
+		}
+	}
 
 	// 下载文件(Attention:文件应该放在服务器端的, 下载文件之前先擦除存储器)
-// 	{
-// 		if (0 != DownloadFile(reader, 2, "apdu_head.bin")) // 下载头文件
-// 		{
-// 			printf("下载头文件失败\n");
-// 		}
-// 		if (0 != DownloadFile(reader, 1, "apdu_body.bin")) // 下载体文件
-// 		{
-// 			printf("下载体文件失败\n");
-// 		}
-// 	}
+	{
+		if (0 != DownloadFile(reader, 2, "apdu_head.bin")) // 下载头文件
+		{
+			printf("下载头文件失败\n");
+		}
+		if (0 != DownloadFile(reader, 1, "apdu_body.bin")) // 下载体文件
+		{
+			printf("下载体文件失败\n");
+		}
+	}
 	
 	// 获取脚本数据(需要先下载文件)
 	{
