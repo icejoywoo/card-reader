@@ -22,10 +22,11 @@
 
 // my own header files
 #include "SimpleLog.h"
+//#include <vld.h> // 检测内存泄漏问题, 不知道为何不能用
 #include <WINSOCK2.H> // win socket
 #include <conio.h> // 
 #include <winbase.h>
-
+ 
 #pragma comment(lib, "WS2_32")
 #include "Server.h"
 
