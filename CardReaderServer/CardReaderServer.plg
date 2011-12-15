@@ -3,12 +3,13 @@
 <pre>
 <h1>Build Log</h1>
 <h3>
---------------------Configuration: CardReaderServer - Win32 Debug--------------------
+--------------------Configuration: CardReaderServer - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5DD2.tmp" with contents
+Creating command line "rc.exe /l 0x804 /fo"Release/CardReaderServer.res" /d "NDEBUG" /d "_AFXDLL" "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServer.rc"" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP81A1.tmp" with contents
 [
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fo"Release/" /Fd"Release/" /FD /c 
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServer.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServerDlg.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Handlers.cpp"
@@ -17,38 +18,35 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5DD2.tmp" with 
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerSettingDlg.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerUtils.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\SimpleLog.cpp"
+"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\SplitStr.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5DD2.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5DE3.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP81A1.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP81B2.tmp" with contents
 [
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/CardReaderServer.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Release/CardReaderServer.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\StdAfx.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5DE3.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5DF4.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP81B2.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP81C3.tmp" with contents
 [
-/nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderServer.pdb" /debug /machine:I386 /out:"Debug/CardReaderServer.exe" /pdbtype:sept 
-".\Debug\CardReaderServer.obj"
-".\Debug\CardReaderServerDlg.obj"
-".\Debug\Handlers.obj"
-".\Debug\Server.obj"
-".\Debug\ServerParam.obj"
-".\Debug\ServerSettingDlg.obj"
-".\Debug\ServerUtils.obj"
-".\Debug\SimpleLog.obj"
-".\Debug\SplitStr.obj"
-".\Debug\StdAfx.obj"
-".\Debug\CardReaderServer.res"
+/nologo /subsystem:windows /incremental:no /pdb:"Release/CardReaderServer.pdb" /machine:I386 /out:"Release/CardReaderServer.exe" 
+".\Release\CardReaderServer.obj"
+".\Release\CardReaderServerDlg.obj"
+".\Release\Handlers.obj"
+".\Release\Server.obj"
+".\Release\ServerParam.obj"
+".\Release\ServerSettingDlg.obj"
+".\Release\ServerUtils.obj"
+".\Release\SimpleLog.obj"
+".\Release\SplitStr.obj"
+".\Release\StdAfx.obj"
+".\Release\CardReaderServer.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5DF4.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP81C3.tmp"
 <h3>Output Window</h3>
+Compiling resources...
 Compiling...
 StdAfx.cpp
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::vector<unsigned int,std::allocator<unsigned int> > >,std::map<int,std::vector<unsigned int,std::allocator<unsigned int> >,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Kfn,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >' : identifier was truncated to '255' characters in the debug information
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::vector<unsigned int,std::allocator<unsigned int> > >,std::map<int,std::vector<unsigned int,std::allocator<unsigned int> >,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Kfn,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::const_iterator' : identifier was truncated to '255' characters in the debug information
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::vector<unsigned int,std::allocator<unsigned int> > >,std::map<int,std::vector<unsigned int,std::allocator<unsigned int> >,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Kfn,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::iterator' : identifier was truncated to '255' characters in the debug information
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::vector<unsigned int,std::allocator<unsigned int> > >,std::map<int,std::vector<unsigned int,std::allocator<unsigned int> >,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Kfn,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Node' : identifier was truncated to '255' characters in the debug information
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::vector<unsigned int,std::allocator<unsigned int> > >,std::map<int,std::vector<unsigned int,std::allocator<unsigned int> >,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Kfn,std::less<int>,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Redbl' : identifier was truncated to '255' characters in the debug information
 Compiling...
 CardReaderServer.cpp
 CardReaderServerDlg.cpp
@@ -58,31 +56,14 @@ ServerParam.cpp
 ServerSettingDlg.cpp
 ServerUtils.cpp
 SimpleLog.cpp
+SplitStr.cpp
 Generating Code...
 Linking...
-LINK : fatal error LNK1168: cannot open Debug/CardReaderServer.exe for writing
-Ö´ÐÐ link.exe Ê±³ö´í.
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP863C.tmp" with contents
-[
-/nologo /o"Debug/CardReaderServer.bsc" 
-".\Debug\StdAfx.sbr"
-".\Debug\CardReaderServer.sbr"
-".\Debug\CardReaderServerDlg.sbr"
-".\Debug\Handlers.sbr"
-".\Debug\Server.sbr"
-".\Debug\ServerParam.sbr"
-".\Debug\ServerSettingDlg.sbr"
-".\Debug\ServerUtils.sbr"
-".\Debug\SimpleLog.sbr"
-".\Debug\SplitStr.sbr"]
-Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP863C.tmp"
-Creating browse info file...
-<h3>Output Window</h3>
 
 
 
 <h3>Results</h3>
-CardReaderServer.exe - 1 error(s), 0 warning(s)
+CardReaderServer.exe - 0 error(s), 0 warning(s)
 </pre>
 </body>
 </html>
