@@ -6,13 +6,26 @@
 --------------------Configuration: CardReaderServer - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD0C0.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E37.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServer.cpp"
+"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServerDlg.cpp"
+"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Handlers.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Server.cpp"
+"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerParam.cpp"
+"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerSettingDlg.cpp"
+"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerUtils.cpp"
+"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\SimpleLog.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD0C0.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD0C1.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E37.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E86.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/CardReaderServer.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E86.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E87.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderServer.pdb" /debug /machine:I386 /out:"Debug/CardReaderServer.exe" /pdbtype:sept 
 ".\Debug\CardReaderServer.obj"
@@ -27,12 +40,13 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD0C1.tmp" with 
 ".\Debug\StdAfx.obj"
 ".\Debug\CardReaderServer.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD0C1.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP1E87.tmp"
 <h3>Output Window</h3>
 Compiling...
-Server.cpp
-Linking...
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD6CA.tmp" with contents
+StdAfx.cpp
+c:\users\icejoywoo\desktop\card-reader\cardreaderserver\stdafx.h(25) : fatal error C1083: Cannot open include file: 'vld.h': No such file or directory
+执行 cl.exe 时出错.
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP251D.tmp" with contents
 [
 /nologo /o"Debug/CardReaderServer.bsc" 
 ".\Debug\StdAfx.sbr"
@@ -45,14 +59,16 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD6CA.tmp" with 
 ".\Debug\ServerUtils.sbr"
 ".\Debug\SimpleLog.sbr"
 ".\Debug\SplitStr.sbr"]
-Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD6CA.tmp"
+Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP251D.tmp"
 Creating browse info file...
+BSCMAKE: error BK1506 : cannot open file '.\Debug\StdAfx.sbr': No such file or directory
+执行 bscmake.exe 时出错.
 <h3>Output Window</h3>
 
 
 
 <h3>Results</h3>
-CardReaderServer.exe - 0 error(s), 0 warning(s)
+CardReaderServer.exe - 1 error(s), 0 warning(s)
 </pre>
 </body>
 </html>
