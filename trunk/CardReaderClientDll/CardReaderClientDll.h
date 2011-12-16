@@ -64,7 +64,7 @@ CARDREADERCLIENTDLL_API int CleanUpClient();
  * @return  
  *	0: ³É¹¦
  */
-CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout = 5000, long customTimeout = 10000);
+CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout = 5000, long customTimeout = 60000);
 
 /**
  * @brief ÊÍ·Å¶Á¿¨Æ÷
