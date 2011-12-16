@@ -36,6 +36,12 @@ Client& Client::setTimeout(ULONG timeout)
 	return *this;
 }
 
+Client& Client::setSocket(SOCKET s)
+{
+	this->s = s;
+	return *this;
+}
+
 int Client::getReaderId()
 {
 	return this->readerId;
@@ -54,13 +60,16 @@ SOCKET Client::getSocket()
 Client& Client::updateTimeout()
 {
 	this->timeoutStart = ::GetTickCount();
+	TRACE(CString("[¶Á¿¨Æ÷ ") + i2str(readerId) + "]¸üÐÂtimeout\n");
 	return *this;
 }
 
 BOOL Client::isOvertime()
 {
 	ULONG timePassed = ::GetTickCount() - this->timeoutStart;
-	return (timePassed >= this->timeout);
+	BOOL result = (timePassed >= this->timeout);
+	TRACE(CString("[¶Á¿¨Æ÷ ") + i2str(readerId) + "]ÊÇ·ñ³¬Ê±: " + i2str(result) + "\n");
+	return result;
 }
 
 void Client::release()

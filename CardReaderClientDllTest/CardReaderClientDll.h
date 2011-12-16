@@ -2,7 +2,7 @@
 // FileName:	CardReaderClientDll.h
 // Creator:		icejoywoo
 // Date:		2011.12.03
-// $Revision: 65 $
+// $Revision: 71 $
 // Comment: 客户端操作读卡器的接口定义
 //////////////////////////////////////////////////////////////////////////
 
