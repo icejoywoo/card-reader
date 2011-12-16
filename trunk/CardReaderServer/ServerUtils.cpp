@@ -13,7 +13,7 @@ CString i2str(int a)
 	return str;
 }
 
-int parseCommand(SOCKET client, int readerId, char* command, CString& operationName)
+int parseCommand(Client* client, int readerId, char* command, CString& operationName)
 {
 	ServerParam::instance->split.SetData(CString(command));
 	CStringArray requestParam; // operationName, cardId, params
@@ -32,7 +32,7 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 // 		SimpleLog::error("通信器初始化失败");
 // 		return GET_COMMUNICATOR_FAILED;
 // 	}
-	// 测试使用, 使用udp通信器
+	// TODO: 测试使用, 使用udp通信器
 	const char* dstIP = "192.168.1.138";
 	int port = 10000 + readerId;
 	if (GetOneUDPCommunicator(communicator, dstIP, port) != 0)// 获取通信器, 第二个参数与
@@ -42,8 +42,8 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 	}
 	SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]通信器初始化完成");
 
-	ULONG savedTimeout = Server::getInstance()->clientTimeout[readerId];
-	Server::getInstance()->clientTimeout[readerId] = MAX_OPERATION_DURATION; // 保证操作完成, 最长的操作是下载
+ 	ULONG savedTimeout = client->getTimeout();
+ 	client->setTimeout(MAX_OPERATION_DURATION); // 保证操作完成, 最长的操作是下载
 
 	SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]正在进行[" + operationName + "]操作...");
 	
@@ -62,7 +62,7 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 	} else if (operationName == CString("getBraudRate")) { // 获得比特率
 		int braudRate;
 		int resultCode = GetCardBraudRate(communicator, braudRate);
-		sendData(client, braudRate);
+		client->sendData(braudRate);
 		functionReturn = resultCode;
 	} else if (operationName == CString("downloadFile")) { // 下载文件
 		int flag = atoi(requestParam[1]); // 1 下载命令体文件, 2 下载命令头文件
@@ -73,7 +73,7 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 		int card = atoi(requestParam[2]); // 1 为A卡, 2 为B卡
 		SmartCom::string retCode; // 输出参数, 执行apdu指令的返回值
 		int resultCode = CardApdu(communicator, apdu, retCode, card);
-		sendData(client, retCode);
+		client->sendData(retCode);
 		functionReturn = resultCode;
 	} else if (operationName == CString("executeMulApdu")) { // 卡片操作-执行批处理APDU命令
 		int cmdNum = atoi(requestParam[1]);
@@ -85,18 +85,18 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 		SmartCom::string strData; // 输出参数 读取的转换成十六进制字符串的数据
 		int resultCode = GetScriptData(communicator, offset, bytes, strData);
 		if (resultCode == 0) {
-			sendData(client, strData);
+			client->sendData(strData);
 		} else {
-			sendData(client, "getScript_wrong");
+			client->sendData("getScript_wrong");
 		}
 		functionReturn = resultCode;
 	} else if (operationName == CString("checkBatchResult")) { // 查询执行批处理APDU结果
 		SmartCom::string retCode; // 输出参数, 最后一条指令的返回值
 		int resultCode = CheckBatchResult(communicator, retCode);
 		if (resultCode >= 0) {
-			sendData(client, retCode);
+			client->sendData(retCode);
 		} else {
-			sendData(client, "checkBatchResult_wrong");
+			client->sendData("checkBatchResult_wrong");
 		}
 		functionReturn = resultCode;
 	} else if (operationName == CString("modifyCardPower")) { // 修改卡片电源
@@ -107,7 +107,7 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 		SmartCom::string devID; // out, 存放7字节id号
 		int macNo; // out, 1字节机号
 		int retCode = GetDevIDAndMacNo(communicator, devID, macNo);
-		sendData(client, devID + "," + i2str(macNo));
+		client->sendData(devID + "," + i2str(macNo));
 		functionReturn = retCode;
 	} else if (operationName == CString("setReaderIdByDevID")) { // 设置终端设备id号和机号
 		char* devID = (LPSTR)(LPCTSTR) requestParam[1]; 
@@ -121,18 +121,18 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 		SmartCom::string appVersion; // 程序版本
 		SmartCom::string devType; // 终端类型
 		int resultCode = GetAppVerAndDevType(communicator, appVersion, devType);
-		sendData(client, appVersion + "," + devType);
+		client->sendData(appVersion + "," + devType);
 		functionReturn = resultCode;
 	} else if (operationName == CString("getChipID")) { // 获取读卡接口芯片ID号
 		SmartCom::string chipID;
 		int resultCode = GetChipID(communicator, chipID);
-		sendData(client, chipID);
+		client->sendData(chipID);
 		functionReturn = resultCode;
 	} else if (operationName == CString("isCardReady")) { // 检测A卡和B卡座是否有卡
 		int cardA = -1; // out, 1,A卡座有卡；0，A卡座无卡
 		int cardB = -1; // out, 1,B卡座有卡；0，B卡座无卡
 		int resultCode = IsCardReady(communicator, cardA, cardB);
-		sendData(client, SmartCom::string(i2str(cardA)) + "," + i2str(cardB));
+		client->sendData(SmartCom::string(i2str(cardA)) + "," + i2str(cardB));
 		functionReturn = resultCode;
 	} else if (operationName == CString("resetCard")) { // 卡片复位应答
 		SmartCom::string retCode; // out 复位命令的返回值, "F9"：卡座无卡, "FD"：不可识别卡
@@ -140,9 +140,9 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 		int resultCode = ResetCard(communicator, retCode, card);
 		if (resultCode != 0)
 		{
-			sendData(client, "ResetCard_wrong");
+			client->sendData("ResetCard_wrong");
 		} else {
-			sendData(client, retCode);
+			client->sendData(retCode);
 		}
 		functionReturn = resultCode;
 	} else if (operationName == CString("quit")) { // 退出
@@ -160,8 +160,9 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 // 		return -102; // 关闭udp通信失败
 // 	}
 
-	Server::getInstance()->updateTimeout(readerId);
-	Server::getInstance()->clientTimeout[readerId] = savedTimeout; // 回复原来的timeout
+ 	client->updateTimeout();
+ 	client->setTimeout(savedTimeout); // 回复原来的timeout
+
 	return functionReturn;
 }
 

@@ -12,6 +12,7 @@
 
 #include "StdAfx.h"
 #include "Handlers.h"
+#include "Client.h"
 #include <map>
 #include <vector>
 
@@ -80,29 +81,23 @@ public:
 	{
 		return this->port;
 	}
-	
-	//////////////////////////////////////////////////////////////////////////
-	/// 等待队列的方法
 
 	// 向队列添加socket
-	void addToWaitList(int readerId, SOCKET s);
-	void addToTimeout(SOCKET s, ULONG timeout);
+	void addToWaitList(Client* client);
 
 	// 获取队列的首个元素
-	SOCKET getSocketByReaderId(int readerId);
-	SOCKET getSocketByReaderIdAndDelete(int readerId);
-
-	// 释放当前读卡器的socket连接
+	Client* getClientByReaderId(int readerId);
+	// 获取队列的首个元素, 然后删除
+	Client* getClientByReaderIdAndDelete(int readerId);
+	// 释放读卡器
 	void releaseReader(int readerId);
-	// 更新延时
-	void updateTimeout(int readerId);
 
 private:
 	Server();
 	static Server* instance; // the singleton
 	WSADATA wsaData;
 	int port;
-//	CEdit mEdit; // 在界面中输出日志信息
+	CEdit mEdit; // 在界面中输出日志信息
 	
 public:
 	SOCKET server;
@@ -113,15 +108,9 @@ public:
 	map<int, int> readerUsage;
 
 	// 等待队列
-	map< int, vector<SOCKET> > waitList;
-	// 保存每个客户端的延时开始时间timeout start time
-	map<SOCKET, ULONG> timepassed;
-	// 保存每个客户端的延时时间, 由客户端发送
-	map< SOCKET, ULONG > timeout;
-	// 当前正在操作的客户端的timeout
-	map <int, ULONG> clientTimeout;
+	map< int, vector<Client*> > waitList;
 	// 当前正在操作客户端列表
-	map <int, SOCKET> clients;
+	map <Client*, Client*> clients;
 	// true表示正在运行, false表示停止
 	BOOL status;
 

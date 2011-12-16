@@ -81,7 +81,11 @@ BOOL SimpleLog::WriteLog(CString LogText)
 		
 		char* m_szMessage;			
 		m_szMessage=(LPTSTR)(LPCTSTR)m_sErrorMessage;
-		m_SFile.Write(m_szMessage,lstrlen(m_szMessage));   	
+		m_SFile.Write(m_szMessage,lstrlen(m_szMessage));
+
+		// TODO: 将日志输入到服务器中, 耦合性很强
+		Server::getInstance()->log += m_szMessage;
+
 		m_SFile.Close();
 		ReleaseMutex(mutex);
 	}

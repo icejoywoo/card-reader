@@ -58,8 +58,6 @@ int Server::stop()
 	// 恢复服务器的原始状态
 	readerUsage.clear();
 	waitList.clear(); // 重启的时候不删除等待队列可以保证等待队列继续处理
-	timepassed.clear();
-	timeout.clear();
 	clients.clear();
 
 	return 0;
@@ -87,37 +85,29 @@ int Server::setPort(int &port)
 	return 0;
 }
 
-void Server::addToWaitList(int readerId, SOCKET s)
+void Server::addToWaitList(Client* client)
 {
-	this->waitList[readerId].push_back(s);
+	this->waitList[client->getReaderId()].push_back(client);
+	this->clients[client] = client;
 }
 
-void Server::addToTimeout(SOCKET s, ULONG timeout)
+Client* Server::getClientByReaderId(int readerId)
 {
-	this->timeout[s] = timeout;
+	return this->waitList[readerId].at(0);
 }
 
-SOCKET Server::getSocketByReaderId(int readerId)
+Client* Server::getClientByReaderIdAndDelete(int readerId)
 {
-	SOCKET result = this->waitList[readerId].at(0);
-	return result;
-}
-
-SOCKET Server::getSocketByReaderIdAndDelete(int readerId)
-{
-	SOCKET result = this->waitList[readerId].at(0);
+	Client* result = this->waitList[readerId].at(0);
+	Client* beginClient = this->waitList[readerId][0];
+	this->clients.erase(beginClient);
 	this->waitList[readerId].erase(this->waitList[readerId].begin());
 	return result;
 }
 
 void Server::releaseReader(int readerId) {
-	this->waitList[readerId].erase(this->waitList[readerId].begin());
 	this->readerUsage[readerId] = 0;
 	SimpleLog::info(CString("释放读卡器") + i2str(readerId));
 }
 
-void Server::updateTimeout(int readerId)
-{
-	this->timepassed[readerId] = GetTickCount();
-}
 /// Server定义结束
