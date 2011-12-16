@@ -108,6 +108,8 @@ public:
 
 	// 等待队列
 	map< int, list<Client*> > waitList;
+	// 所有客户端
+	list <Client*> clients;
 	// true表示正在运行, false表示停止
 	BOOL status;
 

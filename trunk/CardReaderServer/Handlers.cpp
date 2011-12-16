@@ -130,7 +130,9 @@ UINT defaultServerHandler(LPVOID pParam)
 		Client* client = new Client(clientSocket); // new一个client
 		client->setReaderId(readerId);
 		client->setTimeout(timeout);
+		EnterCriticalSection(&(Server::getInstance()->g_cs));
 		Server::getInstance()->addToWaitList(client);
+		LeaveCriticalSection(&(Server::getInstance()->g_cs));
 		SimpleLog::info(CString("将请求添加到[读卡器 ") + i2str(readerId) + "]等待队列中...");
 	}
 	return 0;
@@ -166,23 +168,33 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 	{
 		EnterCriticalSection(&(Server::getInstance()->g_cs));
 		// 遍历所有客户端
-		for (map<int, list<Client*> >::iterator miter = Server::getInstance()->waitList.begin();
-			miter != Server::getInstance()->waitList.end() ; ++miter)
+// 		for (map<int, list<Client*> >::iterator miter = Server::getInstance()->waitList.begin();
+// 			miter != Server::getInstance()->waitList.end() ; ++miter)
+// 		{
+// 			list<Client*> l = miter->second;
+// 
+// 			for (list<Client*>::iterator liter = l.begin(); liter != l.begin(); ++liter)
+// 			{
+// 				if ((*liter)->isOvertime()) // 客户端如果超时, 就直接关闭其socket
+// 				{
+// 					(*liter)->release();
+// 					Server::getInstance()->waitList[miter->first].remove((*liter)); // 删除等待列表中的超时的客户端, 在这里添加后可能会内存泄漏
+// 					delete (*liter); // 删除内存
+// 					SimpleLog::error(CString("[读卡器 ") + i2str((*liter)->getReaderId()) + "]的客户端" + i2str((*liter)->getSocket()) + "超时, 从等待队列中删除");
+// 					break;
+// 				}
+// 			}
+// 		}
+		for (list<Client*>::iterator iter = Server::getInstance()->clients.begin();
+			iter != Server::getInstance()->clients.end(); ++iter)
 		{
-			list<Client*> l = miter->second;
-
-			for (list<Client*>::iterator liter = miter->second.begin(); liter != miter->second.begin(); ++liter)
-			{
-				if ((*liter)->isOvertime()) // 客户端如果超时, 就直接关闭其socket
-				{
-					(*liter)->release();
-					Server::getInstance()->waitList[miter->first].remove((*liter)); // 删除等待列表中的超时的客户端, 在这里添加后可能会内存泄漏
-					delete (*liter); // 删除内存
-					SimpleLog::info(CString("[读卡器 ") + i2str((*liter)->getReaderId()) + "]的客户端" + i2str((*liter)->getSocket()) + "超时, 从等待队列中删除");
-					break;
-				}
+			if((*iter)->isOvertime())
+			{	
+				SimpleLog::error(CString("[读卡器 ") + i2str((*iter)->getReaderId()) + "]的客户端" + i2str((*iter)->getSocket()) + "超时, 删除");
+				(*iter)->release();
+				Server::getInstance()->clients.remove(*iter);
+				break;
 			}
-
 		}
 		
 		LeaveCriticalSection(&(Server::getInstance()->g_cs));
@@ -228,10 +240,12 @@ UINT defaultClientHandler (LPVOID pParam)
 			break;
 		}
 	}
+	EnterCriticalSection(&(Server::getInstance()->g_cs));
 	// 释放读卡器
 	Server::getInstance()->releaseReader(readerId);
 	client->release();
 	delete client; // 不要的指针删掉
+	LeaveCriticalSection(&(Server::getInstance()->g_cs));
 
 	return 0;
 }
