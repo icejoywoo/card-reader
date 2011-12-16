@@ -2,8 +2,10 @@
 // FileName: SimpleLog.cpp
 // Creator: icejoywoo
 // Date: 2011.11.28
+// $Revision: 69 $
+// $LastChangedDate: 2011-12-16 14:03:46 +0800 (å‘¨äº”, 16 åäºŒæœˆ 2011) $
 // Comment: Ò»¸ö¼òµ¥µÄÈÕÖ¾ÀàµÄÊµÏÖ, ÈıµÈ¼¶ÈÕÖ¾: info, warn, error
-//			Ä¬ÈÏ±£´æÂ·¾¶: ³ÌĞòÄ¿Â¼ÏÂµÄlog, ÎÄ¼şÃûÒÔÈÕÆÚÎªÃû×Ö, ÊÇÈÕÖ¾µÚÒ»´ÎĞ´ÈëµÄÈÕÆÚ
+//			Ä¬ÈÏ±£´æÂ·¾¶: ³ÌĞòÄ¿Â¼ÏÂµÄlog, ÎÄ¼şÃûÒÔÈÕÆÚÎªÃû×Ö
 //////////////////////////////////////////////////////////////////////////
 #include "SimpleLog.h"
 #include <windows.h>
@@ -36,7 +38,7 @@ CString SimpleLog::GetFilePath()
 	return m_FilePath;
 }
 
-	// Ğ´ÈÕÖ¾µ½ÎÄ¼ş, ¸ñÊ½Îª Ê±¼ä(%Y-%m-%d %X) ÄÚÈİ
+// Ğ´ÈÕÖ¾µ½ÎÄ¼ş, ¸ñÊ½Îª Ê±¼ä(%Y-%m-%d %X) ÄÚÈİ
 BOOL SimpleLog::WriteLog(CString LogText)
 {
 	WaitForSingleObject(mutex, INFINITE);
@@ -69,16 +71,17 @@ BOOL SimpleLog::WriteLog(CString LogText)
 				m_SFile.Open(logFileLocation, CFile::modeCreate | CFile::modeReadWrite | CFile::typeText);
 			}
 		}
-		
+
+		if (m_SFile.GetLength() > 100000000) // ´óÓÚ100MµÄÈÕÖ¾ÎÄ¼ş100000000
+		{
+			isLogFileCreated = FALSE;
+		}
+
 		m_SFile.SeekToEnd(); 
 		
 		char* m_szMessage;			
 		m_szMessage=(LPTSTR)(LPCTSTR)m_sErrorMessage;
-		m_SFile.Write(m_szMessage,lstrlen(m_szMessage));
-
-		// TODO: ½«ÈÕÖ¾ÊäÈëµ½·şÎñÆ÷ÖĞ, ñîºÏĞÔºÜÇ¿
-		Server::getInstance()->log += m_szMessage;
-
+		m_SFile.Write(m_szMessage,lstrlen(m_szMessage));   	
 		m_SFile.Close();
 		ReleaseMutex(mutex);
 	}
@@ -91,17 +94,17 @@ BOOL SimpleLog::WriteLog(CString LogText)
 
 BOOL SimpleLog::warn(CString logText)
 {
-	return WriteLog(" ¾¯¸æ: " + logText);
+	return WriteLog(" warn: " + logText);
 }
 
 BOOL SimpleLog::info(CString logText)
 {
-	return WriteLog(" ĞÅÏ¢: " + logText);
+	return WriteLog(" info: " + logText);
 }
 
 BOOL SimpleLog::error(CString logText)
 {
-	return WriteLog(" ´íÎó: " + logText);
+	return WriteLog(" error: " + logText);
 }
 
 const HANDLE SimpleLog::mutex = CreateMutex(NULL, FALSE, NULL);

@@ -13,12 +13,12 @@ Class2=CCardReaderServerDlg
 Class3=CAboutDlg
 
 ResourceCount=5
-Resource1=IDD_DIALOG1
+Resource1=IDD_CARDREADERSERVER_DIALOG
 Resource2=IDR_MAINFRAME
-Resource3=IDD_ABOUTBOX
+Resource3=IDD_SERVERSETTING_DIALOG
 Class4=ServerSetting
-Resource4=IDD_SERVERSETTING_DIALOG
-Resource5=IDD_CARDREADERSERVER_DIALOG
+Resource4=IDD_ABOUTBOX
+Resource5=IDD_DIALOG1
 
 [CLS:CCardReaderServerApp]
 Type=0

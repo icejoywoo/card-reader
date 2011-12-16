@@ -57,6 +57,7 @@ int Server::stop()
 
 	// 恢复服务器的原始状态
 	readerUsage.clear();
+	waitList.clear(); // 重启的时候不删除等待队列可以保证等待队列继续处理
 	timepassed.clear();
 	timeout.clear();
 	clients.clear();
@@ -97,6 +98,12 @@ void Server::addToTimeout(SOCKET s, ULONG timeout)
 }
 
 SOCKET Server::getSocketByReaderId(int readerId)
+{
+	SOCKET result = this->waitList[readerId].at(0);
+	return result;
+}
+
+SOCKET Server::getSocketByReaderIdAndDelete(int readerId)
 {
 	SOCKET result = this->waitList[readerId].at(0);
 	this->waitList[readerId].erase(this->waitList[readerId].begin());

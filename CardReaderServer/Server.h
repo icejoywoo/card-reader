@@ -90,6 +90,8 @@ public:
 
 	// 获取队列的首个元素
 	SOCKET getSocketByReaderId(int readerId);
+	SOCKET getSocketByReaderIdAndDelete(int readerId);
+
 	// 释放当前读卡器的socket连接
 	void releaseReader(int readerId);
 	// 更新延时
@@ -100,7 +102,7 @@ private:
 	static Server* instance; // the singleton
 	WSADATA wsaData;
 	int port;
-	CEdit mEdit; // 在界面中输出日志信息
+//	CEdit mEdit; // 在界面中输出日志信息
 	
 public:
 	SOCKET server;
@@ -112,8 +114,8 @@ public:
 
 	// 等待队列
 	map< int, vector<SOCKET> > waitList;
-	// 当前每个读卡器的开始时间, 用现在时间-开始时间, 计算已经延时的时间
-	map<int, ULONG> timepassed;
+	// 保存每个客户端的延时开始时间timeout start time
+	map<SOCKET, ULONG> timepassed;
 	// 保存每个客户端的延时时间, 由客户端发送
 	map< SOCKET, ULONG > timeout;
 	// 当前正在操作的客户端的timeout

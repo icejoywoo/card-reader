@@ -6,17 +6,14 @@
 --------------------Configuration: CardReaderServer - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPFACA.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA6E1.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServerDlg.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Handlers.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Server.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerSettingDlg.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerUtils.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPFACA.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPFADB.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA6E1.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA6F1.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderServer.pdb" /debug /machine:I386 /out:"Debug/CardReaderServer.exe" /pdbtype:sept 
 ".\Debug\CardReaderServer.obj"
@@ -31,21 +28,16 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPFADB.tmp" with 
 ".\Debug\StdAfx.obj"
 ".\Debug\CardReaderServer.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPFADB.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA6F1.tmp"
 <h3>Output Window</h3>
 Compiling...
-Server.cpp
-ServerUtils.cpp
-Generating Code...
-Compiling...
-CardReaderServerDlg.cpp
 Handlers.cpp
-ServerSettingDlg.cpp
+Server.cpp
 Generating Code...
 Linking...
 LINK : fatal error LNK1168: cannot open Debug/CardReaderServer.exe for writing
 Ö´ÐÐ link.exe Ê±³ö´í.
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP10AD.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB2A5.tmp" with contents
 [
 /nologo /o"Debug/CardReaderServer.bsc" 
 ".\Debug\StdAfx.sbr"
@@ -58,7 +50,7 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP10AD.tmp" with 
 ".\Debug\ServerUtils.sbr"
 ".\Debug\SimpleLog.sbr"
 ".\Debug\SplitStr.sbr"]
-Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP10AD.tmp"
+Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB2A5.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
 
