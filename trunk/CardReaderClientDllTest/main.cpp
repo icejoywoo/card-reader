@@ -39,7 +39,7 @@ int main(int argc, char* args[])
 // 	return 0;
 
 	Reader* reader = new Reader();
-	reader->readerId = atoi(args[1]);
+	reader->readerId = 3;
 
 	// 初始化客户端
 	InitClient("127.0.0.1", 60000);
@@ -48,6 +48,7 @@ int main(int argc, char* args[])
 	if (0 != GetReader(reader, 10000, 10000))
 	{
 		printf("getReader Failed.");
+		return -1;
 	}
 
 
@@ -78,7 +79,7 @@ int main(int argc, char* args[])
 		}
  		cout << devID << ", " << readerId << endl;
 	}
-	
+	Sleep(20000);
 	// 读取程序版本和终端类型
 	{
 		char appVer[512] = {0};

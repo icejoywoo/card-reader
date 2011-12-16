@@ -14,6 +14,7 @@
 #include "Handlers.h"
 #include "Client.h"
 #include <map>
+#include <list>
 #include <vector>
 
 using namespace std;
@@ -87,8 +88,6 @@ public:
 
 	// 获取队列的首个元素
 	Client* getClientByReaderId(int readerId);
-	// 获取队列的首个元素, 然后删除
-	Client* getClientByReaderIdAndDelete(int readerId);
 	// 释放读卡器
 	void releaseReader(int readerId);
 
@@ -108,9 +107,9 @@ public:
 	map<int, int> readerUsage;
 
 	// 等待队列
-	map< int, vector<Client*> > waitList;
-	// 当前正在操作客户端列表
-	map <Client*, Client*> clients;
+	map< int, list<Client*> > waitList;
+	// 当前正在操作客户端列表, client和readerId
+	map <Client*, int> clients;
 	// true表示正在运行, false表示停止
 	BOOL status;
 

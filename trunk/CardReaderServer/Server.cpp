@@ -88,26 +88,20 @@ int Server::setPort(int &port)
 void Server::addToWaitList(Client* client)
 {
 	this->waitList[client->getReaderId()].push_back(client);
-	this->clients[client] = client;
+	this->clients[client] = client->getReaderId();
 }
 
 Client* Server::getClientByReaderId(int readerId)
 {
-	return this->waitList[readerId].at(0);
-}
-
-Client* Server::getClientByReaderIdAndDelete(int readerId)
-{
-	Client* result = this->waitList[readerId].at(0);
-	Client* beginClient = this->waitList[readerId][0];
-	this->clients.erase(beginClient);
-	this->waitList[readerId].erase(this->waitList[readerId].begin());
-	return result;
+	return this->waitList[readerId].front();
 }
 
 void Server::releaseReader(int readerId) {
+	Client* beginClient = this->waitList[readerId].front();
+	this->clients.erase(beginClient);
+	this->waitList[readerId].erase(this->waitList[readerId].begin());
 	this->readerUsage[readerId] = 0;
-	SimpleLog::info(CString("释放读卡器") + i2str(readerId));
+	SimpleLog::info(CString("释放[读卡器 ") + i2str(readerId) + "]");
 }
 
 /// Server定义结束
