@@ -105,6 +105,10 @@ SOURCE=.\CardReaderServerDlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Client.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Handlers.cpp
 # End Source File
 # Begin Source File
@@ -147,6 +151,10 @@ SOURCE=.\CardReaderServer.h
 # Begin Source File
 
 SOURCE=.\CardReaderServerDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Client.h
 # End Source File
 # Begin Source File
 

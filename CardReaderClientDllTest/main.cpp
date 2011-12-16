@@ -70,8 +70,8 @@ int main(int argc, char* args[])
 	
 	// 获取读卡器id
 	{
-		char devID[512];
-		int readerId;
+		char devID[512] = {0};
+		int readerId = 0;
 		if (0 != GetDevIDAndReaderId(reader, devID, 512, readerId))
 		{
 			printf("GetDevIDAndReaderId Failed.");
@@ -81,8 +81,8 @@ int main(int argc, char* args[])
 	
 	// 读取程序版本和终端类型
 	{
-		char appVer[512];
-		char devType[512];
+		char appVer[512] = {0};
+		char devType[512] = {0};
 		if (0 != GetAppVerAndDevType(reader, appVer, 512, devType, 512))
 		{
 			printf("GetAppVerAndDevType Failed.");
@@ -92,7 +92,7 @@ int main(int argc, char* args[])
 
 	// 获取芯片id(调用复位之后调用这个, 会出错)
 	{
-		char chipID[512];
+		char chipID[512] = {0};
 		if (0 != GetChipID(reader, chipID, 512))
 		{
 			printf("GetChipID failed.");
@@ -102,8 +102,8 @@ int main(int argc, char* args[])
 
 	// 检测A卡和B卡座是否有卡
 	{
-		int cardA;
-		int cardB;
+		int cardA = -1;
+		int cardB = -1;
 		if (0 != IsCardReady(reader, cardA, cardB))
 		{
 			printf("IsCardReady failed.");
@@ -113,7 +113,7 @@ int main(int argc, char* args[])
 	
 	// 复位应答
 	{
-		SmartCom::string retCode;
+		SmartCom::string retCode = "empty";
 		if (0 != ResetCard(reader, retCode))
 		{
 			printf("ResetCard failed.");
@@ -123,7 +123,7 @@ int main(int argc, char* args[])
 
 	// 执行单条命令(执行前需要先复位应答)
 	{
-		SmartCom::string retCode;
+		SmartCom::string retCode = "empty";
 		char* apdu = "00820000083132333435363738";
 		if (0 != CardApdu(reader, apdu, retCode, 1))
 		{
@@ -159,28 +159,28 @@ int main(int argc, char* args[])
 // 	}
 	
 	// 擦除存储器
-	{
-		if (0 != ClearMem(reader)) 
-		{
-			printf("擦除存储器失败\n");
-		}
-	}
+// 	{
+// 		if (0 != ClearMem(reader)) 
+// 		{
+// 			printf("擦除存储器失败\n");
+// 		}
+// 	}
 
 	// 下载文件(Attention:文件应该放在服务器端的, 下载文件之前先擦除存储器)
-	{
-		if (0 != DownloadFile(reader, 2, "apdu_head.bin")) // 下载头文件
-		{
-			printf("下载头文件失败\n");
-		}
-		if (0 != DownloadFile(reader, 1, "apdu_body.bin")) // 下载体文件
-		{
-			printf("下载体文件失败\n");
-		}
-	}
+// 	{
+// 		if (0 != DownloadFile(reader, 2, "apdu_head.bin")) // 下载头文件
+// 		{
+// 			printf("下载头文件失败\n");
+// 		}
+// 		if (0 != DownloadFile(reader, 1, "apdu_body.bin")) // 下载体文件
+// 		{
+// 			printf("下载体文件失败\n");
+// 		}
+// 	}
 	
 	// 获取脚本数据(需要先下载文件)
 	{
-		SmartCom::string strData;
+		SmartCom::string strData = "empty";
 		if (0 != GetScriptData(reader, 0, 128, strData))
 		{
 			printf("GetScriptData失败\n");
@@ -199,8 +199,8 @@ int main(int argc, char* args[])
 
 	// CheckBatchResult
 	{
-		SmartCom::string retCode; // 状态返回码
-		int result; // 已执行的条数
+		SmartCom::string retCode = "empty"; // 状态返回码
+		int result = -1000; // 已执行的条数
 		if ((result = CheckBatchResult(reader, retCode)) < 0)
 		{
 			printf("CheckBatchResult失败\n");
