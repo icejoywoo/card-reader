@@ -39,7 +39,7 @@ int main(int argc, char* args[])
 // 	return 0;
 
 	Reader* reader = new Reader();
-	reader->readerId = 3;
+	reader->readerId = atoi(args[1]);
 
 	// 初始化客户端
 	InitClient("127.0.0.1", 60000);
