@@ -22,7 +22,11 @@ UINT logHandler (LPVOID pParam)
 			int len = logWindow->GetWindowTextLength();
 			logWindow->SetSel(len,len);
 			logWindow->ReplaceSel(Server::getInstance()->log);
-			Server::getInstance()->log = ""; // 清空日志
+
+			Server::getInstance()->log = "";
+			Server::getInstance()->log.Empty(); 
+			Server::getInstance()->log.ReleaseBuffer();// 清空日志
+
 			if (logWindow->GetLineCount() > 1000) // 超过1000行清空一次
 			{
 				logWindow->SetWindowText("");
@@ -78,8 +82,8 @@ UINT defaultServerHandler(LPVOID pParam)
 			iter != ServerParam::instance->readerIdSet.end(); ++iter) // 遍历当前读卡器id的集合
 	{
 		serv->readerUsage[*iter] = 0; // 初始化控制列表
-		serv->timeoutList[*iter] = GetTickCount();
-		serv->timeout[*iter] = 60000; // 延时初始化为60s
+		serv->timepassed[*iter] = GetTickCount();
+		serv->clientTimeout[*iter] = 60000; // 当前延时时间
 		serv->clients[*iter] = INVALID_SOCKET; // 初始化当前客户端列表
 	}
 
@@ -91,7 +95,7 @@ UINT defaultServerHandler(LPVOID pParam)
 	SimpleLog::info(CString("服务器启动成功, ") + "端口: " + i2str(serv->getPort()));
 
 	AfxBeginThread(serv->waitListHandler, NULL); // 启动等待队列线程, 处理等待队列的
-//	AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
+	AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
 
 	while (true)
 	{
@@ -125,7 +129,7 @@ UINT defaultServerHandler(LPVOID pParam)
 		
 		SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]的延时为: " + i2str(timeout));
 		
-		Server::getInstance()->timeout[client] = timeout;
+		Server::getInstance()->addToTimeout(client, timeout);
 		sendData(client, "timeout_ok");
 		
 		serv->timeout[client] = timeout;
@@ -162,23 +166,21 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 {
 	while (Server::getInstance()->status == TRUE) // 读卡器的延时队列只针对当前访问读卡器的客户端
 	{
+		EnterCriticalSection(&(Server::getInstance()->g_cs));
 		// 当前客户端socket
-		for (map<int, SOCKET>::iterator iter = Server::getInstance()->clients.begin(); 
-		iter != Server::getInstance()->clients.end(); ++iter)
+		for (int readerId = 0; readerId < Server::getInstance()->readerUsage.size(); ++readerId)
 		{
-			if (iter->second != INVALID_SOCKET) // 判断是否是连接的socket
-			{
-				if ((GetTickCount() - Server::getInstance()->timeoutList[iter->first]) > 
-					Server::getInstance()->timeout[iter->first])
+				if (1 == Server::getInstance()->readerUsage[readerId] && 
+					(GetTickCount() - Server::getInstance()->timepassed[readerId]) > Server::getInstance()->clientTimeout[readerId])
 				{
-					SOCKET s = iter->second;
-					SimpleLog::error(CString("读卡器") + i2str(iter->first) + "等待超时, 即刻关闭");
+					SimpleLog::error(CString("读卡器") + i2str(readerId) + "等待超时, 即刻关闭");
+					SOCKET s = Server::getInstance()->clients[readerId];
 					shutdown(s, SD_BOTH);
 					closesocket(s);
-					Server::getInstance()->releaseReader(iter->first); // 删除读卡器当前的socket连接
+					Server::getInstance()->readerUsage[readerId] = 0; // 释放读卡器
 				}
-			}
 		}
+		LeaveCriticalSection(&(Server::getInstance()->g_cs));
 		Sleep(100); // 休眠100ms, 根据情况适当修改
 	}
 	
@@ -190,7 +192,12 @@ UINT defaultClientHandler (LPVOID pParam)
 {
 	int readerId = ((int) pParam);
 	SOCKET client = Server::getInstance()->getSocketByReaderId(readerId); // 取出相应读卡器队列中的socket
+
+	EnterCriticalSection(&(Server::getInstance()->g_cs));
 	Server::getInstance()->clients[readerId] = client; // 添加到当前客户端列表中
+	Server::getInstance()->clientTimeout[readerId] = Server::getInstance()->timeout[client];
+	LeaveCriticalSection(&(Server::getInstance()->g_cs));
+
 	char buff[512]; // buffer
 
 	sendData(client, "Ready"); // 告诉客户端已经准备就绪可以操作
@@ -213,6 +220,7 @@ UINT defaultClientHandler (LPVOID pParam)
 		} else {
 			SimpleLog::error(CString("[读卡器 ") + i2str(readerId) + "][" + operationName + "]操作失败, 错误码: " + i2str(resultCode));
 		}
+		Server::getInstance()->updateTimeout(readerId);
 		// 将结果发送到客户端
 		if (sendData(client, resultCode) == -1) // 发送数据出错即刻关闭
 		{
@@ -231,24 +239,5 @@ UINT defaultClientHandler (LPVOID pParam)
 	Server::getInstance()->readerUsage[readerId] = 0;  // 操作完成后, 设置为空闲状态
 	LeaveCriticalSection(&(Server::getInstance()->g_cs));
 
-	return 0;
-}
-
-// 测试用
-UINT helloClientHandler (LPVOID pParam)
-{
-	SOCKET client = (SOCKET) pParam;
-	char buff[512]; // buffer
-	
- 	sprintf(buff, "Hello."); // 测试数据, 仅发送Hello
-// 	int size = send(client, buff, strlen(buff), 0);
-// 	SimpleLog::info(CString("发送数据: ") + buff);
-
-	sendData(client, buff);
-	
-	//Sleep(10000);
-	shutdown(client, SD_BOTH);
-	closesocket(client);
-	
 	return 0;
 }

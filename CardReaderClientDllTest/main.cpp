@@ -45,7 +45,7 @@ int main(int argc, char* args[])
 	InitClient("127.0.0.1", 60000);
 
 	// »ñÈ¡¶Á¿¨Æ÷
-	if (0 != GetReader(reader, 1000, 1000))
+	if (0 != GetReader(reader, 10000, 10000))
 	{
 		printf("getReader Failed.");
 	}
