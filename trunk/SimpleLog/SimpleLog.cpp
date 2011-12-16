@@ -71,7 +71,12 @@ BOOL SimpleLog::WriteLog(CString LogText)
 				m_SFile.Open(logFileLocation, CFile::modeCreate | CFile::modeReadWrite | CFile::typeText);
 			}
 		}
-		
+
+		if (m_SFile.GetLength() > 100000000) // 大于100M的日志文件
+		{
+			isLogFileCreated = FALSE;
+		}
+
 		m_SFile.SeekToEnd(); 
 		
 		char* m_szMessage;			
