@@ -72,7 +72,7 @@ BOOL SimpleLog::WriteLog(CString LogText)
 			}
 		}
 
-		if (m_SFile.GetLength() > 100000000) // 大于100M的日志文件
+		if (m_SFile.GetLength() >= 100000000) // 大于100M的日志文件100000000
 		{
 			isLogFileCreated = FALSE;
 		}

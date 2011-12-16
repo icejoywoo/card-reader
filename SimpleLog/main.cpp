@@ -34,17 +34,19 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 		CString strHello;
 		strHello.LoadString(IDS_HELLO);
 		cout << (LPCTSTR)strHello << endl;
-		SimpleLog::warn("警告你了");
-		SimpleLog::info("你有新消息了");
-		SimpleLog::error("你又错了");
-		Sleep(100);
-		SimpleLog::warn("警告你了");
-		SimpleLog::info("你有新消息了");
-		SimpleLog::error("你又错了");
-		Sleep(100);
-		SimpleLog::warn("警告你了");
-		SimpleLog::info("你有新消息了");
-		SimpleLog::error("你又错了");
+		for (int i = 0; i < 10000; ++i)
+		{
+			SimpleLog::warn("警告你了");
+			SimpleLog::info("你有新消息了");
+			SimpleLog::error("你又错了");
+			SimpleLog::warn("警告你了");
+			SimpleLog::info("你有新消息了");
+			SimpleLog::error("你又错了");
+			SimpleLog::warn("警告你了");
+			SimpleLog::info("你有新消息了");
+			SimpleLog::error("你又错了");
+			Sleep(10);
+		}
 		//cout << SimpleLog::GetlogFileLocation() << endl;
 		// 在记事本中打开日志, 依赖系统变量PATH的notepad
 		WinExec(CString("notepad ") + SimpleLog::GetlogFileLocation(), SW_SHOWNORMAL);
