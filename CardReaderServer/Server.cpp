@@ -58,7 +58,6 @@ int Server::stop()
 	// 恢复服务器的原始状态
 	readerUsage.clear();
 	waitList.clear(); // 重启的时候不删除等待队列可以保证等待队列继续处理
-	clients.clear();
 
 	return 0;
 }
@@ -88,7 +87,6 @@ int Server::setPort(int &port)
 void Server::addToWaitList(Client* client)
 {
 	this->waitList[client->getReaderId()].push_back(client);
-	this->clients[client] = client->getReaderId();
 }
 
 Client* Server::getClientByReaderId(int readerId)
@@ -97,10 +95,12 @@ Client* Server::getClientByReaderId(int readerId)
 }
 
 void Server::releaseReader(int readerId) {
-	Client* beginClient = this->waitList[readerId].front();
-	this->clients.erase(beginClient);
 	this->waitList[readerId].erase(this->waitList[readerId].begin());
-	this->readerUsage[readerId] = 0;
+	// 将读卡器设置为可用
+	EnterCriticalSection(&(Server::getInstance()->g_cs));
+	this->readerUsage[readerId] = 0;  // 操作完成后, 设置为空闲状态
+	LeaveCriticalSection(&(Server::getInstance()->g_cs));
+
 	SimpleLog::info(CString("释放[读卡器 ") + i2str(readerId) + "]");
 }
 

@@ -89,7 +89,7 @@ UINT defaultServerHandler(LPVOID pParam)
 	struct sockaddr_in from;
 	memset(&from, 0, sizeof(from));
 	int fromlen = sizeof(from);
-//	SimpleLog::info(CString("服务器启动成功, ") + "IP:" + inet_ntoa(local.sin_addr) + ", 端口: " + i2str(serv->getPort()));
+
 	SimpleLog::info(CString("服务器启动成功, ") + "端口: " + i2str(serv->getPort()));
 
 	AfxBeginThread(serv->waitListHandler, NULL); // 启动等待队列线程, 处理等待队列的
@@ -166,16 +166,23 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 	{
 		EnterCriticalSection(&(Server::getInstance()->g_cs));
 		// 遍历所有客户端
-		for (map<Client*, int>::iterator iter = Server::getInstance()->clients.begin();
-			iter != Server::getInstance()->clients.end() ; ++iter)
+		for (map<int, list<Client*> >::iterator miter = Server::getInstance()->waitList.begin();
+			miter != Server::getInstance()->waitList.end() ; ++miter)
 		{
-			if (iter->first->isOvertime()) // 客户端如果超时, 就直接关闭其socket
+			list<Client*> l = miter->second;
+
+			for (list<Client*>::iterator liter = miter->second.begin(); liter != miter->second.begin(); ++liter)
 			{
-				iter->first->release();
-// 				Server::getInstance()->waitList[iter->second].remove((iter->first)); // 删除等待列表中的超时的客户端
- 				SimpleLog::info(CString("[读卡器 ") + i2str(iter->second) + "]的客户端" + i2str(iter->first->getSocket()) + "超时, 从等待队列中删除");
-				break;
+				if ((*liter)->isOvertime()) // 客户端如果超时, 就直接关闭其socket
+				{
+					(*liter)->release();
+					Server::getInstance()->waitList[miter->first].remove((*liter)); // 删除等待列表中的超时的客户端, 在这里添加后可能会内存泄漏
+					delete (*liter); // 删除内存
+					SimpleLog::info(CString("[读卡器 ") + i2str((*liter)->getReaderId()) + "]的客户端" + i2str((*liter)->getSocket()) + "超时, 从等待队列中删除");
+					break;
+				}
 			}
+
 		}
 		
 		LeaveCriticalSection(&(Server::getInstance()->g_cs));
@@ -224,12 +231,7 @@ UINT defaultClientHandler (LPVOID pParam)
 	// 释放读卡器
 	Server::getInstance()->releaseReader(readerId);
 	client->release();
-//	delete client; // 不要的指针删掉
-
-	// 将读卡器设置为可用
-	EnterCriticalSection(&(Server::getInstance()->g_cs));
-	Server::getInstance()->readerUsage[readerId] = 0;  // 操作完成后, 设置为空闲状态
-	LeaveCriticalSection(&(Server::getInstance()->g_cs));
+	delete client; // 不要的指针删掉
 
 	return 0;
 }
