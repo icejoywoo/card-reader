@@ -111,6 +111,13 @@ public:
 	 */
 	int receiveData( int& data);
 
+	bool operator ==(const Client& r) const
+	{
+		return s == r.s 
+			&& readerId == r.readerId
+			&& timeout == r.timeout;
+	}
+
 private:
 	SOCKET s; // 与服务器的socket连接
 	ULONG timeout; // 延时ms

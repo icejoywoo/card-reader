@@ -8,6 +8,7 @@
 #include "ServerParam.h"
 #include "ServerUtils.h"
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -165,12 +166,15 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 	{
 		EnterCriticalSection(&(Server::getInstance()->g_cs));
 		// 遍历所有客户端
-		for (map<Client*, Client*>::iterator iter = Server::getInstance()->clients.begin();
+		for (map<Client*, int>::iterator iter = Server::getInstance()->clients.begin();
 			iter != Server::getInstance()->clients.end() ; ++iter)
 		{
 			if (iter->first->isOvertime()) // 客户端如果超时, 就直接关闭其socket
 			{
 				iter->first->release();
+// 				Server::getInstance()->waitList[iter->second].remove((iter->first)); // 删除等待列表中的超时的客户端
+ 				SimpleLog::info(CString("[读卡器 ") + i2str(iter->second) + "]的客户端" + i2str(iter->first->getSocket()) + "超时, 从等待队列中删除");
+				break;
 			}
 		}
 		
@@ -185,7 +189,7 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 UINT defaultClientHandler (LPVOID pParam)
 {
 	int readerId = ((int) pParam);
-	Client* client = Server::getInstance()->getClientByReaderIdAndDelete(readerId); // 取出相应读卡器队列中的socket
+	Client* client = Server::getInstance()->getClientByReaderId(readerId); // 取出相应读卡器队列中的socket
 
 	char buff[512]; // buffer
 

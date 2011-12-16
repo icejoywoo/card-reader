@@ -76,9 +76,9 @@ int Client::sendData(const char* data)
 	int size = send(s, buff, strlen(buff), 0);
 	
 	if (-1 == size) {
-		SimpleLog::error(CString("发送数据错误, 数据: [") + buff + "]");
+		SimpleLog::error(CString("[读卡器 ") + i2str(readerId) + "]发送数据错误, 数据: [" + buff + "]");
 	} else {
-		SimpleLog::info(CString("发送数据, 长度: ") + i2str(size) + ", 数据: [" + buff + "]");
+		SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]发送数据, 长度: " + i2str(size) + ", 数据: [" + buff + "]");
 	}
 	
 	return size;
@@ -99,11 +99,11 @@ int Client::receiveData(char* data, int len)
 	int size = recv(s, data, len, 0);
 	if (-1 == size)
 	{
-		SimpleLog::error("接收数据出错");
+		SimpleLog::error(CString("[读卡器 ") + i2str(readerId) + "]接收数据出错");
 		return size;
 	}
 	data[size] = '\0';
-	SimpleLog::info(CString("接收数据: [") + data + "]");
+	SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]接收数据: [" + data + "]");
 	return size;
 }
 
