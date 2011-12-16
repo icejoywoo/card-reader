@@ -52,7 +52,7 @@ UINT defaultServerHandler(LPVOID pParam)
 		return -1;
 	}
 	
-	// 初始化读卡器(用udp测试的时候使用)
+	// TODO: 初始化读卡器(用udp测试的时候使用, 到生产环境的时候应该删除)
 	if (InitUDPComm() == -1) {
 		AfxMessageBox("与卡片读写器的通信初始化失败");
 		SimpleLog::error("与卡片读写器的通信初始化失败");
@@ -82,7 +82,6 @@ UINT defaultServerHandler(LPVOID pParam)
 			iter != ServerParam::instance->readerIdSet.end(); ++iter) // 遍历当前读卡器id的集合
 	{
 		serv->readerUsage[*iter] = 0; // 初始化控制列表
-		serv->timepassed[*iter] = GetTickCount();
 		serv->clientTimeout[*iter] = 60000; // 当前延时时间
 		serv->clients[*iter] = INVALID_SOCKET; // 初始化当前客户端列表
 	}
@@ -132,8 +131,8 @@ UINT defaultServerHandler(LPVOID pParam)
 		Server::getInstance()->addToTimeout(client, timeout);
 		sendData(client, "timeout_ok");
 		
-		serv->timeout[client] = timeout;
 		serv->addToWaitList(readerId, client); // 添加到等待处理队列
+		serv->addToTimeout(client, timeout); // 保存客户端超时信息
 		SimpleLog::info(CString("将请求添加到[读卡器 ") + i2str(readerId) + "]等待队列中...");
 	}
 	return 0;
@@ -170,15 +169,28 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 		// 当前客户端socket
 		for (int readerId = 0; readerId < Server::getInstance()->readerUsage.size(); ++readerId)
 		{
-				if (1 == Server::getInstance()->readerUsage[readerId] && 
-					(GetTickCount() - Server::getInstance()->timepassed[readerId]) > Server::getInstance()->clientTimeout[readerId])
-				{
-					SimpleLog::error(CString("读卡器") + i2str(readerId) + "等待超时, 即刻关闭");
-					SOCKET s = Server::getInstance()->clients[readerId];
-					shutdown(s, SD_BOTH);
-					closesocket(s);
-					Server::getInstance()->readerUsage[readerId] = 0; // 释放读卡器
-				}
+			if (1 == Server::getInstance()->readerUsage[readerId] && 
+				(GetTickCount() - Server::getInstance()->timepassed[readerId]) > Server::getInstance()->clientTimeout[readerId])
+			{
+				SimpleLog::error(CString("读卡器") + i2str(readerId) + "等待超时, 即刻关闭");
+				SOCKET s = Server::getInstance()->clients[readerId];
+				shutdown(s, SD_BOTH);
+				closesocket(s);
+				Server::getInstance()->readerUsage[readerId] = 0; // 释放读卡器
+			}
+		}
+		
+		// TODO: 在等待队列中的socket, 如果有延时的, 也要删掉
+		for (map<SOCKET, ULONG>::iterator iter = Server::getInstance()->timeout.begin(); 
+			iter != Server::getInstance()->timeout.end(); ++iter)
+		{
+			if ((GetTickCount() - Server::getInstance()->timepassed[iter->first]) > Server::getInstance()->timeout[iter->first])
+			{
+				SimpleLog::error(CString("客户端") + i2str(iter->first) + "等待超时, 即刻关闭");
+				shutdown(iter->first, SD_BOTH);
+ 				closesocket(iter->first);
+				Server::getInstance()->timeout.erase(iter);
+			}
 		}
 		LeaveCriticalSection(&(Server::getInstance()->g_cs));
 		Sleep(100); // 休眠100ms, 根据情况适当修改
@@ -191,11 +203,12 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 UINT defaultClientHandler (LPVOID pParam)
 {
 	int readerId = ((int) pParam);
-	SOCKET client = Server::getInstance()->getSocketByReaderId(readerId); // 取出相应读卡器队列中的socket
+	SOCKET client = Server::getInstance()->getSocketByReaderIdAndDelete(readerId); // 取出相应读卡器队列中的socket
 
 	EnterCriticalSection(&(Server::getInstance()->g_cs));
 	Server::getInstance()->clients[readerId] = client; // 添加到当前客户端列表中
 	Server::getInstance()->clientTimeout[readerId] = Server::getInstance()->timeout[client];
+	Server::getInstance()->timeout.erase(client);
 	LeaveCriticalSection(&(Server::getInstance()->g_cs));
 
 	char buff[512]; // buffer

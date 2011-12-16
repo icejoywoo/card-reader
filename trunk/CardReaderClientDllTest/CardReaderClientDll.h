@@ -2,7 +2,7 @@
 // FileName:	CardReaderClientDll.h
 // Creator:		icejoywoo
 // Date:		2011.12.03
-// $Revision: 60 $
+// $Revision: 65 $
 // Comment: 客户端操作读卡器的接口定义
 //////////////////////////////////////////////////////////////////////////
 
@@ -64,7 +64,7 @@ CARDREADERCLIENTDLL_API int CleanUpClient();
  * @return  
  *	0: 成功
  */
-CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout = 5000, long customTimeout = 10000);
+CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout = 5000, long customTimeout = 60000);
 
 /**
  * @brief 释放读卡器

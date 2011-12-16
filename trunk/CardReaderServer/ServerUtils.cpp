@@ -93,7 +93,7 @@ int parseCommand(SOCKET client, int readerId, char* command, CString& operationN
 	} else if (operationName == CString("checkBatchResult")) { // 查询执行批处理APDU结果
 		SmartCom::string retCode; // 输出参数, 最后一条指令的返回值
 		int resultCode = CheckBatchResult(communicator, retCode);
-		if (resultCode > 0) {
+		if (resultCode >= 0) {
 			sendData(client, retCode);
 		} else {
 			sendData(client, "checkBatchResult_wrong");
