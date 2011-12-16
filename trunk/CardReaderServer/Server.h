@@ -86,6 +86,8 @@ public:
 
 	// 向队列添加socket
 	void addToWaitList(int readerId, SOCKET s);
+	void addToTimeout(SOCKET s, ULONG timeout);
+
 	// 获取队列的首个元素
 	SOCKET getSocketByReaderId(int readerId);
 	// 释放当前读卡器的socket连接
@@ -111,16 +113,18 @@ public:
 	// 等待队列
 	map< int, vector<SOCKET> > waitList;
 	// 当前每个读卡器的开始时间, 用现在时间-开始时间, 计算已经延时的时间
-	map<int, ULONG> timeoutList;
+	map<int, ULONG> timepassed;
 	// 保存每个客户端的延时时间, 由客户端发送
 	map< SOCKET, ULONG > timeout;
+	// 当前正在操作的客户端的timeout
+	map <int, ULONG> clientTimeout;
 	// 当前正在操作客户端列表
 	map <int, SOCKET> clients;
 	// true表示正在运行, false表示停止
 	BOOL status;
 
 	/************************************************************************/
-	/* 替换这两个handler可以改变服务器的行为                                */
+	/* 替换这四个handler可以改变服务器的行为                                */
 	/************************************************************************/
 
 	// 处理客户端请求

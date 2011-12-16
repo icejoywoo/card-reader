@@ -57,7 +57,7 @@ int Server::stop()
 
 	// 恢复服务器的原始状态
 	readerUsage.clear();
-	timeoutList.clear();
+	timepassed.clear();
 	timeout.clear();
 	clients.clear();
 
@@ -91,6 +91,11 @@ void Server::addToWaitList(int readerId, SOCKET s)
 	this->waitList[readerId].push_back(s);
 }
 
+void Server::addToTimeout(SOCKET s, ULONG timeout)
+{
+	this->timeout[s] = timeout;
+}
+
 SOCKET Server::getSocketByReaderId(int readerId)
 {
 	SOCKET result = this->waitList[readerId].at(0);
@@ -101,12 +106,11 @@ SOCKET Server::getSocketByReaderId(int readerId)
 void Server::releaseReader(int readerId) {
 	this->waitList[readerId].erase(this->waitList[readerId].begin());
 	this->readerUsage[readerId] = 0;
-	this->timeoutList[readerId] = GetTickCount();
 	SimpleLog::info(CString("释放读卡器") + i2str(readerId));
 }
 
 void Server::updateTimeout(int readerId)
 {
-	this->timeoutList[readerId] = GetTickCount();
+	this->timepassed[readerId] = GetTickCount();
 }
 /// Server定义结束

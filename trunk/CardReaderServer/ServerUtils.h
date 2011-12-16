@@ -12,6 +12,8 @@
 #include "SmartComString.h"
 #include "ServerParam.h"
 
+#define MAX_OPERATION_DURATION (6000000) // 读卡器所有操作的最长时间
+
 /**
  * @brief 将int转换为CString
  * @param 
