@@ -34,7 +34,7 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 		CString strHello;
 		strHello.LoadString(IDS_HELLO);
 		cout << (LPCTSTR)strHello << endl;
-		for (int i = 0; i < 10000; ++i)
+		for (int i = 0; i < 10; ++i)
 		{
 			SimpleLog::warn("警告你了");
 			SimpleLog::info("你有新消息了");

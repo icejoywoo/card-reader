@@ -8,6 +8,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "SplitStr.h"
+#include <vector>
+
+using namespace std;
 
 //构造函数
 CSplitStr::CSplitStr()
@@ -34,7 +37,7 @@ CString CSplitStr::GetData()
 return m_sData;
 }
 //切分操作函数（很简单实用吧）
-void CSplitStr::GetSplitStrArray(CStringArray &array)
+void CSplitStr::GetSplitStrArray(vector<CString> &array)
 {
 	CString sData = GetData();
 	CString sSplitFlag = GetSplitFlag();
@@ -47,13 +50,13 @@ void CSplitStr::GetSplitStrArray(CStringArray &array)
 		sTemp = sData.Left(pos);
 		if (!GetSequenceAsOne())
 		{
-			array.Add(sTemp);
+			array.push_back(sTemp);
 		}
 		else
 		{
 			if (!sTemp.IsEmpty() && sTemp !="") ////连续的分隔符视为单个处理
 			{
-				array.Add(sTemp);
+				array.push_back(sTemp);
 			}
 		}
 		sData = sData.Right(sData.GetLength() - pos - 1);

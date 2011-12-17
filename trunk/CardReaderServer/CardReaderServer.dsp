@@ -166,6 +166,10 @@ SOURCE=.\CustomErrorCode.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CustomMessage.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Handlers.h
 # End Source File
 # Begin Source File

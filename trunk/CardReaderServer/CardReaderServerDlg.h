@@ -37,6 +37,7 @@ protected:
 	HICON m_hIcon;
 	ServerSettingDlg* settingDlg; // 设置对话框
 	BOOL m_start; // 服务器状态, 是否开启, 开启为true, 关闭为false
+	LRESULT updateLog(WPARAM wparam,LPARAM lparam); // 更新日志
 
 	// Generated message map functions
 	//{{AFX_MSG(CCardReaderServerDlg)
