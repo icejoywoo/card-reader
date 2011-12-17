@@ -14,8 +14,4 @@ ServerParam::ServerParam()
 	{
 		readerIdSet.insert(i);
 	}
-
-	// 设置默认的split参数
-	split.SetSplitFlag(",");
-	split.SetSequenceAsOne(TRUE);
 }
