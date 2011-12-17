@@ -36,7 +36,7 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 		cout << (LPCTSTR)strHello << endl;
 		for (int i = 0; i < 10; ++i)
 		{
-			SimpleLog::warn("警告你了");
+			SimpleLog::warn("警告你了%d: %s", 12, "我操");
 			SimpleLog::info("你有新消息了");
 			SimpleLog::error("你又错了");
 			SimpleLog::warn("警告你了");

@@ -78,7 +78,7 @@ BOOL SimpleLog::WriteLog(char* LogText)
 
 		m_SFile.SeekToEnd(); 
 		
-		m_SFile.Write(m_sLogMessage,lstrlen(m_sLogMessage));
+		m_SFile.WriteString(m_sLogMessage);
 		
 		// TODO: 将日志输入到服务器中, 耦合性很强
 		//EnterCriticalSection(&(Server::getInstance()->g_cs));

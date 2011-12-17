@@ -83,11 +83,13 @@ int Client::sendData(const char* data)
 	char buff[512];
 	sprintf(buff, data);
 	int size = send(s, buff, strlen(buff), 0);
-	
+	char log[512];
 	if (-1 == size) {
-		SimpleLog::error(CString("[读卡器 ") + i2str(readerId) + "]发送数据错误, 数据: [" + buff + "]");
+		sprintf(log, "[读卡器 %d]发送数据错误, 数据: [%s]", readerId, buff);
+		SimpleLog::error(log);
 	} else {
-		SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]发送数据, 长度: " + i2str(size) + ", 数据: [" + buff + "]");
+		sprintf(log, "[读卡器 %d]发送数据, 长度: %d, 数据: [%s]", readerId, size, buff);
+		SimpleLog::info(log);
 	}
 	
 	return size;
@@ -106,13 +108,16 @@ int Client::sendData(SmartCom::string data)
 int Client::receiveData(char* data, int len)
 {
 	int size = recv(s, data, len, 0);
-	if (-1 == size)
+	char log[512];
+	if (-1 == size || 0 == size)
 	{
-		SimpleLog::error(CString("[读卡器 ") + i2str(readerId) + "]接收数据出错");
+		sprintf(log, "[读卡器 %d]接收数据出错", readerId);
+		SimpleLog::error(log);
 		return size;
 	}
 	data[size] = '\0';
-	SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]接收数据: [" + data + "]");
+	sprintf(log, "[读卡器 %d]接收数据: [%s]", readerId, data);
+	SimpleLog::info(log);
 	return size;
 }
 
