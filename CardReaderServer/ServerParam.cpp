@@ -10,7 +10,7 @@ ServerParam* ServerParam::instance = new ServerParam();
 ServerParam::ServerParam()
 {
 	// TODO: ≤‚ ‘ π”√
-	for (int i = 1; i <= 6; ++i)
+	for (int i = 1; i <= 8; ++i)
 	{
 		readerIdSet.insert(i);
 	}

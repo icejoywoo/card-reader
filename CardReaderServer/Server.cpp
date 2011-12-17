@@ -96,15 +96,15 @@ Client* Server::getClientByReaderId(int readerId)
 }
 
 void Server::releaseReader(int readerId) {
-
+	char log[512];
 	// 将读卡器设置为可用
 	EnterCriticalSection(&(Server::getInstance()->g_cs));
 	this->clients.remove(this->waitList[readerId].front());
 	this->waitList[readerId].erase(this->waitList[readerId].begin());
 	this->readerUsage[readerId] = 0;  // 操作完成后, 设置为空闲状态
 	LeaveCriticalSection(&(Server::getInstance()->g_cs));
-
-	SimpleLog::info(CString("释放[读卡器 ") + i2str(readerId) + "]");
+	sprintf(log, "释放[读卡器 %d]", readerId);
+	SimpleLog::info(log);
 }
 
 /// Server定义结束

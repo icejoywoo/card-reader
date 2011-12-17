@@ -287,6 +287,7 @@ LRESULT CCardReaderServerDlg::updateLog(WPARAM wparam,LPARAM lparam)
 
 	WaitForSingleObject(SimpleLog::getMutex(), 100);
 	//EnterCriticalSection(&(Server::getInstance()->g_cs));
+	Server::getInstance()->log = "";
 	Server::getInstance()->log.Empty();// Çå¿ÕÈÕÖ¾
 	//LeaveCriticalSection(&(Server::getInstance()->g_cs));
 	ReleaseMutex(SimpleLog::getMutex());

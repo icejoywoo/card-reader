@@ -3,13 +3,12 @@
 <pre>
 <h1>Build Log</h1>
 <h3>
---------------------Configuration: CardReaderServer - Win32 Debug--------------------
+--------------------Configuration: CardReaderServer - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7AB6.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5994.tmp" with contents
 [
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServer.cpp"
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fo"Release/" /Fd"Release/" /FD /c 
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServerDlg.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Client.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Handlers.cpp"
@@ -19,117 +18,41 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7AB6.tmp" with 
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerUtils.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\SimpleLog.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7AB6.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7AC7.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5994.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5995.tmp" with contents
 [
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/CardReaderServer.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\StdAfx.cpp"
+/nologo /subsystem:windows /incremental:no /pdb:"Release/CardReaderServer.pdb" /machine:I386 /out:"Release/CardReaderServer.exe" 
+".\Release\CardReaderServer.obj"
+".\Release\CardReaderServerDlg.obj"
+".\Release\Client.obj"
+".\Release\Handlers.obj"
+".\Release\Server.obj"
+".\Release\ServerParam.obj"
+".\Release\ServerSettingDlg.obj"
+".\Release\ServerUtils.obj"
+".\Release\SimpleLog.obj"
+".\Release\SplitStr.obj"
+".\Release\StdAfx.obj"
+".\Release\CardReaderServer.res"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7AC7.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7AC8.tmp" with contents
-[
-/nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderServer.pdb" /debug /machine:I386 /out:"Debug/CardReaderServer.exe" /pdbtype:sept 
-".\Debug\CardReaderServer.obj"
-".\Debug\CardReaderServerDlg.obj"
-".\Debug\Client.obj"
-".\Debug\Handlers.obj"
-".\Debug\Server.obj"
-".\Debug\ServerParam.obj"
-".\Debug\ServerSettingDlg.obj"
-".\Debug\ServerUtils.obj"
-".\Debug\SimpleLog.obj"
-".\Debug\SplitStr.obj"
-".\Debug\StdAfx.obj"
-".\Debug\CardReaderServer.res"
-]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7AC8.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP5995.tmp"
 <h3>Output Window</h3>
 Compiling...
-StdAfx.cpp
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::list<Client *,std::allocator<Client *> > >,std::map<int,std::list<Client *,std::allocator<Client *> >,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Kfn,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >' : identifier was truncated to '255' characters in the debug information
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::list<Client *,std::allocator<Client *> > >,std::map<int,std::list<Client *,std::allocator<Client *> >,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Kfn,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::const_iterator' : identifier was truncated to '255' characters in the debug information
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::list<Client *,std::allocator<Client *> > >,std::map<int,std::list<Client *,std::allocator<Client *> >,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Kfn,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::iterator' : identifier was truncated to '255' characters in the debug information
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::list<Client *,std::allocator<Client *> > >,std::map<int,std::list<Client *,std::allocator<Client *> >,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Kfn,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Node' : identifier was truncated to '255' characters in the debug information
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::list<Client *,std::allocator<Client *> > >,std::map<int,std::list<Client *,std::allocator<Client *> >,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Kfn,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Redbl' : identifier was truncated to '255' characters in the debug information
-Compiling...
-Client.cpp
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\client.cpp(88) : error C2664: 'error' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\client.cpp(90) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\client.cpp(111) : error C2664: 'error' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\client.cpp(115) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-Handlers.cpp
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\handlers.cpp(82) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\handlers.cpp(92) : error C2664: 'warn' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\handlers.cpp(95) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\handlers.cpp(103) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\handlers.cpp(106) : error C2664: 'error' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\handlers.cpp(118) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\handlers.cpp(129) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\handlers.cpp(147) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\handlers.cpp(192) : error C2664: 'error' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\handlers.cpp(234) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\handlers.cpp(239) : error C2664: 'error' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-Server.cpp
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\server.cpp(107) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-ServerUtils.cpp
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\serverutils.cpp(43) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\serverutils.cpp(48) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\serverutils.cpp(150) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\serverutils.cpp(177) : error C2664: 'error' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\serverutils.cpp(179) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\icejoywoo\desktop\card-reader\cardreaderserver\serverutils.cpp(204) : error C2664: 'info' : cannot convert parameter 1 from 'class CString' to 'char *'
-        No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-SimpleLog.cpp
-Generating Code...
-Skipping... (no relevant changes detected)
-CardReaderServer.cpp
 CardReaderServerDlg.cpp
+Client.cpp
+Handlers.cpp
+Server.cpp
 ServerParam.cpp
 ServerSettingDlg.cpp
-Ö´ÐÐ cl.exe Ê±³ö´í.
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8FCF.tmp" with contents
-[
-/nologo /o"Debug/CardReaderServer.bsc" 
-".\Debug\StdAfx.sbr"
-".\Debug\CardReaderServer.sbr"
-".\Debug\CardReaderServerDlg.sbr"
-".\Debug\Client.sbr"
-".\Debug\Handlers.sbr"
-".\Debug\Server.sbr"
-".\Debug\ServerParam.sbr"
-".\Debug\ServerSettingDlg.sbr"
-".\Debug\ServerUtils.sbr"
-".\Debug\SimpleLog.sbr"
-".\Debug\SplitStr.sbr"]
-Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8FCF.tmp"
-Creating browse info file...
-<h3>Output Window</h3>
+ServerUtils.cpp
+SimpleLog.cpp
+Generating Code...
+Linking...
 
 
 
 <h3>Results</h3>
-CardReaderServer.exe - 1 error(s), 0 warning(s)
+CardReaderServer.exe - 0 error(s), 0 warning(s)
 </pre>
 </body>
 </html>

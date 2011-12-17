@@ -10,6 +10,7 @@
 #include "SimpleLog.h"
 #include <windows.h>
 #include <stdio.h>
+#include <stdarg.h>  
 
 char* SimpleLog::GetlogFileLocation()
 {
@@ -91,24 +92,64 @@ BOOL SimpleLog::WriteLog(char* LogText)
 	return true;
 }
 
-BOOL SimpleLog::warn(char* logText)
+// BOOL SimpleLog::warn(char* logText)
+// {
+// 	char buf[512];
+// 	sprintf(buf, " warn: %s", logText);
+// 	return WriteLog(buf);
+// }
+// 
+// BOOL SimpleLog::info(char* logText)
+// {
+// 	char buf[512];
+// 	sprintf(buf, " info: %s", logText);
+// 	return WriteLog(buf);
+// }
+// 
+// BOOL SimpleLog::error(char* logText)
+// {
+// 	char buf[512];
+// 	sprintf(buf, " error: %s", logText);
+// 	return WriteLog(buf);
+// }
+
+
+BOOL SimpleLog::warn(char* format, ...)
 {
+	char myFormat[512];
+	sprintf(myFormat, " warn: %s", format);
+	TRACE(CString("myFormat") + myFormat + "\n");
 	char buf[512];
-	sprintf(buf, " warn: %s", logText);
+	va_list arg_ptr;
+	va_start(arg_ptr, myFormat);
+	sprintf(buf, myFormat, arg_ptr);
+	va_end(arg_ptr);
 	return WriteLog(buf);
 }
 
-BOOL SimpleLog::info(char* logText)
+BOOL SimpleLog::info(char* format, ...)
 {
+	char myFormat[512];
+	sprintf(myFormat, " info: %s", format);
+	TRACE(CString("myFormat") + myFormat + "\n");
 	char buf[512];
-	sprintf(buf, " info: %s", logText);
+	va_list arg_ptr;
+	va_start(arg_ptr, myFormat);
+	sprintf(buf, myFormat, arg_ptr);
+	va_end(arg_ptr);
 	return WriteLog(buf);
 }
 
-BOOL SimpleLog::error(char* logText)
+BOOL SimpleLog::error(char* format, ...)
 {
+	char myFormat[512];
+	sprintf(myFormat, " error: %s", format);
+	TRACE(CString("myFormat") + myFormat + "\n");
 	char buf[512];
-	sprintf(buf, " error: %s", logText);
+	va_list arg_ptr;
+	va_start(arg_ptr, myFormat);
+	sprintf(buf, myFormat, arg_ptr);
+	va_end(arg_ptr);
 	return WriteLog(buf);
 }
 

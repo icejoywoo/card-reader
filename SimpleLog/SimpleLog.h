@@ -27,12 +27,19 @@ class SimpleLog
 public:
 	// 获取日志保存路径
 	static char* GetlogFileLocation();
+// 	// 警告信息
+// 	static BOOL warn(char* logText);
+// 	// 普通信息
+// 	static BOOL info(char* logText);
+// 	// 错误信息
+// 	static BOOL error(char* logText);
+
 	// 警告信息
-	static BOOL warn(char* logText);
+	static BOOL warn(char* format, ...);
 	// 普通信息
-	static BOOL info(char* logText);
+	static BOOL info(char* format, ...);
 	// 错误信息
-	static BOOL error(char* logText);
+	static BOOL error(char* format, ...);
 	
 private:
 	SimpleLog() {}

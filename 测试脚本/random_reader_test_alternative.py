@@ -7,7 +7,7 @@ import time
 class ReaderTest(threading.Thread):
 	def run(self):
 		for _ in xrange(100):
-			readerId = random.randint(1,6)
+			readerId = random.randint(1,8)
 			print "reader id:", readerId
 			# 这个是只运行一条简单的apdu命令
 			cmd = "CardReaderClientDllTest.exe " + str(readerId)

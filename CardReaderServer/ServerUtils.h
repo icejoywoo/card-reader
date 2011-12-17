@@ -12,6 +12,9 @@
 #include "SmartComString.h"
 #include "ServerParam.h"
 #include "Client.h"
+#include <vector>
+
+using namespace std;
 
 #define MAX_OPERATION_DURATION (6000000) // 读卡器所有操作的最长时间
 
@@ -55,7 +58,7 @@ CString i2str(int a);
  *		-102, 关闭udp通信失败
  *		其他错误码, 具体参考SmartCom和operationName对照表中相应SmartCom函数中的错误码
  */
-int parseCommand(Client* client, int readerId, char* command, CString& operationName);
+int parseCommand(Client* client, int readerId, char* command, string& operationName);
 
 /**
  * @brief 通过socket发送数据
@@ -86,5 +89,13 @@ int receiveData(SOCKET s, char* data, int len);
  * @return 接收的字符数
  */
 int receiveData(SOCKET s, int& data);
+
+/**
+ * @brief 使用,来切割字符串, 并获得一个vecotr列表
+ * @param 
+ *	in splitedStr 需要切割的字符串
+ * @return 切割后的字符串
+ */
+vector<string> splitString(char* splitedStr);
 
 #endif
