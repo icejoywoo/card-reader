@@ -11,6 +11,9 @@
 
 #include <afx.h>
 #include <windows.h>
+#include <vector>
+
+using namespace std;
 
 class CSplitStr
 {
@@ -23,7 +26,7 @@ private:
 	CString m_sData;
 public:
 	//得到切分好的文本串
-	void GetSplitStrArray(CStringArray &array);
+	void GetSplitStrArray(vector<CString> &array);
 	//得到被切分的文本
 	CString GetData();
 	//设置被切分的文本

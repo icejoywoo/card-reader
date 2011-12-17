@@ -7,6 +7,7 @@
 #include "Handlers.h"
 #include "ServerParam.h"
 #include "ServerUtils.h"
+#include "CustomMessage.h"
 #include <vector>
 #include <algorithm>
 
@@ -19,21 +20,9 @@ UINT logHandler (LPVOID pParam)
 	{
 		if (!Server::getInstance()->log.IsEmpty())
 		{
-			CEdit* logWindow = (CEdit*) pParam;
-			int len = logWindow->GetWindowTextLength();
-			logWindow->SetSel(len,len);
-			logWindow->ReplaceSel(Server::getInstance()->log);
-
-			Server::getInstance()->log = "";
-			Server::getInstance()->log.Empty(); 
-			Server::getInstance()->log.ReleaseBuffer();// 清空日志
-
-			if (logWindow->GetLineCount() > 1000) // 超过1000行清空一次
-			{
-				logWindow->SetWindowText("");
-			}
+			::PostMessage(ServerParam::instance->mainFrame, LOG_UPDATE_MSG, 1, 1);
 		}
-		Sleep(500); // 延迟0.5s
+		Sleep(100); // 延迟0.5s
 	}
 	return 0;
 }
@@ -124,8 +113,10 @@ UINT defaultServerHandler(LPVOID pParam)
 		// 读取延时
 		int timeout; // 读卡器延时
 		receiveData(clientSocket, timeout);
-		
-		SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "]的延时为: " + i2str(timeout));
+		CString templog;
+		templog.Format("[读卡器 %d]的延时为: %d", readerId, timeout);
+		SimpleLog::info(templog);
+
 		sendData(clientSocket, "timeout_ok");
 		Client* client = new Client(clientSocket); // new一个client
 		client->setReaderId(readerId);
@@ -133,7 +124,9 @@ UINT defaultServerHandler(LPVOID pParam)
 		EnterCriticalSection(&(Server::getInstance()->g_cs));
 		Server::getInstance()->addToWaitList(client);
 		LeaveCriticalSection(&(Server::getInstance()->g_cs));
-		SimpleLog::info(CString("将请求添加到[读卡器 ") + i2str(readerId) + "]等待队列中...");
+		
+		templog.Format("将请求添加到[读卡器 %d]的等待队列中...", readerId);
+		SimpleLog::info(templog);
 	}
 	return 0;
 }
@@ -149,7 +142,10 @@ UINT defaultWaitListHandler (LPVOID pParam )
 		{
 			if (0 == iter->second && !Server::getInstance()->waitList[iter->first].empty())
 			{
-				SimpleLog::info(CString("开始处理[读卡器 ") + i2str(iter->first) + "]的请求...");
+				CString templog;
+				templog.Format("[读卡器 %d]开始处理请求...", iter->first);
+				SimpleLog::info(templog);
+
 				Server::getInstance()->getClientByReaderId(iter->first)->updateTimeout();
 				AfxBeginThread(Server::getInstance()->clientHandler, (LPVOID)iter->first);
 				Server::getInstance()->readerUsage[iter->first] = 1; // 标记读卡器为正在使用
@@ -168,6 +164,7 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 	{
 		EnterCriticalSection(&(Server::getInstance()->g_cs));
 		// 遍历所有客户端
+// outter:
 // 		for (map<int, list<Client*> >::iterator miter = Server::getInstance()->waitList.begin();
 // 			miter != Server::getInstance()->waitList.end() ; ++miter)
 // 		{
@@ -181,7 +178,7 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 // 					Server::getInstance()->waitList[miter->first].remove((*liter)); // 删除等待列表中的超时的客户端, 在这里添加后可能会内存泄漏
 // 					delete (*liter); // 删除内存
 // 					SimpleLog::error(CString("[读卡器 ") + i2str((*liter)->getReaderId()) + "]的客户端" + i2str((*liter)->getSocket()) + "超时, 从等待队列中删除");
-// 					break;
+// 					goto outter;// 删除元素后, 跳出所有循环, iterator需要更新
 // 				}
 // 			}
 // 		}
@@ -189,8 +186,10 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 			iter != Server::getInstance()->clients.end(); ++iter)
 		{
 			if((*iter)->isOvertime())
-			{	
-				SimpleLog::error(CString("[读卡器 ") + i2str((*iter)->getReaderId()) + "]的客户端" + i2str((*iter)->getSocket()) + "超时, 删除");
+			{
+				CString templog;
+				templog.Format("[读卡器 %d]的客户端%d超时, 即刻删除", (*iter)->getReaderId(), (*iter)->getSocket());
+				SimpleLog::error(templog);
 				(*iter)->release();
 				Server::getInstance()->clients.remove(*iter);
 				break;
@@ -198,7 +197,7 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 		}
 		
 		LeaveCriticalSection(&(Server::getInstance()->g_cs));
-		Sleep(100); // 休眠100ms, 根据情况适当修改
+		Sleep(10); // 休眠100ms, 根据情况适当修改
 	}
 	
 	return 0;
@@ -215,7 +214,7 @@ UINT defaultClientHandler (LPVOID pParam)
 	client->sendData("Ready"); // 告诉客户端已经准备就绪可以操作
 	client->updateTimeout();
 
-	CString operationName;
+	CString operationName = "";
 	int resultCode;
 	while(operationName != "quit")
 	{
@@ -229,9 +228,15 @@ UINT defaultClientHandler (LPVOID pParam)
 		if ((resultCode= parseCommand(client, readerId, buff, operationName)) >= 0)
 		{
 			if (Server::getInstance()->status == TRUE)
-				SimpleLog::info(CString("[读卡器 ") + i2str(readerId) + "][" + operationName + "]操作成功");
+			{
+				CString templog;
+				templog.Format("[读卡器 %d][%s]操作成功", readerId, operationName);
+				SimpleLog::info(templog);
+			}
 		} else {
-			SimpleLog::error(CString("[读卡器 ") + i2str(readerId) + "][" + operationName + "]操作失败, 错误码: " + i2str(resultCode));
+			CString templog;
+			templog.Format("[读卡器 %d][%s]操作失败, 错误码: %d", readerId, operationName, resultCode);
+			SimpleLog::error(templog);
 		}
 		client->updateTimeout();
 		// 将结果发送到客户端
@@ -240,6 +245,7 @@ UINT defaultClientHandler (LPVOID pParam)
 			break;
 		}
 	}
+	operationName.Empty();
 	EnterCriticalSection(&(Server::getInstance()->g_cs));
 	// 释放读卡器
 	Server::getInstance()->releaseReader(readerId);

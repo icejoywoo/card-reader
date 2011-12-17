@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////
 #include "SimpleLog.h"
 #include <windows.h>
+#include <stdio.h>
 
 char* SimpleLog::GetlogFileLocation()
 {
@@ -39,20 +40,20 @@ CString SimpleLog::GetFilePath()
 }
 
 // 写日志到文件, 格式为 时间(%Y-%m-%d %X) 内容
-BOOL SimpleLog::WriteLog(CString LogText)
+BOOL SimpleLog::WriteLog(char* LogText)
 {
 	WaitForSingleObject(mutex, INFINITE);
 	try
 	{
 		CStdioFile m_SFile;
 		CFileFind m_FileFind;
-		CString m_sErrorMessage;
+		char m_sLogMessage[512]; // 存放日志消息的地方
 		CString m_sFileName = GetFileName();
 		CString m_sFilePath = GetFilePath();
 		CString m_sCurrentTime = CTime::GetCurrentTime().Format("%Y-%m-%d %X");
 
-		
-		m_sErrorMessage = "[" + m_sCurrentTime + "]" + LogText + "\r\n";
+		sprintf(m_sLogMessage, "[%s]%s\r\n", m_sCurrentTime, LogText);
+
 		if (!isLogFileCreated)
 		{
 			logFileLocation = m_sFilePath + "\\" +m_sFileName;
@@ -79,9 +80,7 @@ BOOL SimpleLog::WriteLog(CString LogText)
 
 		m_SFile.SeekToEnd(); 
 		
-		char* m_szMessage;			
-		m_szMessage=(LPTSTR)(LPCTSTR)m_sErrorMessage;
-		m_SFile.Write(m_szMessage,lstrlen(m_szMessage));   	
+		m_SFile.Write(m_sLogMessage,lstrlen(m_sLogMessage));   	
 		m_SFile.Close();
 		ReleaseMutex(mutex);
 	}
@@ -92,19 +91,25 @@ BOOL SimpleLog::WriteLog(CString LogText)
 	return true;
 }
 
-BOOL SimpleLog::warn(CString logText)
+BOOL SimpleLog::warn(char* logText)
 {
-	return WriteLog(" warn: " + logText);
+	char buf[512];
+	sprintf(buf, " warn: %s", logText);
+	return WriteLog(buf);
 }
 
-BOOL SimpleLog::info(CString logText)
+BOOL SimpleLog::info(char* logText)
 {
-	return WriteLog(" info: " + logText);
+	char buf[512];
+	sprintf(buf, " info: %s", logText);
+	return WriteLog(buf);
 }
 
-BOOL SimpleLog::error(CString logText)
+BOOL SimpleLog::error(char* logText)
 {
-	return WriteLog(" error: " + logText);
+	char buf[512];
+	sprintf(buf, " error: %s", logText);
+	return WriteLog(buf);
 }
 
 const HANDLE SimpleLog::mutex = CreateMutex(NULL, FALSE, NULL);

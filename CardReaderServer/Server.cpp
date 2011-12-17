@@ -16,7 +16,7 @@ Server::Server()
 {
 	WSAStartup(MAKEWORD(2,2), &this->wsaData); // init winsock
 	this->port = DEFAULT_PORT;
-	this->log = "";
+	//this->log = "";
 
 	this->clientHandler = defaultClientHandler;
 	//this->clientHandler = helloClientHandler;

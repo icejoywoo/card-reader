@@ -28,17 +28,18 @@ public:
 	// 获取日志保存路径
 	static char* GetlogFileLocation();
 	// 警告信息
-	static BOOL warn(CString logText);
+	static BOOL warn(char* logText);
 	// 普通信息
-	static BOOL info(CString logText);
+	static BOOL info(char* logText);
 	// 错误信息
-	static BOOL error(CString logText);
-	
+	static BOOL error(char* logText);
+
+	static HANDLE getMutex() {return mutex;}
 private:
 	SimpleLog() {}
 	virtual ~SimpleLog() {}
 	// 写日志到文件, 格式为 时间(%Y-%m-%d %X) 内容
-	static BOOL WriteLog(CString LogText);
+	static BOOL WriteLog(char* LogText);
 	// 获取日志文件名称
 	static CString GetFileName();
 	

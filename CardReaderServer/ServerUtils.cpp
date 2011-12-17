@@ -16,13 +16,13 @@ CString i2str(int a)
 int parseCommand(Client* client, int readerId, char* command, CString& operationName)
 {
 	ServerParam::instance->split.SetData(CString(command));
-	CStringArray requestParam; // operationName, cardId, params
+	vector<CString> requestParam; // operationName, cardId, params
 	ServerParam::instance->split.GetSplitStrArray(requestParam);
 	operationName = requestParam[0]; // 操作名称
 	
 	// 取出两边的空白
-	operationName.TrimLeft();
-	operationName.TrimRight();
+// 	operationName.TrimLeft();
+// 	operationName.TrimRight();
 
 	Communicator communicator; // 与读卡器通信的通信
 
@@ -159,7 +159,8 @@ int parseCommand(Client* client, int readerId, char* command, CString& operation
 // 		SimpleLog::error("关闭udp通信失败");
 // 		return -102; // 关闭udp通信失败
 // 	}
-
+	
+	requestParam.clear(); // 删除所有
  	client->updateTimeout();
  	client->setTimeout(savedTimeout); // 回复原来的timeout
 

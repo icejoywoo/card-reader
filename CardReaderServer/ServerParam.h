@@ -26,8 +26,8 @@ private:
 public:
 	set<int> readerIdSet; // 读卡器id集合, 保存读卡器的id
 	int serverPort; /// 服务器的端口
-	HWND mainFrame; // 保存窗口
 	CSplitStr split;
+	HWND mainFrame;
 	static ServerParam* instance;
 };
 

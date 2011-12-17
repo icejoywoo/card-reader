@@ -6,6 +6,7 @@
 #include "CardReaderServerDlg.h"
 #include "ServerSettingDlg.h"
 #include "ServerUtils.h"
+#include "CustomMessage.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -90,6 +91,7 @@ BEGIN_MESSAGE_MAP(CCardReaderServerDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_SETTING, OnButtonSetting)
 	ON_BN_CLICKED(IDC_BUTTON_CLEAR, OnButtonClear)
 	ON_BN_CLICKED(IDC_BUTTON_LOG, OnButtonLog)
+	ON_MESSAGE(LOG_UPDATE_MSG, updateLog)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -138,16 +140,15 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 	
 
 	// 记录日志的线程
-	m_logWindow.SetLimitText(4294967295);
-	AfxBeginThread(logHandler, &m_logWindow);
-
-	// 设置主窗口为当前对话框
-	ServerParam::instance->mainFrame = this->GetSafeHwnd();
+	m_logWindow.SetLimitText(500000);
+	AfxBeginThread(logHandler, NULL);
 
 
 	// 初始化设置窗口
 	settingDlg = new ServerSettingDlg(this);
 	settingDlg->Create(IDD_SERVERSETTING_DIALOG);
+
+	ServerParam::instance->mainFrame = this->GetSafeHwnd();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -272,4 +273,23 @@ void CCardReaderServerDlg::OnButtonLog()
 {
 	// TODO: Add your control notification handler code here
 	WinExec(CString("notepad ") + SimpleLog::GetlogFileLocation(), SW_SHOWNORMAL); // 在记事本里打开日志文件
+}
+
+LRESULT CCardReaderServerDlg::updateLog(WPARAM wparam,LPARAM lparam)
+{
+	if (this->m_logWindow.GetLineCount() >= 1000)
+	{
+		this->m_logWindow.SetWindowText("");
+	}
+	int len = this->m_logWindow.GetWindowTextLength();
+	this->m_logWindow.SetSel(len,len);
+	this->m_logWindow.ReplaceSel(Server::getInstance()->log);
+
+	WaitForSingleObject(SimpleLog::getMutex(), 100);
+	//EnterCriticalSection(&(Server::getInstance()->g_cs));
+	Server::getInstance()->log.Empty();// 清空日志
+	//LeaveCriticalSection(&(Server::getInstance()->g_cs));
+	ReleaseMutex(SimpleLog::getMutex());
+
+	return 0;
 }
