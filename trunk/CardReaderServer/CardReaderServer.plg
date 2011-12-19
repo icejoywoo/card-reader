@@ -3,48 +3,53 @@
 <pre>
 <h1>Build Log</h1>
 <h3>
---------------------Configuration: CardReaderServer - Win32 Release--------------------
+--------------------Configuration: CardReaderServer - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP6B1.tmp" with contents
+Creating command line "rc.exe /l 0x804 /fo"Debug/CardReaderServer.res" /d "_DEBUG" /d "_AFXDLL" "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServer.rc"" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB8DF.tmp" with contents
 [
-/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fo"Release/" /Fd"Release/" /FD /c 
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServerDlg.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Client.cpp"
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Handlers.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Server.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerParam.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerSettingDlg.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\ServerUtils.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP6B1.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP6B2.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB8DF.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB8F0.tmp" with contents
 [
-/nologo /subsystem:windows /incremental:no /pdb:"Release/CardReaderServer.pdb" /machine:I386 /out:"Release/CardReaderServer.exe" 
-".\Release\CardReaderServer.obj"
-".\Release\CardReaderServerDlg.obj"
-".\Release\Client.obj"
-".\Release\Handlers.obj"
-".\Release\Server.obj"
-".\Release\ServerParam.obj"
-".\Release\ServerSettingDlg.obj"
-".\Release\ServerUtils.obj"
-".\Release\SimpleLog.obj"
-".\Release\StdAfx.obj"
-".\Release\CardReaderServer.res"
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderServer.pdb" /debug /machine:I386 /out:"Debug/CardReaderServer.exe" /pdbtype:sept 
+".\Debug\CardReaderServer.obj"
+".\Debug\CardReaderServerDlg.obj"
+".\Debug\Client.obj"
+".\Debug\Handlers.obj"
+".\Debug\Server.obj"
+".\Debug\ServerParam.obj"
+".\Debug\ServerSettingDlg.obj"
+".\Debug\ServerUtils.obj"
+".\Debug\SimpleLog.obj"
+".\Debug\StdAfx.obj"
+".\Debug\CardReaderServer.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP6B2.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB8F0.tmp"
 <h3>Output Window</h3>
+Compiling resources...
 Compiling...
-CardReaderServerDlg.cpp
-Client.cpp
 Handlers.cpp
-Server.cpp
-ServerParam.cpp
-ServerSettingDlg.cpp
-ServerUtils.cpp
-Generating Code...
 Linking...
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPC3F8.tmp" with contents
+[
+/nologo /o"Debug/CardReaderServer.bsc" 
+".\Debug\StdAfx.sbr"
+".\Debug\CardReaderServer.sbr"
+".\Debug\CardReaderServerDlg.sbr"
+".\Debug\Client.sbr"
+".\Debug\Handlers.sbr"
+".\Debug\Server.sbr"
+".\Debug\ServerParam.sbr"
+".\Debug\ServerSettingDlg.sbr"
+".\Debug\ServerUtils.sbr"
+".\Debug\SimpleLog.sbr"]
+Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPC3F8.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
 
 
 
