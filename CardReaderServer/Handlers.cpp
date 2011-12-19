@@ -13,7 +13,7 @@
 
 using namespace std;
 
-// GUI上控制日志显示的线程
+// GUI上控制日志显示的线程, 大概没0.5s更新一次日志显示
 UINT logHandler (LPVOID pParam)
 {
 	while (TRUE)
