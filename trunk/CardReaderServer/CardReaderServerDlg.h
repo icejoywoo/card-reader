@@ -8,7 +8,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "ServerSettingDlg.h"
+#include "ServerSetting.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CCardReaderServerDlg dialog
@@ -35,7 +35,7 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
-	ServerSettingDlg* settingDlg; // 设置对话框
+	ServerSetting* settingDlg; // 设置对话框
 	LRESULT updateLog(WPARAM wparam,LPARAM lparam); // 更新日志
 
 

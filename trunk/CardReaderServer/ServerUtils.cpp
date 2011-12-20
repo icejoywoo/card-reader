@@ -236,10 +236,14 @@ int receiveData(SOCKET s, int& data)
 	return size;
 }
 
-vector<string> splitString(char* splitedStr)
+vector<string> splitString(const char* splitedStr)
 {
 	string str(splitedStr);
-	str.append(",");
+	if (str.at(str.length() - 1) != ',')
+	{
+		str.append(",");
+	}
+
 	string::size_type first;
 	string::size_type second;
 	vector<string> result;

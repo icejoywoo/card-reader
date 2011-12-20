@@ -96,6 +96,6 @@ int receiveData(SOCKET s, int& data);
  *	in splitedStr ÐèÒªÇÐ¸îµÄ×Ö·û´®
  * @return ÇÐ¸îºóµÄ×Ö·û´®
  */
-vector<string> splitString(char* splitedStr);
+vector<string> splitString(const char* splitedStr);
 
 #endif

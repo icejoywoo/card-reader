@@ -121,7 +121,7 @@ SOURCE=.\ServerParam.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\ServerSettingDlg.cpp
+SOURCE=.\ServerSetting.cpp
 # End Source File
 # Begin Source File
 
@@ -182,7 +182,7 @@ SOURCE=.\ServerParam.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ServerSettingDlg.h
+SOURCE=.\ServerSetting.h
 # End Source File
 # Begin Source File
 
