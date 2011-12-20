@@ -27,6 +27,7 @@ ServerSetting::ServerSetting(CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(ServerSetting)
 	m_Port = Server::getInstance()->getPort();
 	m_AddReaderId = 0;
+	isChanged = FALSE;
 	//}}AFX_DATA_INIT
 }
 
@@ -71,7 +72,12 @@ void ServerSetting::OnOK()
 	{
 		AfxMessageBox("修改了端口号, 需要重启服务器, 才可以生效!!!");
 	}
-
+	
+	if (isChanged == TRUE)
+	{
+		AfxMessageBox("修改了读卡器配置, 需要重启服务器, 才可以生效!!!");
+		isChanged = FALSE;
+	}
 	
 	ServerParam::instance->saveConfig(); // 保存配置
 
@@ -98,7 +104,7 @@ void ServerSetting::OnPaint()
 		m_ReaderList.SetItemData(index, (*iter));
 		++index;
 	}
-
+	
 	UpdateData(FALSE);
 	// Do not call CDialog::OnPaint() for painting messages
 }
@@ -119,7 +125,8 @@ void ServerSetting::OnButtonAddReader()
 	} else {
 		AfxMessageBox("输入的读卡器id已经存在或不正确. 请检查!");
 	}
-
+	
+	isChanged = TRUE;
 	UpdateData(FALSE);
 }
 
@@ -127,13 +134,27 @@ void ServerSetting::OnButtonAddReader()
 void ServerSetting::OnButtonDelReader() 
 {
 	// TODO: Add your control notification handler code here
+	UpdateData(TRUE);
+
 	int index = m_ReaderList.GetCurSel();
 	int count = m_ReaderList.GetCount();
 	if (index != LB_ERR && count > 1)
 	{
 		int readerId = m_ReaderList.GetItemData(index);
 		TRACE(CString(i2str(index)) + "," +i2str(readerId) + "\n");
-		remove(ServerParam::instance->readerIdSet.begin(), ServerParam::instance->readerIdSet.end(), readerId);
+
+		for (set<int>::iterator iter = ServerParam::instance->readerIdSet.begin(); iter != ServerParam::instance->readerIdSet.end();)
+		{
+			if ((*iter) == readerId)
+			{
+				ServerParam::instance->readerIdSet.erase(iter++);
+			}
+			else
+			{
+				++iter;
+			}
+		}
+
 		m_ReaderList.DeleteString(index);
 
 		if (++index < count)
@@ -143,4 +164,6 @@ void ServerSetting::OnButtonDelReader()
 			m_ReaderList.SetCurSel(0);
 		}
 	}
+	isChanged = TRUE;
+	UpdateData(FALSE);
 }
