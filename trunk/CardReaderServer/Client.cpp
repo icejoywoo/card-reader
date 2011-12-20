@@ -8,11 +8,6 @@
 #include "Client.h"
 #include "ServerUtils.h"
 
-Client::Client()
-{
-	this->timeoutStart = ::GetTickCount();
-}
-
 Client::Client(SOCKET s)
 {
 	this->s = s;
@@ -127,4 +122,12 @@ int Client::receiveData(int& data)
 	int size = receiveData(str, 512);
 	data = atoi(str);
 	return size;
+}
+
+void Client::getName(char* name)
+{
+	sockaddr_in addr;
+	int addrlen = sizeof(addr);
+	getpeername(s, (sockaddr *)&addr, &addrlen);
+	sprintf(name, "%s:%d", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 }

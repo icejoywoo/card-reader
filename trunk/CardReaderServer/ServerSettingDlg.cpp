@@ -55,6 +55,8 @@ void ServerSettingDlg::OnOK()
 	{
 		AfxMessageBox("修改了端口号, 需要重启服务器, 才可以生效!!!");
 	}
+
+	
 	
 	UpdateData(FALSE);
 	CDialog::OnOK();

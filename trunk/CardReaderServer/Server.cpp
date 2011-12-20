@@ -35,8 +35,32 @@ Server::~Server()
 
 int Server::start()
 {
-	this->status = TRUE;
+	
+	if ((this->server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
+	{
+		SimpleLog::error("服务器创建Socket失败");
+		return -1;
+	}
+
+	struct sockaddr_in local;
+	memset(&local, 0, sizeof(local));
+	local.sin_family = AF_INET;
+	local.sin_addr.s_addr = INADDR_ANY;
+	local.sin_port = htons(this->getPort());
+	
+	if (bind(this->server, (struct sockaddr*)&local, sizeof(local)) != 0)
+	{
+		SimpleLog::error("服务器绑定端口失败");
+		return -2;
+	}
+	
+	if (listen(this->server, 64) != 0)
+	{
+		SimpleLog::error("服务器监听端口失败");
+		return -3;
+	}
 	HANDLE thread = AfxBeginThread(this->serverHandler, this);
+	this->status = TRUE; // 修改服务器状态
 	return 0;
 }
 
