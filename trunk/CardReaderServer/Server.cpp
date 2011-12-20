@@ -76,6 +76,11 @@ int Server::stop()
 		SimpleLog::error("关闭失败");
 		return -2;
 	}
+	for (list<Client*>::iterator iter = clients.begin(); iter != clients.end(); ++iter)
+	{
+		closesocket((*iter)->getSocket());
+	}
+
 	this->status = FALSE;
 	SimpleLog::info("服务器已关闭");
 
