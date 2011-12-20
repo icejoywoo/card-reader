@@ -7,6 +7,7 @@
 #include "Server.h"
 #include "ServerUtils.h"
 #include <set>
+#include <algorithm>
 
 using namespace std;
 
@@ -93,6 +94,7 @@ void ServerSetting::OnPaint()
 		char name[50];
 		sprintf(name, "读卡器 %d", (*iter));
 		m_ReaderList.AddString(name);
+		TRACE(CString(i2str(index)) + "," +i2str((*iter)) + "\n");
 		m_ReaderList.SetItemData(index, (*iter));
 		++index;
 	}
@@ -107,12 +109,13 @@ void ServerSetting::OnButtonAddReader()
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
 
-	if (ServerParam::instance->readerIdSet.count(m_AddReaderId) == 0)
+	if (ServerParam::instance->readerIdSet.count(m_AddReaderId) == 0 && m_AddReaderId > 0)
 	{
 		char name[50];
 		sprintf(name, "读卡器 %d", m_AddReaderId);
 		m_ReaderList.AddString(name);
 		ServerParam::instance->readerIdSet.insert(m_AddReaderId);
+		m_ReaderList.SetItemData(m_ReaderList.GetCount(), m_AddReaderId);
 	} else {
 		AfxMessageBox("输入的读卡器id已经存在或不正确. 请检查!");
 	}
@@ -125,10 +128,19 @@ void ServerSetting::OnButtonDelReader()
 {
 	// TODO: Add your control notification handler code here
 	int index = m_ReaderList.GetCurSel();
-	if (index != LB_ERR)
+	int count = m_ReaderList.GetCount();
+	if (index != LB_ERR && count > 1)
 	{
 		int readerId = m_ReaderList.GetItemData(index);
-		ServerParam::instance->readerIdSet.erase(index);
+		TRACE(CString(i2str(index)) + "," +i2str(readerId) + "\n");
+		remove(ServerParam::instance->readerIdSet.begin(), ServerParam::instance->readerIdSet.end(), readerId);
 		m_ReaderList.DeleteString(index);
+
+		if (++index < count)
+		{
+			m_ReaderList.SetCurSel(index);
+		} else {
+			m_ReaderList.SetCurSel(0);
+		}
 	}
 }
