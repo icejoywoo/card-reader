@@ -27,6 +27,7 @@ UINT logHandler (LPVOID pParam)
 	return 0;
 }
 
+
 //////////////////////////////////////////////////////////////////////////
 /// 默认的handlers定义 
 //////////////////////////////////////////////////////////////////////////
@@ -36,35 +37,11 @@ UINT defaultServerHandler(LPVOID pParam)
 {
 	Server* serv = (Server*) pParam;
 	
-	if ((serv->server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
-	{
-		SimpleLog::error("服务器创建Socket失败");
-		return -1;
-	}
-	
 	// TODO: 初始化读卡器(用udp测试的时候使用, 到生产环境的时候应该删除)
 	if (InitUDPComm() == -1) {
 		AfxMessageBox("与卡片读写器的通信初始化失败");
 		SimpleLog::error("与卡片读写器的通信初始化失败");
 		return INIT_FAILED; // 与卡片读写器的通信初始化失败
-	}
-
-	struct sockaddr_in local;
-	memset(&local, 0, sizeof(local));
-	local.sin_family = AF_INET;
-	local.sin_addr.s_addr = INADDR_ANY;
-	local.sin_port = htons(serv->getPort());
-	
-	if (bind(serv->server, (struct sockaddr*)&local, sizeof(local)) != 0)
-	{
-		SimpleLog::error("服务器绑定端口失败");
-		return -2;
-	}
-	
-	if (listen(serv->server, 64) != 0)
-	{
-		SimpleLog::error("服务器监听端口失败");
-		return -3;
 	}
 	
 	// 对读卡器的访问控制, 在服务器启动的时候进行初始化设置
@@ -98,7 +75,7 @@ UINT defaultServerHandler(LPVOID pParam)
 			break;
 		}
 
-		sprintf(log, "接收客户端请求失败, 来自: %s", inet_ntoa(from.sin_addr));
+		sprintf(log, "接收客户端请求, 来自: %s:%d", inet_ntoa(from.sin_addr), ntohs(from.sin_port));
 		SimpleLog::info(log);
 		
 

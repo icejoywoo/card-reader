@@ -17,7 +17,6 @@
 class Client
 {
 public:
-	Client();
 	Client(SOCKET s);
 	virtual ~Client();
 	/// 说明: return this是一种链式编程风格
@@ -117,6 +116,11 @@ public:
 			&& readerId == r.readerId
 			&& timeout == r.timeout;
 	}
+	
+	/**
+	 * 获取名字
+	 */
+	void getName(char* name);
 
 private:
 	SOCKET s; // 与服务器的socket连接

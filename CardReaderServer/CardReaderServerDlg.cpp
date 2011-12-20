@@ -7,6 +7,11 @@
 #include "ServerSettingDlg.h"
 #include "ServerUtils.h"
 #include "CustomMessage.h"
+#include <set>
+#include <list>
+#include <map>
+
+using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -76,7 +81,7 @@ void CCardReaderServerDlg::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CCardReaderServerDlg)
 	DDX_Control(pDX, IDC_EDIT_LOG, m_logWindow);
-	DDX_Control(pDX, IDC_TREE_VIEW, m_Tree);
+	DDX_Control(pDX, IDC_TREE_CLIENTS, m_Tree);
 	//}}AFX_DATA_MAP
 }
 
@@ -130,14 +135,14 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 	
 
 	// 为树添加图标
-	CImageList cImageList;
-	cImageList.Create(16, 16,  ILC_COLOR32| ILC_MASK, 1, 2);
-	HICON hIcon= ::AfxGetApp()->LoadIcon(IDI_ICON_SERVERROOT);
-	cImageList.Add(hIcon);
-	m_Tree.SetImageList(&cImageList, TVSIL_NORMAL);
+// 	CImageList cImageList;
+// 	cImageList.Create(16, 16,  ILC_COLOR32| ILC_MASK, 1, 2);
+// 	HICON hIcon= ::AfxGetApp()->LoadIcon(IDI_ICON_SERVERROOT);
+// 	cImageList.Add(hIcon);
+// 	m_Tree.SetImageList(&cImageList, TVSIL_NORMAL);
+	m_Tree.ModifyStyle(0, TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS);
 	HTREEITEM root = m_Tree.InsertItem(_T("server"));
-	m_start = FALSE;
-	
+
 
 	// 记录日志的线程
 	m_logWindow.SetLimitText(500000);
@@ -206,13 +211,11 @@ HCURSOR CCardReaderServerDlg::OnQueryDragIcon()
 void CCardReaderServerDlg::OnButtonStart() 
 {
 	// TODO: Add your control notification handler code here
-	if (FALSE == m_start)
+	if (FALSE == Server::getInstance()->status)
 	{
 		if (Server::getInstance()->start() != 0)
 		{
 			AfxMessageBox("开启失败");
-		} else {
-			m_start = TRUE;
 		}
 	} else {
 		AfxMessageBox("服务器已开启");
@@ -224,13 +227,11 @@ void CCardReaderServerDlg::OnButtonStart()
 void CCardReaderServerDlg::OnButtonStop() 
 {
 	// TODO: Add your control notification handler code here
-	if (TRUE == m_start)
+	if (TRUE == Server::getInstance()->status)
 	{
 		if (Server::getInstance()->stop() != 0)
 		{
 			AfxMessageBox("关闭失败");
-		} else {
-			m_start = FALSE;
 		}
 	} else {
 		AfxMessageBox("服务器未开启");
@@ -241,7 +242,7 @@ void CCardReaderServerDlg::OnButtonStop()
 void CCardReaderServerDlg::OnButtonRestart() 
 {
 	// TODO: Add your control notification handler code here
-	if (TRUE == m_start) 
+	if (TRUE == Server::getInstance()->status) 
 	{
 		if (Server::getInstance()->restart() != 0)
 		{
@@ -291,6 +292,34 @@ LRESULT CCardReaderServerDlg::updateLog(WPARAM wparam,LPARAM lparam)
 	Server::getInstance()->log.Empty();// 清空日志
 	//LeaveCriticalSection(&(Server::getInstance()->g_cs));
 	ReleaseMutex(SimpleLog::getMutex());
+	
+	// 动态显示客户端节点
+	m_Tree.DeleteAllItems();
+	HTREEITEM root = m_Tree.InsertItem(_T("server"));
+	// 添加所有读卡器
+	map<int, HTREEITEM> readersTree;
+	for (set<int>::iterator i = ServerParam::instance->readerIdSet.begin();
+		i != ServerParam::instance->readerIdSet.end(); ++i)
+	{
+		readersTree[(*i)] = m_Tree.InsertItem(_T("读卡器 " + i2str((*i))), root);
+	}
+	
+	// 添加所有客户端到对应读卡器节点
+	for (list<Client*>::iterator iter = Server::getInstance()->clients.begin();
+		iter != Server::getInstance()->clients.end(); ++iter)
+	{
+		char name[512];
+		(*iter)->getName(name);
+		m_Tree.InsertItem(_T(name), readersTree[(*iter)->getReaderId()]);
+	}
 
+	// 展开所有节点, 在添加所有节点以后再展开
+	m_Tree.Expand(root, TVE_EXPAND);
+	for (map<int, HTREEITEM>::iterator miter = readersTree.begin();
+		miter != readersTree.end(); ++miter)
+	{
+		m_Tree.Expand(miter->second, TVE_EXPAND);
+	}
+	
 	return 0;
 }
