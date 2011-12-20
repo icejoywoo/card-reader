@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "CardReaderServer.h"
 #include "CardReaderServerDlg.h"
-#include "ServerSettingDlg.h"
+#include "ServerSetting.h"
 #include "ServerUtils.h"
 #include "CustomMessage.h"
 #include <set>
@@ -150,10 +150,12 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 
 
 	// 初始化设置窗口
-	settingDlg = new ServerSettingDlg(this);
+	settingDlg = new ServerSetting(this);
 	settingDlg->Create(IDD_SERVERSETTING_DIALOG);
 
 	ServerParam::instance->mainFrame = this->GetSafeHwnd();
+
+	// 初始化读卡器set
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -296,6 +298,7 @@ LRESULT CCardReaderServerDlg::updateLog(WPARAM wparam,LPARAM lparam)
 	// 动态显示客户端节点
 	m_Tree.DeleteAllItems();
 	HTREEITEM root = m_Tree.InsertItem(_T("server"));
+
 	// 添加所有读卡器
 	map<int, HTREEITEM> readersTree;
 	for (set<int>::iterator i = ServerParam::instance->readerIdSet.begin();
