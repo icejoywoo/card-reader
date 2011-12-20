@@ -25,21 +25,13 @@ ServerSetting::ServerSetting(CWnd* pParent /*=NULL*/)
 {
 	//{{AFX_DATA_INIT(ServerSetting)
 	m_Port = Server::getInstance()->getPort();
+	m_AddReaderId = 0;
 	//}}AFX_DATA_INIT
 }
 
 BOOL ServerSetting::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-
-	// ≥ı ºªØ∂¡ø®∆˜≈‰÷√listCtrl
-	LVCOLUMN column;
-	column.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
-	column.fmt = LVCFMT_LEFT;
-	column.cx = 80;
-	column.iSubItem = 0;
-	column.pszText = "∂¡ø®∆˜id";
-	m_Readers.InsertColumn(0, &column);
 
 	return TRUE;
 }
@@ -49,8 +41,9 @@ void ServerSetting::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(ServerSetting)
-	DDX_Control(pDX, IDC_LIST_READER, m_Readers);
+	DDX_Control(pDX, IDC_LIST_READERS, m_ReaderList);
 	DDX_Text(pDX, IDC_EDIT_PORT, m_Port);
+	DDX_Text(pDX, IDC_EDIT_READER_ID, m_AddReaderId);
 	//}}AFX_DATA_MAP
 }
 
@@ -58,6 +51,8 @@ void ServerSetting::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(ServerSetting, CDialog)
 	//{{AFX_MSG_MAP(ServerSetting)
 	ON_WM_PAINT()
+	ON_BN_CLICKED(IDC_BUTTON_ADD, OnButtonAddReader)
+	ON_BN_CLICKED(IDC_BUTTON_DEL, OnButtonDelReader)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -77,7 +72,8 @@ void ServerSetting::OnOK()
 	}
 
 	
-	
+	ServerParam::instance->saveConfig(); // ±£¥Ê≈‰÷√
+
 	UpdateData(FALSE);
 	CDialog::OnOK();
 }
@@ -88,23 +84,51 @@ void ServerSetting::OnPaint()
 	
 	// TODO: Add your message handler code here
 	UpdateData(TRUE);
-
-
+	
+	m_ReaderList.ResetContent();
 	int index = 0;
 	for (set<int>::iterator iter = ServerParam::instance->readerIdSet.begin();
 		iter != ServerParam::instance->readerIdSet.end(); ++iter)
 	{
-		LVITEM item;
-		item.mask = LVIF_TEXT | LVIF_IMAGE;
-		item.iItem = index;
-		item.iSubItem = 0;
-		char buf[10];
-		sprintf(buf, "∂¡ø®∆˜ %d", *iter);
-		item.pszText = buf;
-		m_Readers.InsertItem(&item);
-		index++;
+		char name[50];
+		sprintf(name, "∂¡ø®∆˜ %d", (*iter));
+		m_ReaderList.AddString(name);
+		m_ReaderList.SetItemData(index, (*iter));
+		++index;
 	}
 
 	UpdateData(FALSE);
 	// Do not call CDialog::OnPaint() for painting messages
+}
+
+// ÃÌº”∂¡ø®∆˜
+void ServerSetting::OnButtonAddReader() 
+{
+	// TODO: Add your control notification handler code here
+	UpdateData(TRUE);
+
+	if (ServerParam::instance->readerIdSet.count(m_AddReaderId) == 0)
+	{
+		char name[50];
+		sprintf(name, "∂¡ø®∆˜ %d", m_AddReaderId);
+		m_ReaderList.AddString(name);
+		ServerParam::instance->readerIdSet.insert(m_AddReaderId);
+	} else {
+		AfxMessageBox(" ‰»Îµƒ∂¡ø®∆˜id“—æ≠¥Ê‘⁄ªÚ≤ª’˝»∑. «ÎºÏ≤È!");
+	}
+
+	UpdateData(FALSE);
+}
+
+// …æ≥˝À˘—°∂¡ø®∆˜
+void ServerSetting::OnButtonDelReader() 
+{
+	// TODO: Add your control notification handler code here
+	int index = m_ReaderList.GetCurSel();
+	if (index != LB_ERR)
+	{
+		int readerId = m_ReaderList.GetItemData(index);
+		ServerParam::instance->readerIdSet.erase(index);
+		m_ReaderList.DeleteString(index);
+	}
 }

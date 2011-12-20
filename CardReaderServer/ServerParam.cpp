@@ -9,6 +9,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <set>
 
 using namespace std;
 
@@ -22,12 +23,22 @@ ServerParam::ServerParam()
 	{
 		AfxMessageBox("¶Á¿¨Æ÷ÅäÖÃÎÄ¼ş¶ÁÈ¡´íÎó");
 	}
-//	vector<string> result = splitString(config.c_str());
-	vector<string> result = splitString("1,2,3,4,5,6,7,8");
+	vector<string> result = splitString(config.c_str());
 	for (vector<string>::iterator iter = result.begin(); iter != result.end(); ++iter)
 	{
 		int data = atoi((*iter).c_str());
 		this->readerIdSet.insert(data);
 	}
 	fin.close();
+}
+
+void ServerParam::saveConfig() 
+{
+	// ±£´æÅäÖÃµ½
+	ofstream fout("readers.config");
+	for (set<int>::iterator iter = this->readerIdSet.begin(); iter != this->readerIdSet.end(); ++iter)
+	{
+		fout << (*iter) << ",";
+	}
+	fout.close();
 }

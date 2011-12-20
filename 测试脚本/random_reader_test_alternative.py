@@ -16,5 +16,5 @@ class ReaderTest(threading.Thread):
 			time.sleep(0.1)
 
 if __name__ == "__main__":
-	for _ in xrange(10):
+	for _ in xrange(30):
 		ReaderTest().start()

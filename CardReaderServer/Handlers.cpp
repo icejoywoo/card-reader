@@ -177,7 +177,9 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 		{
 			if((*iter)->isOvertime())
 			{
-				sprintf(log, "[¶Á¿¨Æ÷ %d]µÄ¿Í»§¶Ë[%d]³¬Ê±, ¼´¿ÌÉ¾³ı", (*iter)->getReaderId(), (*iter)->getSocket());
+				char name[50];
+				(*iter)->getName(name);
+				sprintf(log, "[¶Á¿¨Æ÷ %d]µÄ¿Í»§¶Ë[%s]³¬Ê±, ¼´¿ÌÉ¾³ı", (*iter)->getReaderId(), name);
 				SimpleLog::error(log);
 				(*iter)->release();
 				Server::getInstance()->clients.remove(*iter);

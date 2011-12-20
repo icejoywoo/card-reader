@@ -71,6 +71,8 @@ CCardReaderServerDlg::CCardReaderServerDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CCardReaderServerDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CCardReaderServerDlg)
+	m_errors = 0;
+	m_warns = 0;
 	//}}AFX_DATA_INIT
 	// Note that LoadIcon does not require a subsequent DestroyIcon in Win32
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -82,6 +84,8 @@ void CCardReaderServerDlg::DoDataExchange(CDataExchange* pDX)
 	//{{AFX_DATA_MAP(CCardReaderServerDlg)
 	DDX_Control(pDX, IDC_EDIT_LOG, m_logWindow);
 	DDX_Control(pDX, IDC_TREE_CLIENTS, m_Tree);
+	DDX_Text(pDX, IDC_EDIT_ERRORS, m_errors);
+	DDX_Text(pDX, IDC_EDIT_WARNS, m_warns);
 	//}}AFX_DATA_MAP
 }
 
@@ -97,6 +101,7 @@ BEGIN_MESSAGE_MAP(CCardReaderServerDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_CLEAR, OnButtonClear)
 	ON_BN_CLICKED(IDC_BUTTON_LOG, OnButtonLog)
 	ON_MESSAGE(LOG_UPDATE_MSG, updateLog)
+	ON_WM_DESTROY()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -280,7 +285,7 @@ void CCardReaderServerDlg::OnButtonLog()
 
 LRESULT CCardReaderServerDlg::updateLog(WPARAM wparam,LPARAM lparam)
 {
-	if (this->m_logWindow.GetLineCount() >= 1000)
+	if (this->m_logWindow.GetLineCount() >= 1000) // 超过1000行,清空一次
 	{
 		this->m_logWindow.SetWindowText("");
 	}
@@ -323,6 +328,25 @@ LRESULT CCardReaderServerDlg::updateLog(WPARAM wparam,LPARAM lparam)
 	{
 		m_Tree.Expand(miter->second, TVE_EXPAND);
 	}
-	
+
+	// 更新显示统计信息
+	UpdateData(TRUE);
+	m_errors = SimpleLog::getErrors();
+	m_warns = SimpleLog::getWarns();
+	UpdateData(FALSE);
+
 	return 0;
+}
+
+BOOL CCardReaderServerDlg::DestroyWindow() 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	return CDialog::DestroyWindow();
+}
+
+void CCardReaderServerDlg::OnDestroy() 
+{
+	CDialog::OnDestroy();
+	// TODO: Add your message handler code here
+
 }

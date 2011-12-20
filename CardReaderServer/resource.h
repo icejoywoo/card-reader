@@ -12,6 +12,7 @@
 #define IDI_ICON_SERVERROOT             139
 #define IDC_EDIT1                       1000
 #define IDC_EDIT_PORT                   1000
+#define IDC_EDIT_ERRORS                 1000
 #define IDC_BUTTON_SENDCMD              1001
 #define IDC_EDIT_LOG                    1002
 #define IDC_BUTTON_CLEAR                1003
@@ -23,7 +24,9 @@
 #define IDC_TREE_CLIENTS                1009
 #define IDC_BUTTON_ADD                  1025
 #define IDC_BUTTON_DEL                  1026
-#define IDC_LIST_READER                 1035
+#define IDC_EDIT_WARNS                  1036
+#define IDC_LIST_READERS                1037
+#define IDC_EDIT_READER_ID              1038
 
 // Next default values for new objects
 // 
@@ -31,7 +34,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        140
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1036
+#define _APS_NEXT_CONTROL_VALUE         1039
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif
