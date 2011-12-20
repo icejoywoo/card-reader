@@ -24,10 +24,14 @@ public:
 	enum { IDD = IDD_CARDREADERSERVER_DIALOG };
 	CEdit	m_logWindow;
 	CTreeCtrl	m_Tree;
+	int		m_errors;
+	int		m_warns;
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CCardReaderServerDlg)
+	public:
+	virtual BOOL DestroyWindow();
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 	//}}AFX_VIRTUAL
@@ -51,6 +55,7 @@ protected:
 	afx_msg void OnButtonSetting();
 	afx_msg void OnButtonClear();
 	afx_msg void OnButtonLog();
+	afx_msg void OnDestroy();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

@@ -19,8 +19,9 @@ public:
 // Dialog Data
 	//{{AFX_DATA(ServerSetting)
 	enum { IDD = IDD_SERVERSETTING_DIALOG };
-	CListCtrl	m_Readers;
+	CListBox	m_ReaderList;
 	int		m_Port;
+	int		m_AddReaderId;
 	//}}AFX_DATA
 
 
@@ -35,9 +36,11 @@ public:
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(ServerSetting)
-	BOOL OnInitDialog();
+	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	afx_msg void OnPaint();
+	afx_msg void OnButtonAddReader();
+	afx_msg void OnButtonDelReader();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

@@ -35,6 +35,10 @@ public:
 	static BOOL error(char* logText);
 
 	static HANDLE getMutex() {return mutex;}
+
+	static int getErrors() {return errors;}
+	
+	static int getWarns() {return warns;}
 private:
 	SimpleLog() {}
 	virtual ~SimpleLog() {}
@@ -52,6 +56,9 @@ private:
 	static BOOL isLogFileCreated;
 	// 日志文件路径
 	static CString logFileLocation;
+	// 统计数据
+	static ULONG errors;
+	static ULONG warns;
 };
 
 #endif // !defined(AFX_SIMPLELOG_H__6BCBB496_2156_4415_94F5_962D614E57D5__INCLUDED_)

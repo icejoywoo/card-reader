@@ -99,6 +99,7 @@ BOOL SimpleLog::warn(char* logText)
 {
 	char buf[512];
 	sprintf(buf, " warn: %s", logText);
+	warns++;
 	return WriteLog(buf);
 }
 
@@ -113,6 +114,7 @@ BOOL SimpleLog::error(char* logText)
 {
 	char buf[512];
 	sprintf(buf, " error: %s", logText);
+	errors++;
 	return WriteLog(buf);
 }
 
@@ -121,3 +123,6 @@ const HANDLE SimpleLog::mutex = CreateMutex(NULL, FALSE, NULL);
 BOOL SimpleLog::isLogFileCreated = FALSE;
 
 CString SimpleLog::logFileLocation = "";
+
+ULONG SimpleLog::errors = 0;
+ULONG SimpleLog::warns = 0;
