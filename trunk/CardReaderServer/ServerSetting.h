@@ -22,6 +22,7 @@ public:
 	CListBox	m_ReaderList;
 	int		m_Port;
 	int		m_AddReaderId;
+	BOOL isChanged;
 	//}}AFX_DATA
 
 
