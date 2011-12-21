@@ -43,7 +43,8 @@ typedef struct _Reader
  *	serverIp	服务器ip
  *	serverPort	服务器端口号
  * @return 
- *	成功返回0
+ *	 0	成功
+ *	-1	失败
  */
 CARDREADERCLIENTDLL_API int InitClient(char* serverIp, int serverPort);
 
@@ -51,7 +52,8 @@ CARDREADERCLIENTDLL_API int InitClient(char* serverIp, int serverPort);
  * @brief 清理客户端, 在使用完读卡器的最后调用
  * @param None
  * @return 
- *	成功返回0
+ *	 0	成功
+ *	-1	失败
  */
 CARDREADERCLIENTDLL_API int CleanUpClient();
 
@@ -62,7 +64,13 @@ CARDREADERCLIENTDLL_API int CleanUpClient();
  *	socketTimeout	socket连接的超时
  *	customTimeout	应用本身需要的延时
  * @return  
- *	0: 成功
+ *	 0	成功
+ *	-1	id设置失败
+ *	-2	customTimeout设置失败
+ *	-3	等待超时, 等待时间超过customTimeout
+ *	SETSOCKOPT_FAILED	设置socketTimeout失败
+ *	CONNECT_FAILED		连接服务器失败
+ *	SEND_ERROR			发送数据失败
  */
 CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout = 5000, long customTimeout = 60000);
 
@@ -71,7 +79,9 @@ CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout = 5000,
  * @param
  *	reader			读卡器
  * @return  
- *	0: 成功
+ *	 0	成功
+ *	-1	失败
+ *	SEND_ERROR			发送数据失败
  */
 CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader);
 

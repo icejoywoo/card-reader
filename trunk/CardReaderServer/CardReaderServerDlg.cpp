@@ -151,7 +151,7 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 
 	// 记录日志的线程
 	m_logWindow.SetLimitText(500000);
-	AfxBeginThread(logHandler, NULL);
+	logThread = AfxBeginThread(logHandler, NULL);
 
 
 	// 初始化设置窗口
@@ -348,5 +348,8 @@ void CCardReaderServerDlg::OnDestroy()
 {
 	CDialog::OnDestroy();
 	// TODO: Add your message handler code here
-
+	delete settingDlg;
+	::WaitForSingleObject(logThread, INFINITE);
+	delete logThread;
+//	_CrtDumpMemoryLeaks();
 }

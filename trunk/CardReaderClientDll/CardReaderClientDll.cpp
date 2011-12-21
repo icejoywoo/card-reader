@@ -140,17 +140,20 @@ CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
 	int retCode;
 	if (-1 == ClientUtils::sendData(reader->s, "quit")) // 发出退出消息
 	{
-		cout << "发送数据出错" << endl;
+		// 关闭资源
+		closesocket(reader->s);
+		reader->readerId = 0;
+		return SEND_ERROR;
 	}
 	ClientUtils::receiveData(reader->s, retCode);
 	if (retCode != 0)
 	{
-		cout << "接收数据出错" << endl;
+		return -1;
 	}
 	// 关闭资源
 	closesocket(reader->s);
 	reader->readerId = 0;
-	return 0;
+	return retCode;
 }
 
 CARDREADERCLIENTDLL_API int GetDevIDAndReaderId(Reader* reader, char* devID, int devIDBufLen, int& readerMacId)

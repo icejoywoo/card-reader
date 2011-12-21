@@ -41,7 +41,7 @@ protected:
 	HICON m_hIcon;
 	ServerSetting* settingDlg; // 设置对话框
 	LRESULT updateLog(WPARAM wparam,LPARAM lparam); // 更新日志
-
+	CWinThread* logThread;
 
 	// Generated message map functions
 	//{{AFX_MSG(CCardReaderServerDlg)
