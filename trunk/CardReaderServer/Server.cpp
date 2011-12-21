@@ -30,7 +30,7 @@ Server::Server()
 Server::~Server()
 {
 	WSACleanup(); // clean up winsock
-	delete this->instance;
+//	delete this->instance;
 }
 
 int Server::start()
@@ -59,8 +59,9 @@ int Server::start()
 		SimpleLog::error("服务器监听端口失败");
 		return -3;
 	}
-	HANDLE thread = AfxBeginThread(this->serverHandler, this);
 	this->status = TRUE; // 修改服务器状态
+	AfxBeginThread(this->serverHandler, this)->m_bAutoDelete = TRUE;
+	AfxBeginThread(logHandler, NULL)->m_bAutoDelete = TRUE;
 	return 0;
 }
 
@@ -81,12 +82,13 @@ int Server::stop()
 		closesocket((*iter)->getSocket());
 	}
 
-	this->status = FALSE;
+
 	SimpleLog::info("服务器已关闭");
 
 	// 恢复服务器的原始状态
 	readerUsage.clear();
 	waitList.clear(); // 重启的时候不删除等待队列可以保证等待队列继续处理
+	this->status = FALSE;
 
 	return 0;
 }

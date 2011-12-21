@@ -23,7 +23,7 @@ class ServerParam
 private:
 	ServerParam();
 public:
-	virtual ~ServerParam() {delete instance;}
+	virtual ~ServerParam() {}
 	void saveConfig();
 	set<int> readerIdSet; // 读卡器id集合, 保存读卡器的id
 	int serverPort; /// 服务器的端口
