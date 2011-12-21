@@ -24,7 +24,9 @@ UINT logHandler (LPVOID pParam)
 		}
 		Sleep(100); // 延迟0.5s
 	}
-	return 0;
+	UINT exitCode;
+	AfxEndThread(exitCode);
+	return exitCode;
 }
 
 
@@ -64,7 +66,7 @@ UINT defaultServerHandler(LPVOID pParam)
 	AfxBeginThread(serv->waitListHandler, NULL); // 启动等待队列线程, 处理等待队列的
 	AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
 
-	while (true)
+	while (TRUE)
 	{
 		clientSocket = accept(serv->server, (struct sockaddr*) &from, &fromlen);
 		if (clientSocket == INVALID_SOCKET) // 接受客户端socket失败, 是在关闭服务器的时候
@@ -116,7 +118,9 @@ UINT defaultServerHandler(LPVOID pParam)
 		sprintf(log, "将请求添加到[读卡器 %d]的等待队列中...", readerId);
 		SimpleLog::info(log);
 	}
-	return 0;
+	UINT exitCode;
+	AfxEndThread(exitCode);
+	return exitCode;
 }
 
 UINT defaultWaitListHandler (LPVOID pParam ) 
@@ -142,8 +146,9 @@ UINT defaultWaitListHandler (LPVOID pParam )
 		LeaveCriticalSection(&(Server::getInstance()->g_cs));
 		Sleep(100); // 休眠100ms, 根据情况适当修改
 	}
-
-	return 0;
+	UINT exitCode;
+	AfxEndThread(exitCode);
+	return exitCode;
 }
 
 UINT defaultTimeoutListHandler (LPVOID pParam )
@@ -191,7 +196,9 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 		Sleep(10); // 休眠100ms, 根据情况适当修改
 	}
 	
-	return 0;
+	UINT exitCode;
+	AfxEndThread(exitCode);
+	return exitCode;
 }
 
 // TODO: 修改handler, 读取读卡器的数据
@@ -243,5 +250,7 @@ UINT defaultClientHandler (LPVOID pParam)
 	delete client; // 不要的指针删掉
 	LeaveCriticalSection(&(Server::getInstance()->g_cs));
 
-	return 0;
+	UINT exitCode;
+	AfxEndThread(exitCode);
+	return exitCode;
 }
