@@ -16,17 +16,15 @@ using namespace std;
 // GUI上控制日志显示的线程, 大概没0.5s更新一次日志显示
 UINT logHandler (LPVOID pParam)
 {
-	while (TRUE)
+	while (Server::getInstance()->status == TRUE)
 	{
 		if (!Server::getInstance()->log.IsEmpty())
 		{
 			::PostMessage(ServerParam::instance->mainFrame, LOG_UPDATE_MSG, 1, 1);
 		}
-		Sleep(100); // 延迟0.5s
+		Sleep(100); // 延迟0.1s
 	}
-	UINT exitCode;
-	AfxEndThread(exitCode);
-	return exitCode;
+	return 0;
 }
 
 
@@ -63,10 +61,12 @@ UINT defaultServerHandler(LPVOID pParam)
 	sprintf(log, "服务器启动成功, 端口: %d", serv->getPort());
 	SimpleLog::info(log);
 
-	AfxBeginThread(serv->waitListHandler, NULL); // 启动等待队列线程, 处理等待队列的
-	AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
+	CWinThread* waitListThread = AfxBeginThread(serv->waitListHandler, NULL); // 启动等待队列线程, 处理等待队列的
+	waitListThread->m_bAutoDelete = TRUE;
+	CWinThread* timeoutListThread = AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
+	waitListThread->m_bAutoDelete = TRUE;
 
-	while (TRUE)
+	while (Server::getInstance()->status == TRUE)
 	{
 		clientSocket = accept(serv->server, (struct sockaddr*) &from, &fromlen);
 		if (clientSocket == INVALID_SOCKET) // 接受客户端socket失败, 是在关闭服务器的时候
@@ -88,7 +88,7 @@ UINT defaultServerHandler(LPVOID pParam)
 		{
 			sprintf(log, "接收读卡器com号: [%d]", readerId);
 			SimpleLog::info(log);
-
+			
 			sendData(clientSocket, "id_ok");
 		} else {
 			sprintf(log, "接收读卡器com号: [%d], 读卡器不存在", readerId);
@@ -108,7 +108,7 @@ UINT defaultServerHandler(LPVOID pParam)
 		SimpleLog::info(log);
 
 		sendData(clientSocket, "timeout_ok");
-		Client* client = new Client(clientSocket); // new一个client
+		Client* client = new Client(clientSocket); // new一个client, 在处理完client后delete
 		client->setReaderId(readerId);
 		client->setTimeout(timeout);
 		EnterCriticalSection(&(Server::getInstance()->g_cs));
@@ -118,9 +118,7 @@ UINT defaultServerHandler(LPVOID pParam)
 		sprintf(log, "将请求添加到[读卡器 %d]的等待队列中...", readerId);
 		SimpleLog::info(log);
 	}
-	UINT exitCode;
-	AfxEndThread(exitCode);
-	return exitCode;
+	return 0;
 }
 
 UINT defaultWaitListHandler (LPVOID pParam ) 
@@ -139,16 +137,14 @@ UINT defaultWaitListHandler (LPVOID pParam )
 				SimpleLog::info(log);
 
 				Server::getInstance()->getClientByReaderId(iter->first)->updateTimeout();
-				AfxBeginThread(Server::getInstance()->clientHandler, (LPVOID)iter->first);
+				AfxBeginThread(Server::getInstance()->clientHandler, (LPVOID)iter->first)->m_bAutoDelete = TRUE;
 				Server::getInstance()->readerUsage[iter->first] = 1; // 标记读卡器为正在使用
 			}
 		}
 		LeaveCriticalSection(&(Server::getInstance()->g_cs));
 		Sleep(100); // 休眠100ms, 根据情况适当修改
 	}
-	UINT exitCode;
-	AfxEndThread(exitCode);
-	return exitCode;
+	return 0;
 }
 
 UINT defaultTimeoutListHandler (LPVOID pParam )
@@ -196,9 +192,7 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 		Sleep(10); // 休眠100ms, 根据情况适当修改
 	}
 	
-	UINT exitCode;
-	AfxEndThread(exitCode);
-	return exitCode;
+	return 0;
 }
 
 // TODO: 修改handler, 读取读卡器的数据
@@ -250,7 +244,5 @@ UINT defaultClientHandler (LPVOID pParam)
 	delete client; // 不要的指针删掉
 	LeaveCriticalSection(&(Server::getInstance()->g_cs));
 
-	UINT exitCode;
-	AfxEndThread(exitCode);
-	return exitCode;
+	return 0;
 }

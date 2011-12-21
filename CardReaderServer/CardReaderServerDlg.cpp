@@ -149,9 +149,8 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 	HTREEITEM root = m_Tree.InsertItem(_T("server"));
 
 
-	// 记录日志的线程
+	// 记录日志显示属性
 	m_logWindow.SetLimitText(500000);
-	logThread = AfxBeginThread(logHandler, NULL);
 
 
 	// 初始化设置窗口
@@ -309,7 +308,9 @@ LRESULT CCardReaderServerDlg::updateLog(WPARAM wparam,LPARAM lparam)
 	for (set<int>::iterator i = ServerParam::instance->readerIdSet.begin();
 		i != ServerParam::instance->readerIdSet.end(); ++i)
 	{
-		readersTree[(*i)] = m_Tree.InsertItem(_T("读卡器 " + i2str((*i))), root);
+		char name[512];
+		sprintf(name, "读卡器 %d", (*i));
+		readersTree[(*i)] = m_Tree.InsertItem(name, root);
 	}
 	
 	// 添加所有客户端到对应读卡器节点
@@ -318,7 +319,7 @@ LRESULT CCardReaderServerDlg::updateLog(WPARAM wparam,LPARAM lparam)
 	{
 		char name[512];
 		(*iter)->getName(name);
-		m_Tree.InsertItem(_T(name), readersTree[(*iter)->getReaderId()]);
+		m_Tree.InsertItem(name, readersTree[(*iter)->getReaderId()]);
 	}
 
 	// 展开所有节点, 在添加所有节点以后再展开
@@ -348,8 +349,11 @@ void CCardReaderServerDlg::OnDestroy()
 {
 	CDialog::OnDestroy();
 	// TODO: Add your message handler code here
+
+	// 释放内存, 保证内存不会泄漏
 	delete settingDlg;
-	::WaitForSingleObject(logThread, INFINITE);
-	delete logThread;
-//	_CrtDumpMemoryLeaks();
+	delete ServerParam::instance;
+	delete Server::getInstance();
+
+	_CrtDumpMemoryLeaks();
 }
