@@ -8,36 +8,8 @@ using namespace std;
 
 #pragma comment(lib, "CardReaderClientDll.lib")
 
-string i2str(int a)
-{
-	char* str = new char[10];
-	sprintf(str, "%d", a);
-	return string(str);
-}
-
 int main(int argc, char* args[])
 {
-// 	int   number   =   12345;  
-// 	char   string[25];  
-// 	
-// 	itoa(number,   string,   10);  
-// 
-// 	printf( "integer   =   %d   string   =   %s\n ",   number,   i2str(number).c_str());
-// 	return   0;
-
-// 	char* buf = "00 03 00 E7 00 2F 75,1";
-// 	char devID[512];
-// 	int readerId;
-// 	string str(buf);
-// 
-// 	string::size_type loc = str.find(",", 0);
-// 	string first = str.substr(0, loc);
-// 	strcpy(devID, first.c_str());
-// 	string second = str.substr(loc + 1);
-// 	readerId = atoi(second.c_str());
-// 	cout << devID << ", " << readerId << endl;
-// 	return 0;
-
 	Reader* reader = new Reader();
 	reader->readerId = atoi(args[1]);
 /*	reader->readerId = 4;*/
