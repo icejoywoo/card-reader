@@ -37,25 +37,25 @@ typedef struct _Reader
 	int readerId;
 } Reader;
 
-/**
- * @brief 初始化客户端的服务器全局配置, Reader依赖这些配置建立与服务器的通信
- * @param
- *	serverIp	服务器ip
- *	serverPort	服务器端口号
- * @return 
- *	 0	成功
- *	-1	失败
- */
-CARDREADERCLIENTDLL_API int InitClient(char* serverIp, int serverPort);
-
-/**
- * @brief 清理客户端, 在使用完读卡器的最后调用
- * @param None
- * @return 
- *	 0	成功
- *	-1	失败
- */
-CARDREADERCLIENTDLL_API int CleanUpClient();
+// /**
+//  * @brief 初始化客户端的服务器全局配置, Reader依赖这些配置建立与服务器的通信
+//  * @param
+//  *	serverIp	服务器ip
+//  *	serverPort	服务器端口号
+//  * @return 
+//  *	 0	成功
+//  *	-1	失败
+//  */
+// CARDREADERCLIENTDLL_API int InitClient(char* serverIp, int serverPort);
+// 
+// /**
+//  * @brief 清理客户端, 在使用完读卡器的最后调用
+//  * @param None
+//  * @return 
+//  *	 0	成功
+//  *	-1	失败
+//  */
+// CARDREADERCLIENTDLL_API int CleanUpClient();
 
 /**
  * @brief 获取读卡器

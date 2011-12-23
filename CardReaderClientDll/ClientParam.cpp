@@ -17,30 +17,35 @@ using namespace std;
 
 ClientParam::ClientParam() 
 {
+	OutputDebugString("ClientParam初始化...");
 	this->clientNum = 0; // 初始化客户端数量为0
 	this->mutex = CreateMutex(NULL, FALSE, LPCTSTR("clients"));
 
 	// 读取配置文件, 目前读取有问题
-// 	ifstream fin("client.config");
-// 	string config;
-// 	if (!(fin >> config))
-// 	{
-// 		cout << "读取配置文件出错" << endl;
-// 	}
-// 
-// 	string first;
-// 	string second;
-// 
-// 	ClientUtils::splitString(config.c_str(), first, second);
-// 	
-// 	sprintf(this->instance->serverIp, "%s", first.c_str());
-// 	this->instance->serverPort = atoi(second.c_str());
-// 	
-// 	cout << this->instance->serverIp << ", " << this->instance->serverPort << endl;
-// 
-// 	fin.close();
+	ifstream fin("client.config");
+	string config;
+	if (!(fin >> config))
+	{
+		cout << "读取配置文件出错" << endl;
+	}
+
+	string first;
+	string second;
+
+	ClientUtils::splitString(config.c_str(), first, second);
+	this->serverIp = new char[20];
+	strcpy(this->serverIp, first.c_str());
+	this->serverPort = atoi(second.c_str());
+	
+	cout << this->serverIp << ", " << this->serverPort << endl;
+
+	fin.close();
+// 	this->serverIp = "127.0.0.1";
+// 	this->serverPort = 60000;
 }
-ClientParam::~ClientParam() {}
+ClientParam::~ClientParam() 
+{
+}
 
 ClientParam* ClientParam::instance = new ClientParam();
 
@@ -61,5 +66,5 @@ void ClientParam::deleteClient()
 
 BOOL ClientParam::isClientEmpty()
 {
-	return 0 == clientNum;
+	return (0 == clientNum);
 }

@@ -21,7 +21,7 @@ int main(int argc, char* args[])
 	for (int i = 0; i < ThreadNum; ++i)
 	{
 		threads[i] = CreateThread(NULL, 0, ReaderTestThread, 0, 0, 0);
-		cout << floor(rand() % (readerNum) + 1) << endl;
+		//cout << floor(rand() % (readerNum) + 1) << endl;
 	}
 
 	WaitForMultipleObjects(ThreadNum, threads, TRUE, INFINITE);
@@ -34,10 +34,10 @@ DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 	
 	// ÅäÖÃ¶Á¿¨Æ÷
 	Reader* reader = new Reader();
-	srand(time(NULL));
 	reader->readerId = floor(rand() % (readerNum) + 1); // Ëæ»ú¶Á¿¨Æ÷id
-	
-	InitClient("127.0.0.1", 60001);
+	cout << reader->readerId << endl;
+
+//	InitClient("127.0.0.1", 60000);
 
 	// »ñÈ¡¶Á¿¨Æ÷
 	if (0 != GetReader(reader, 10000, 10000))
@@ -218,7 +218,7 @@ DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 		printf("ReleaseReader Failed.");
 	}
 	
-	CleanUpClient();
+//	CleanUpClient();
 	delete reader; // ÊÍ·ÅÄÚ´æ
 
 	return 0;
