@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <time.h>
 #include "CardReaderClientDll.h"
 
 using namespace std;
@@ -20,6 +21,7 @@ int main(int argc, char* args[])
 	for (int i = 0; i < ThreadNum; ++i)
 	{
 		threads[i] = CreateThread(NULL, 0, ReaderTestThread, 0, 0, 0);
+		cout << floor(rand() % (readerNum) + 1) << endl;
 	}
 
 	WaitForMultipleObjects(ThreadNum, threads, TRUE, INFINITE);
@@ -32,10 +34,10 @@ DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 	
 	// 配置读卡器
 	Reader* reader = new Reader();
+	srand(time(NULL));
 	reader->readerId = floor(rand() % (readerNum) + 1); // 随机读卡器id
-
-	// 初始化客户端
-	InitClient("127.0.0.1", 60000);
+	
+	InitClient("127.0.0.1", 60001);
 
 	// 获取读卡器
 	if (0 != GetReader(reader, 10000, 10000))
@@ -215,8 +217,7 @@ DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 	{
 		printf("ReleaseReader Failed.");
 	}
-
-	// 清理客户端资源
+	
 	CleanUpClient();
 	delete reader; // 释放内存
 

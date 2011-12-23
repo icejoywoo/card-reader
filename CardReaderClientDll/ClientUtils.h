@@ -88,8 +88,8 @@ public:
 	 *	out second 分割出的第二个参数
 	 * @return 接收的字符数
 	 */
-	static void splitString(char* buf, string& first, string& second);
-	static void splitString(char* buf, string& first, int& second);
+	static void splitString(const char* buf, string& first, string& second);
+	static void splitString(const char* buf, string& first, int& second);
 };
 
 #endif

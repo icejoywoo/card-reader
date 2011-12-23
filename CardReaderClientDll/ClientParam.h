@@ -14,11 +14,24 @@ class ClientParam
 private:
 	ClientParam();
 	virtual ~ClientParam();
+
+public:
+	// 添加一个客户端
+	void addClient();
+	// 删除一个客户端
+	void deleteClient();
+	// 看当前是否有客户端
+	BOOL isClientEmpty();
+
 public:
 	// 服务器ip地址
 	char* serverIp;
 	// 服务器端口号
 	int serverPort;
+	// 互斥量, 保证客户端数量原子性地修改
+	HANDLE mutex;
+	// 客户端数量
+	unsigned int clientNum;
 	// 单例
 	static ClientParam* instance;
 };

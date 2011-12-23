@@ -68,6 +68,7 @@ CARDREADERCLIENTDLL_API int CleanUpClient();
  *	-1	id设置失败
  *	-2	customTimeout设置失败
  *	-3	等待超时, 等待时间超过customTimeout
+ *	-4	winsock环境初始化失败
  *	SETSOCKOPT_FAILED	设置socketTimeout失败
  *	CONNECT_FAILED		连接服务器失败
  *	SEND_ERROR			发送数据失败
