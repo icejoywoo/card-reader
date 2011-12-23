@@ -60,7 +60,7 @@ int ClientUtils::receiveData(SOCKET s, int &data)
 	return size;
 }
 
-void ClientUtils::splitString(char* buf, string& first, string& second)
+void ClientUtils::splitString(const char* buf, string& first, string& second)
 {
 	string str(buf);
 	string::size_type loc = str.find(",", 0);
@@ -68,7 +68,7 @@ void ClientUtils::splitString(char* buf, string& first, string& second)
 	second = str.substr(loc + 1);
 }
 
-void ClientUtils::splitString(char* buf, string& first, int& second)
+void ClientUtils::splitString(const char* buf, string& first, int& second)
 {
 	string str(buf);
 	string::size_type loc = str.find(",", 0);

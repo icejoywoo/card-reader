@@ -57,21 +57,31 @@ CARDREADERCLIENTDLL_API int InitClient(char* serverIp, int serverPort)
 	// 初始化winsock环境
 	WSADATA wsaData;
 	int wsaret=WSAStartup(0x101,&wsaData);
-
+	WaitForSingleObject(ClientParam::instance->mutex, INFINITE);
 	ClientParam::instance->serverIp = serverIp;
 	ClientParam::instance->serverPort = serverPort;
+	ReleaseMutex(ClientParam::instance->mutex);
 	return 0;
 }
 
 CARDREADERCLIENTDLL_API int CleanUpClient()
 {
-	if (0 != WSACleanup())
+	WaitForSingleObject(ClientParam::instance->mutex, INFINITE);
+	int ret = WSACleanup();
+	ReleaseMutex(ClientParam::instance->mutex);
+	if (0 != ret)
 		return -1; 
 	return 0;
 }
 
 CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long customTimeout)
 {
+// 	if (ClientParam::instance->isClientEmpty())
+// 	{
+// 		WSADATA wsaData;
+// 		if (0 !=WSAStartup(0x101,&wsaData))
+// 			return -4;
+// 	}
 	struct sockaddr_in server;
 	struct hostent *hp;
 	unsigned int addr;
@@ -131,7 +141,7 @@ CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long c
 		closesocket(reader->s); // 关闭socket资源
 		return -3; // 等待失败
 	} 
-	
+	ClientParam::instance->addClient();
 	return 0;
 }
 
@@ -153,6 +163,11 @@ CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
 	// 关闭资源
 	closesocket(reader->s);
 	reader->readerId = 0;
+	ClientParam::instance->deleteClient();
+// 	if (ClientParam::instance->isClientEmpty())
+// 	{
+// 		WSACleanup();
+// 	}
 	return retCode;
 }
 
