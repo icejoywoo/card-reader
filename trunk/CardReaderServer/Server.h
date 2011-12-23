@@ -102,7 +102,8 @@ public:
 	SOCKET server;
 	CString log;
 	// 全局临界区 读卡器的访问控制
-	CRITICAL_SECTION g_cs;
+	CRITICAL_SECTION readerUsage_cs;
+
 	// 保存目前读卡器使用情况, 1表示在使用, 0表示未使用
 	map<int, int> readerUsage;
 
@@ -110,6 +111,8 @@ public:
 	map< int, list<Client*> > waitList;
 	// 所有客户端
 	list <Client*> clients;
+	// 客户端操作临界区, 保证clients在操作和读取时的完整性
+	CRITICAL_SECTION clients_cs;
 	// true表示正在运行, false表示停止
 	BOOL status;
 

@@ -158,7 +158,8 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 
 	// 开启后自动开启服务器
 	Server::getInstance()->start();
-	::PostMessage(ServerParam::instance->mainFrame, WM_HIDETASK, 0, 0); // 并最小化托盘
+	// 最小化托盘
+	::PostMessage(ServerParam::instance->mainFrame, WM_HIDETASK, 0, 0);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -314,7 +315,7 @@ LRESULT CCardReaderServerDlg::UpdateLog(WPARAM wparam,LPARAM lparam)
 		sprintf(name, "读卡器 %d", (*i));
 		readersTree[(*i)] = m_Tree.InsertItem(name, root);
 	}
-	
+	EnterCriticalSection(&(Server::getInstance()->clients_cs));
 	// 添加所有客户端到对应读卡器节点
 	for (list<Client*>::iterator iter = Server::getInstance()->clients.begin();
 		iter != Server::getInstance()->clients.end(); ++iter)
@@ -323,6 +324,7 @@ LRESULT CCardReaderServerDlg::UpdateLog(WPARAM wparam,LPARAM lparam)
 		(*iter)->getName(name);
 		m_Tree.InsertItem(name, readersTree[(*iter)->getReaderId()]);
 	}
+	LeaveCriticalSection(&(Server::getInstance()->clients_cs));	
 
 	// 展开所有节点, 在添加所有节点以后再展开
 	m_Tree.Expand(root, TVE_EXPAND);

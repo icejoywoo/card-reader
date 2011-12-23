@@ -131,3 +131,5 @@ void Client::getName(char* name)
 	getpeername(s, (sockaddr *)&addr, &addrlen);
 	sprintf(name, "%s:%d", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 }
+
+

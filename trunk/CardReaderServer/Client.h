@@ -116,6 +116,11 @@ public:
 			&& readerId == r.readerId
 			&& timeout == r.timeout;
 	}
+
+	bool operator <(const Client& r) const
+	{
+		return readerId < r.readerId;
+	}
 	
 	/**
 	 * »ñÈ¡Ãû×Ö

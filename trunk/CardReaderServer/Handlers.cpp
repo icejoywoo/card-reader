@@ -111,9 +111,9 @@ UINT defaultServerHandler(LPVOID pParam)
 		Client* client = new Client(clientSocket); // new一个client, 在处理完client后delete
 		client->setReaderId(readerId);
 		client->setTimeout(timeout);
-		EnterCriticalSection(&(Server::getInstance()->g_cs));
+		EnterCriticalSection(&(Server::getInstance()->readerUsage_cs));
 		Server::getInstance()->addToWaitList(client);
-		LeaveCriticalSection(&(Server::getInstance()->g_cs));
+		LeaveCriticalSection(&(Server::getInstance()->readerUsage_cs));
 
 		sprintf(log, "将请求添加到[读卡器 %d]的等待队列中...", readerId);
 		SimpleLog::info(log);
@@ -127,7 +127,7 @@ UINT defaultWaitListHandler (LPVOID pParam )
 	while (Server::getInstance()->status == TRUE)
 	{
 		// 进入临界区, 寻找是否有读卡器处在等待状态
-		EnterCriticalSection(&(Server::getInstance()->g_cs));
+		EnterCriticalSection(&(Server::getInstance()->readerUsage_cs));
 		for (map<int,int>::iterator iter = Server::getInstance()->readerUsage.begin();
 			iter != Server::getInstance()->readerUsage.end(); ++iter) // 寻找未使用的读卡器
 		{
@@ -141,7 +141,7 @@ UINT defaultWaitListHandler (LPVOID pParam )
 				Server::getInstance()->readerUsage[iter->first] = 1; // 标记读卡器为正在使用
 			}
 		}
-		LeaveCriticalSection(&(Server::getInstance()->g_cs));
+		LeaveCriticalSection(&(Server::getInstance()->readerUsage_cs));
 		Sleep(100); // 休眠100ms, 根据情况适当修改
 	}
 	return 0;
@@ -152,7 +152,6 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 	char log[512];
 	while (Server::getInstance()->status == TRUE) // 读卡器的延时队列只针对当前访问读卡器的客户端
 	{
-		EnterCriticalSection(&(Server::getInstance()->g_cs));
 		// 遍历所有客户端
 // outter:
 // 		for (map<int, list<Client*> >::iterator miter = Server::getInstance()->waitList.begin();
@@ -173,6 +172,8 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 // 				}
 // 			}
 // 		}
+		EnterCriticalSection(&(Server::getInstance()->clients_cs));
+	
 		for (list<Client*>::iterator iter = Server::getInstance()->clients.begin();
 			iter != Server::getInstance()->clients.end(); ++iter)
 		{
@@ -181,14 +182,13 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 				char name[50];
 				(*iter)->getName(name);
 				sprintf(log, "[读卡器 %d]的客户端[%s]超时, 即刻删除", (*iter)->getReaderId(), name);
-				SimpleLog::error(log);
+				SimpleLog::warn(log);
 				(*iter)->release();
 				Server::getInstance()->clients.remove(*iter);
 				break;
 			}
 		}
-		
-		LeaveCriticalSection(&(Server::getInstance()->g_cs));
+		LeaveCriticalSection(&(Server::getInstance()->clients_cs));	
 		Sleep(10); // 休眠100ms, 根据情况适当修改
 	}
 	
@@ -237,12 +237,10 @@ UINT defaultClientHandler (LPVOID pParam)
 		}
 	}
 
-	EnterCriticalSection(&(Server::getInstance()->g_cs));
 	// 释放读卡器
 	Server::getInstance()->releaseReader(readerId);
 	client->release();
 	delete client; // 不要的指针删掉
-	LeaveCriticalSection(&(Server::getInstance()->g_cs));
 
 	return 0;
 }
