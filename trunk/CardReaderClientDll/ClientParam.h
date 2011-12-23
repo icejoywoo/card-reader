@@ -13,6 +13,7 @@ class ClientParam
 {
 private:
 	ClientParam();
+public:
 	virtual ~ClientParam();
 
 public:
