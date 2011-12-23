@@ -2,17 +2,37 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <cmath>
 #include "CardReaderClientDll.h"
 
 using namespace std;
 
 #pragma comment(lib, "CardReaderClientDll.lib")
 
+#define readerNum (8)
+#define ThreadNum (32)
+
+DWORD WINAPI ReaderTestThread(LPVOID lpParam);
+
 int main(int argc, char* args[])
 {
+	HANDLE threads[ThreadNum];
+	for (int i = 0; i < ThreadNum; ++i)
+	{
+		threads[i] = CreateThread(NULL, 0, ReaderTestThread, 0, 0, 0);
+	}
+
+	WaitForMultipleObjects(ThreadNum, threads, TRUE, INFINITE);
+	return 0;
+}
+
+DWORD WINAPI ReaderTestThread(LPVOID lpParam)
+{
+	UNREFERENCED_PARAMETER(lpParam); // 未使用的参量
+	
+	// 配置读卡器
 	Reader* reader = new Reader();
-	reader->readerId = atoi(args[1]);
-/*	reader->readerId = 4;*/
+	reader->readerId = floor(rand() % (readerNum) + 1); // 随机读卡器id
 
 	// 初始化客户端
 	InitClient("127.0.0.1", 60000);

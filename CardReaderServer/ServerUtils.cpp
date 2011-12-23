@@ -18,7 +18,7 @@ int parseCommand(Client* client, int readerId, char* command, string& operationN
 	char log[512];
 	vector<string> requestParam; // operationName, cardId, params
 	requestParam = splitString(command);
-	operationName = requestParam[0]; // 操作名称
+	operationName.assign(requestParam[0]); // 操作名称
 	
 	// 取出两边的空白
 // 	operationName.TrimLeft();
@@ -256,7 +256,7 @@ vector<string> splitString(const char* splitedStr)
 	{
 		string others = str.substr(first + 1, (second - first - 1));
 		first = second;
-		result.push_back(others);
+		result.push_back(string(others));
 	}
 	return result;
 }

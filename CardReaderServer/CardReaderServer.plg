@@ -6,16 +6,13 @@
 --------------------Configuration: CardReaderServer - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD446.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP2C42.tmp" with contents
 [
 /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Release/" /Fo"Release/" /Fd"Release/" /FD /c 
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServer.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\CardReaderServerDlg.cpp"
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Handlers.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Server.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD446.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD447.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP2C42.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP2C43.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:no /pdb:"Release/CardReaderServer.pdb" /machine:I386 /out:"Release/CardReaderServer.exe" 
 ".\Release\CardReaderServer.obj"
@@ -30,16 +27,12 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD447.tmp" with 
 ".\Release\StdAfx.obj"
 ".\Release\CardReaderServer.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPD447.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP2C43.tmp"
 <h3>Output Window</h3>
 Compiling...
-CardReaderServer.cpp
-CardReaderServerDlg.cpp
 Handlers.cpp
-Server.cpp
-Generating Code...
 Linking...
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPF2FE.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP32C9.tmp" with contents
 [
 /nologo /o"Release/CardReaderServer.bsc" 
 ".\Release\StdAfx.sbr"
@@ -52,7 +45,7 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPF2FE.tmp" with 
 ".\Release\ServerSetting.sbr"
 ".\Release\ServerUtils.sbr"
 ".\Release\SimpleLog.sbr"]
-Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPF2FE.tmp"
+Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP32C9.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
 
