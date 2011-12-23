@@ -100,7 +100,9 @@ BEGIN_MESSAGE_MAP(CCardReaderServerDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_SETTING, OnButtonSetting)
 	ON_BN_CLICKED(IDC_BUTTON_CLEAR, OnButtonClear)
 	ON_BN_CLICKED(IDC_BUTTON_LOG, OnButtonLog)
-	ON_MESSAGE(LOG_UPDATE_MSG, updateLog)
+	ON_MESSAGE(LOG_UPDATE_MSG, UpdateLog)
+	ON_MESSAGE(WM_SHOWTASK,OnShowTask)
+	ON_MESSAGE(WM_HIDETASK, ToTray)
 	ON_WM_DESTROY()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
@@ -136,9 +138,6 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
 	// TODO: Add extra initialization here
-	
-	
-
 	// 为树添加图标
 // 	CImageList cImageList;
 // 	cImageList.Create(16, 16,  ILC_COLOR32| ILC_MASK, 1, 2);
@@ -148,10 +147,8 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 	m_Tree.ModifyStyle(0, TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS);
 	HTREEITEM root = m_Tree.InsertItem(_T("server"));
 
-
 	// 记录日志显示属性
 	m_logWindow.SetLimitText(500000);
-
 
 	// 初始化设置窗口
 	settingDlg = new ServerSetting(this);
@@ -159,7 +156,9 @@ BOOL CCardReaderServerDlg::OnInitDialog()
 
 	ServerParam::instance->mainFrame = this->GetSafeHwnd();
 
-	// 初始化读卡器set
+	// 开启后自动开启服务器
+	Server::getInstance()->start();
+	::PostMessage(ServerParam::instance->mainFrame, WM_HIDETASK, 0, 0); // 并最小化托盘
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -170,6 +169,9 @@ void CCardReaderServerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	{
 		CAboutDlg dlgAbout;
 		dlgAbout.DoModal();
+	}
+	else if(nID==SC_MINIMIZE) {
+		this->ToTray();
 	}
 	else
 	{
@@ -282,7 +284,7 @@ void CCardReaderServerDlg::OnButtonLog()
 	WinExec(CString("notepad ") + SimpleLog::GetlogFileLocation(), SW_SHOWNORMAL); // 在记事本里打开日志文件
 }
 
-LRESULT CCardReaderServerDlg::updateLog(WPARAM wparam,LPARAM lparam)
+LRESULT CCardReaderServerDlg::UpdateLog(WPARAM wparam,LPARAM lparam)
 {
 	if (this->m_logWindow.GetLineCount() >= 1000) // 超过1000行,清空一次
 	{
@@ -356,4 +358,68 @@ void CCardReaderServerDlg::OnDestroy()
 	delete Server::getInstance();
 
 	_CrtDumpMemoryLeaks();
+}
+
+void CCardReaderServerDlg::ToTray()
+{
+	NOTIFYICONDATA nid; 
+    nid.cbSize=(DWORD)sizeof(NOTIFYICONDATA); 
+    nid.hWnd=this->m_hWnd; 
+    nid.uID=IDR_MAINFRAME; 
+    nid.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP ; 
+    nid.uCallbackMessage=WM_SHOWTASK;//自定义的消息名称 
+    nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
+    strcpy(nid.szTip, "密钥保安站");    //信息提示条 
+    Shell_NotifyIcon(NIM_ADD,&nid);    //在托盘区添加图标 
+    ShowWindow(SW_HIDE);    //隐藏主窗口
+}
+
+LRESULT CCardReaderServerDlg::OnShowTask(WPARAM wParam,LPARAM lParam)
+{
+	if(wParam!=IDR_MAINFRAME) 
+        return 1; 
+    switch(lParam) 
+    {    
+	case WM_RBUTTONUP://右键起来时弹出快捷菜单，这里只有一个“关闭” 
+        { 
+			
+            LPPOINT lpoint=new tagPOINT; 
+            ::GetCursorPos(lpoint);//得到鼠标位置 
+            CMenu menu; 
+            menu.CreatePopupMenu();//声明一个弹出式菜单 
+            //增加菜单项“关闭”，点击则发送消息WM_DESTROY给主窗口（已 
+            //隐藏），将程序结束。 
+            menu.AppendMenu(MF_STRING,WM_DESTROY,"关闭"); 
+            //确定弹出式菜单的位置 
+            menu.TrackPopupMenu(TPM_LEFTALIGN,lpoint->x,lpoint->y,this); 
+            //资源回收 
+            HMENU hmenu=menu.Detach(); 
+            menu.DestroyMenu(); 
+            delete lpoint; 
+        }
+		break; 
+	case WM_LBUTTONDBLCLK://双击左键的处理 
+        { 
+            this->ShowWindow(SW_SHOW);//简单的显示主窗口完事儿
+			this->SetForegroundWindow();
+            DeleteTray();
+        } 
+		break; 
+	default:
+		break;
+    } 
+    return 0; 
+}
+
+void CCardReaderServerDlg::DeleteTray()
+{
+	NOTIFYICONDATA nid; 
+	nid.cbSize=(DWORD)sizeof(NOTIFYICONDATA); 
+	nid.hWnd=this->m_hWnd; 
+	nid.uID=IDR_MAINFRAME; 
+	nid.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP ; 
+	nid.uCallbackMessage=WM_SHOWTASK;//自定义的消息名称 
+	nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
+	strcpy(nid.szTip, "密钥保安站");    //信息提示条为“计划任务提醒” 
+	Shell_NotifyIcon(NIM_DELETE,&nid);    //在托盘区删除图标 
 }

@@ -40,7 +40,9 @@ public:
 protected:
 	HICON m_hIcon;
 	ServerSetting* settingDlg; // 设置对话框
-	LRESULT updateLog(WPARAM wparam,LPARAM lparam); // 更新日志
+	LRESULT UpdateLog(WPARAM wparam,LPARAM lparam); // 更新日志
+	void ToTray();
+	LRESULT OnShowTask(WPARAM wparam,LPARAM lparam); // 最小化图标响应函数
 
 	// Generated message map functions
 	//{{AFX_MSG(CCardReaderServerDlg)
@@ -57,6 +59,7 @@ protected:
 	afx_msg void OnDestroy();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+		void DeleteTray();
 };
 
 //{{AFX_INSERT_LOCATION}}
