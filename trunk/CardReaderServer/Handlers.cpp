@@ -123,7 +123,6 @@ UINT defaultServerHandler(LPVOID pParam)
 
 UINT defaultWaitListHandler (LPVOID pParam ) 
 {
-	char log[512];
 	while (Server::getInstance()->status == TRUE)
 	{
 		// 进入临界区, 寻找是否有读卡器处在等待状态
@@ -133,9 +132,6 @@ UINT defaultWaitListHandler (LPVOID pParam )
 		{
 			if (0 == iter->second && !Server::getInstance()->waitList[iter->first].empty())
 			{
-				sprintf(log, "[读卡器 %d]开始处理请求...", iter->first);
-				SimpleLog::info(log);
-
 				Server::getInstance()->getClientByReaderId(iter->first)->updateTimeout();
 				AfxBeginThread(Server::getInstance()->clientHandler, (LPVOID)iter->first)->m_bAutoDelete = TRUE;
 				Server::getInstance()->readerUsage[iter->first] = 1; // 标记读卡器为正在使用
@@ -204,16 +200,23 @@ UINT defaultClientHandler (LPVOID pParam)
 	char buff[512]; // buffer
 	char log[512];
 
-	client->sendData("Ready"); // 告诉客户端已经准备就绪可以操作
+	if (client->isAvailable()) // 如果客户端有效就发送
+	{
+		client->sendData("Ready"); // 告诉客户端已经准备就绪可以操作
+		sprintf(log, "[读卡器 %d]开始处理请求...", client->getReaderId());
+		SimpleLog::info(log);
+	} else {
+
+	}
+	
 	client->updateTimeout();
 
 	string operationName;
 	int resultCode;
 	while(operationName.compare("quit") != 0)
 	{
-		
 		// 接收客户端的请求
-		if (client->receiveData(buff, 512) == -1) // 接收数据错误即刻关闭
+		if (!client->isAvailable() || client->receiveData(buff, 512) == -1) // 接收数据错误即刻关闭
 		{
 			break;
 		}
@@ -231,7 +234,7 @@ UINT defaultClientHandler (LPVOID pParam)
 		}
 		client->updateTimeout();
 		// 将结果发送到客户端
-		if (client->sendData(resultCode) == -1) // 发送数据出错即刻关闭
+		if (!client->isAvailable() || client->sendData(resultCode) == -1) // 发送数据出错即刻关闭
 		{
 			break;
 		}
@@ -239,6 +242,11 @@ UINT defaultClientHandler (LPVOID pParam)
 
 	// 释放读卡器
 	Server::getInstance()->releaseReader(readerId);
+	if (client->isAvailable()) 
+	{
+		sprintf(log, "释放[读卡器 %d]", readerId);
+		SimpleLog::info(log);
+	}
 	client->release();
 	delete client; // 不要的指针删掉
 

@@ -12,6 +12,7 @@ Client::Client(SOCKET s)
 {
 	this->s = s;
 	this->timeoutStart = ::GetTickCount();
+	this->available = TRUE;
 }
 
 Client::~Client()
@@ -55,7 +56,7 @@ SOCKET Client::getSocket()
 Client& Client::updateTimeout()
 {
 	this->timeoutStart = ::GetTickCount();
-	TRACE(CString("[¶Á¿¨Æ÷ ") + i2str(readerId) + "]¸üĞÂtimeout\n");
+	//TRACE(CString("[¶Á¿¨Æ÷ ") + i2str(readerId) + "]¸üĞÂtimeout\n");
 	return *this;
 }
 
@@ -63,7 +64,7 @@ BOOL Client::isOvertime()
 {
 	ULONG timePassed = ::GetTickCount() - this->timeoutStart;
 	BOOL result = (timePassed >= this->timeout);
-	TRACE(CString("[¶Á¿¨Æ÷ ") + i2str(readerId) + "]ÊÇ·ñ³¬Ê±: " + i2str(result) + "\n");
+	//TRACE(CString("[¶Á¿¨Æ÷ ") + i2str(readerId) + "]ÊÇ·ñ³¬Ê±: " + i2str(result) + "\n");
 	return result;
 }
 
@@ -71,6 +72,7 @@ void Client::release()
 {
 	shutdown(s, SD_BOTH);
 	closesocket(s);
+	this->available = FALSE;
 }
 
 int Client::sendData(const char* data)
@@ -130,6 +132,12 @@ void Client::getName(char* name)
 	int addrlen = sizeof(addr);
 	getpeername(s, (sockaddr *)&addr, &addrlen);
 	sprintf(name, "%s:%d", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
+}
+
+BOOL Client::isAvailable()
+{
+//	throw std::exception("The method or operation is not implemented.");
+	return this->available;
 }
 
 

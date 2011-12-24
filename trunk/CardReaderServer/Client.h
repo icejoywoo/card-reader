@@ -126,12 +126,13 @@ public:
 	 * 获取名字
 	 */
 	void getName(char* name);
-
+	BOOL isAvailable();
 private:
 	SOCKET s; // 与服务器的socket连接
 	ULONG timeout; // 延时ms
 	int readerId; // 请求的读卡器id
 	ULONG timeoutStart; // 延时开始计时时间, 使用GetTickCount计时, 单位ms
+	BOOL available; // 是否可用
 };
 
 #endif

@@ -6,6 +6,10 @@
 #include <time.h>
 #include "CardReaderClientDll.h"
 
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#include <stdlib.h>
+
 using namespace std;
 
 #pragma comment(lib, "CardReaderClientDll.lib")
@@ -26,6 +30,7 @@ int main(int argc, char* args[])
 	}
 
 	WaitForMultipleObjects(ThreadNum, threads, TRUE, INFINITE);
+	_CrtDumpMemoryLeaks();
 	return 0;
 }
 
@@ -36,7 +41,9 @@ DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 	// ÅäÖÃ¶Á¿¨Æ÷
 	Reader* reader = new Reader();
 	reader->readerId = floor(rand() % (readerNum) + 1); // Ëæ»ú¶Á¿¨Æ÷id
-	cout << reader->readerId << endl;
+	char log[512];
+	sprintf(log, "¶Á¿¨Æ÷id %d\n", reader->readerId);
+	OutputDebugString(log);
 
 //	InitClient("127.0.0.1", 60000);
 

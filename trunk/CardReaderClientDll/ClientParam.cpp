@@ -37,7 +37,7 @@ ClientParam::ClientParam()
 	strcpy(this->serverIp, first.c_str());
 	this->serverPort = atoi(second.c_str());
 	
-	cout << this->serverIp << ", " << this->serverPort << endl;
+//	cout << this->serverIp << ", " << this->serverPort << endl;
 
 	fin.close();
 // 	this->serverIp = "127.0.0.1";
