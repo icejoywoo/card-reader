@@ -6,14 +6,13 @@
 --------------------Configuration: CardReaderClientDll - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP9466.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP717C.tmp" with contents
 [
 /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CARDREADERCLIENTDLL_EXPORTS" /D "SMARTCOMSTRING_EXPORTS_MACRO" /Fp"Release/CardReaderClientDll.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
 "C:\Users\icejoywoo\Desktop\card-reader\CardReaderClientDll\CardReaderClientDll.cpp"
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderClientDll\ClientParam.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP9466.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP9467.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP717C.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP718C.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:no /pdb:"Release/CardReaderClientDll.pdb" /machine:I386 /out:"Release/CardReaderClientDll.dll" /implib:"Release/CardReaderClientDll.lib" 
 ".\Release\CardReaderClientDll.obj"
@@ -22,12 +21,10 @@ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32
 ".\Release\SmartComString.obj"
 ".\Release\StdAfx.obj"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP9467.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP718C.tmp"
 <h3>Output Window</h3>
 Compiling...
 CardReaderClientDll.cpp
-ClientParam.cpp
-Generating Code...
 Linking...
    Creating library Release/CardReaderClientDll.lib and object Release/CardReaderClientDll.exp
 
