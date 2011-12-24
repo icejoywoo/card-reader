@@ -358,8 +358,6 @@ void CCardReaderServerDlg::OnDestroy()
 	delete settingDlg;
 	delete ServerParam::instance;
 	delete Server::getInstance();
-
-	_CrtDumpMemoryLeaks();
 }
 
 void CCardReaderServerDlg::ToTray()

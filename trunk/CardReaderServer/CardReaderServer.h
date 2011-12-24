@@ -13,9 +13,6 @@
 #endif
 
 #include "resource.h"		// main symbols
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-#include <stdlib.h>
 
 /////////////////////////////////////////////////////////////////////////////
 // CCardReaderServerApp:

@@ -14,6 +14,10 @@
 #include <string>
 #include <cassert>
 
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#include <stdlib.h>
+
 using namespace std;
 
 // #define CARDREADERCLIENTDLL_EXPORTS
@@ -171,6 +175,7 @@ CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
 	{
 		WSACleanup();
 	}
+	_CrtDumpMemoryLeaks();
 	return retCode;
 }
 
