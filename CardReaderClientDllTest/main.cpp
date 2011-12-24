@@ -6,9 +6,7 @@
 #include <time.h>
 #include "CardReaderClientDll.h"
 
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-#include <stdlib.h>
+#include <vld.h>
 
 using namespace std;
 
@@ -30,7 +28,7 @@ int main(int argc, char* args[])
 	}
 
 	WaitForMultipleObjects(ThreadNum, threads, TRUE, INFINITE);
-	_CrtDumpMemoryLeaks();
+	
 	return 0;
 }
 

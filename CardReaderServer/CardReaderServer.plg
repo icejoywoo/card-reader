@@ -6,13 +6,13 @@
 --------------------Configuration: CardReaderServer - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPFBCE.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB3DF.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Handlers.cpp"
+"C:\Users\icejoywoo\Desktop\card-reader\CardReaderServer\Server.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPFBCE.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPFBCF.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB3DF.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB3E0.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderServer.pdb" /debug /machine:I386 /out:"Debug/CardReaderServer.exe" /pdbtype:sept 
 ".\Debug\CardReaderServer.obj"
@@ -27,12 +27,12 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPFBCF.tmp" with 
 ".\Debug\StdAfx.obj"
 ".\Debug\CardReaderServer.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPFBCF.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB3E0.tmp"
 <h3>Output Window</h3>
 Compiling...
-Handlers.cpp
+Server.cpp
 Linking...
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPAED.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPBB41.tmp" with contents
 [
 /nologo /o"Debug/CardReaderServer.bsc" 
 ".\Debug\StdAfx.sbr"
@@ -45,7 +45,7 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPAED.tmp" with c
 ".\Debug\ServerSetting.sbr"
 ".\Debug\ServerUtils.sbr"
 ".\Debug\SimpleLog.sbr"]
-Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPAED.tmp"
+Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPBB41.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
 
