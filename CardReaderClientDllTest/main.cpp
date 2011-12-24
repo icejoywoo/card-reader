@@ -20,7 +20,8 @@ int main(int argc, char* args[])
 	HANDLE threads[ThreadNum];
 	for (int i = 0; i < ThreadNum; ++i)
 	{
-		threads[i] = CreateThread(NULL, 0, ReaderTestThread, 0, 0, 0);
+		DWORD threadId;
+		threads[i] = CreateThread(NULL, 0, ReaderTestThread, 0, 0, &threadId);
 		//cout << floor(rand() % (readerNum) + 1) << endl;
 	}
 

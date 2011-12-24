@@ -100,7 +100,7 @@ CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long c
 		hp=gethostbyaddr((char*)&addr,sizeof(addr),AF_INET);
 	}
 
-	server.sin_addr.s_addr=*((unsigned long*)hp->h_addr);
+	server.sin_addr.s_addr=*((u_long FAR*)hp->h_addr);
 	server.sin_family=AF_INET;
 	server.sin_port=htons(ClientParam::instance->serverPort);
 

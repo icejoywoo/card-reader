@@ -45,6 +45,7 @@ ClientParam::ClientParam()
 }
 ClientParam::~ClientParam() 
 {
+	delete instance;
 }
 
 ClientParam* ClientParam::instance = new ClientParam();
