@@ -37,7 +37,7 @@ UINT defaultServerHandler(LPVOID pParam)
 {
 	Server* serv = (Server*) pParam;
 
-	// TODO: 初始化读卡器(用udp测试的时候使用, 到生产环境的时候应该删除)
+	// TODO: 初始化读卡器(用udp测试的时候使用, 现在已经转用udp)
 	if (InitUDPComm() == -1) {
 		AfxMessageBox("与卡片读写器的通信初始化失败");
 		SimpleLog::error("与卡片读写器的通信初始化失败");
