@@ -1,0 +1,21 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: DataTransfer - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Debug/DataTransfer.res" /d "_DEBUG" /d "_AFXDLL" "F:\明森\出差\给佳斌 2012.1.9 珠海\DataTransfer\DataTransfer\DataTransfer.rc"" 
+Creating command line "link.exe /nologo /subsystem:windows /incremental:yes /pdb:"Debug/DataTransfer.pdb" /debug /machine:I386 /out:"Debug/DataTransfer.exe" /pdbtype:sept  ".\Debug\DataTransfer.obj" ".\Debug\DataTransferDlg.obj" ".\Debug\StdAfx.obj" ".\Debug\DataTransfer.res" "
+<h3>Output Window</h3>
+Compiling resources...
+Linking...
+
+
+
+<h3>Results</h3>
+DataTransfer.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
