@@ -127,11 +127,17 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 		{
 			printf("open data.db successfully!\n");
 		}
-		char* sql = "create table students (number varchar(10), name varchar(10))";
+
+		char* sql = "drop table students; create table students (number varchar(10), name varchar(10))";
 		sqlite3_exec(db, sql, NULL, 0, &errMsg);
-		sqlite3_exec(db, "INSERT INTO students VALUES('00001', 'Mary');", NULL, 0, &errMsg);
-		sqlite3_exec(db, "SELECT * FROM students;", print_result, NULL, &errMsg);
+		int n; // rows
+		int m; // columns
+		char** result;
+		sqlite3_get_table(db, "SELECT * FROM students;", &result, &n, &m, &errMsg); //(N+1)*M
+		cout << n << ", " << m << endl;
 		sqlite3_close(db);
+
+		cout << sqlite3_libversion() << endl;
 		return 0;
 	}
 

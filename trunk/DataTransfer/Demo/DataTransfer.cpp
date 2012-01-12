@@ -103,6 +103,7 @@ int TransferRule::GetStart()
 		int start = this->target.Find(this->startTag);
 		return start + strlen(this->startTag);
 	} else {
+		AfxMessageBox("获取开始位置出错!");
 		throw bad_exception("获取开始位置出错!");
 	}
 }
@@ -127,6 +128,7 @@ int TransferRule::GetLength()
 		}
 		else
 		{
+			AfxMessageBox("获取长度出错!");
 			throw bad_exception("获取长度出错!");
 		}
 	}
