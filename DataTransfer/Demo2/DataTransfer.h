@@ -27,12 +27,17 @@ public:
 	
 	// 设置开始类型和数据
 	void SetStart(DataType startType, char* startData);
+	DataType GetStartType();
+	CString GetStartData();
 	
 	// 设置结束类型和数据
 	void SetEnd(DataType endType, char* endData);
+	DataType GetEndType();
+	CString GetEndData();
 	
 	// 设置标签名
 	void SetTag(char* tag);
+	CString GetTag();
 
 	// 处理数据, 并返回处理结果
 	CString Handle(CString target);
@@ -82,6 +87,8 @@ public:
 	void load(const char* name);
 	// 删除配置
 	void del(const char* name);
+	// 获取所有配置
+	vector<CString> getConfigs();
 private:
 	// 处理文件数据
 	void HandleFile(const char* filename, const char* dirname = NULL);

@@ -59,6 +59,31 @@ void TransferRule::SetTag(char* tag)
 	this->tag = tag;
 }
 
+DataType TransferRule::GetStartType()
+{
+	return this->startType;
+}
+
+CString TransferRule::GetStartData()
+{
+	return this->startData;
+}
+
+DataType TransferRule::GetEndType()
+{
+	return this->endType;
+}
+
+CString TransferRule::GetEndData()
+{
+	return this->endData;
+}
+
+CString TransferRule::GetTag()
+{
+	return this->tag;
+}
+
 int TransferRule::GetStart()
 {
 	// 处理startData
@@ -385,4 +410,22 @@ void DataTransfer::del(const char* name)
 	{
 		AfxMessageBox("所删除的配置不存在!");
 	}
+}
+
+vector<CString> DataTransfer::getConfigs()
+{
+	vector<CString> configs;
+	char* errMsg = 0;
+	int n; // rows
+	int m; // columns
+	char** result;
+	char sql[128];
+	sprintf(sql, "SELECT name FROM config");
+	sqlite3_get_table(db, sql, &result, &n, &m, &errMsg);
+	
+	for (int i = 1; i <= n; ++i)
+	{
+		configs.push_back(result[i*m + 0]);
+	}
+	return configs;
 }

@@ -80,12 +80,17 @@ int main(int argc, TCHAR* argv[], TCHAR* envp[])
 
 	// ±£´æÅäÖÃ
 // 	transfer.init();
-// 	transfer.save("Test");
+ 	transfer.save("Test2");
 	// ¼ÓÔØÅäÖÃ
 //	transfer.load("Test");
 //	transfer.Handle("ÖØÇì½ğÈÚÉç±£IC¿¨-0110-ICInfo");
 	// É¾³ıÅäÖÃ
-	transfer.del("Test");
+//	transfer.del("Test");
+	vector<CString> configs = transfer.getConfigs();
+	for (vector<CString>::iterator iter = configs.begin(); iter != configs.end(); ++iter)
+	{
+		cout << (LPCTSTR)(*iter) << endl;
+	}
 
 	return 0;
 }
