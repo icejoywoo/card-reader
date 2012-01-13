@@ -203,6 +203,11 @@ void DataTransfer::HandleFile(const char* filename, const char* dirname /* = NUL
 	{
 		CStdioFile file(filename, CFile::modeRead);
 		
+		// 获取当前时间戳
+		CTime t = CTime::GetCurrentTime();
+		CString timestamp;
+		timestamp.Format("%d-%d-%d_%d_%d_%d", t.GetYear(), t.GetMonth(), t.GetDay(), t.GetHour(), t.GetMinute(), t.GetSecond());
+
 		// 输出文件名
 		char outFilename[128];
 		if (dirname != NULL)
@@ -213,7 +218,7 @@ void DataTransfer::HandleFile(const char* filename, const char* dirname /* = NUL
 		}
 		else
 		{
-			sprintf(outFilename, "%s_HDP5000", filename);
+			sprintf(outFilename, "%s_HDP5000_%s", filename, timestamp);
 		}
 
 		CStdioFile* outFile = new CStdioFile(outFilename, CFile::modeCreate | CFile::modeWrite);
@@ -268,9 +273,13 @@ void DataTransfer::HandleDir(const char* dirname)
 		BOOL working = finder.FindFile(_T(filePattern));
 		
 		CString targetFile;
+		// 获取当前时间戳
+		CTime t = CTime::GetCurrentTime();
+		CString timestamp;
+		timestamp.Format("%d-%d-%d_%d_%d_%d", t.GetYear(), t.GetMonth(), t.GetDay(), t.GetHour(), t.GetMinute(), t.GetSecond());
 
 		CString outDir; // 输出文件夹
-		outDir.Format("%s_HDP5000", dirname);
+		outDir.Format("%s_HDP5000_%s", dirname, timestamp);
 		CString outFile;
 
 		while (working)

@@ -1,0 +1,207 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (中国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 4, 2\r\n"
+    "#pragma code_page(936)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\DataTransferTool.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.chs\\afxres.rc""          // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\DataTransferTool.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DATATRANSFERTOOL_DIALOG DIALOGEX 0, 0, 386, 303
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "明森HDP5000 Goldpac数据转换工具 "
+FONT 9, "宋体", 0, 0, 0x1
+BEGIN
+    CONTROL         "List2",IDC_LIST_TEMPLATES,"SysListView32",LVS_LIST | 
+                    LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,18,53,74,145
+    GROUPBOX        "现有模板",IDC_STATIC,13,41,85,162,BS_CENTER
+    GROUPBOX        "字段信息",IDC_STATIC,102,42,269,161,BS_CENTER
+    CONTROL         "List3",IDC_LIST_FIELD_TABLE,"SysListView32",LVS_LIST | 
+                    WS_BORDER | WS_TABSTOP,114,58,185,130
+    PUSHBUTTON      "新建",IDC_BUTTON_NEW_FIELD,310,64,50,14
+    PUSHBUTTON      "删除",IDC_BUTTON_DEL_FIELD,310,97,50,14
+    PUSHBUTTON      "修改",IDC_BUTTON_MODIFY_FIELD,310,130,50,14
+    PUSHBUTTON      "新建模板",IDC_BUTTON_NEW_TEMPLATE,70,16,50,14
+    PUSHBUTTON      "删除模板",IDC_BUTTON_DEL_TEMPLATE,135,16,50,14
+    PUSHBUTTON      "使用模板",IDC_BUTTON_APPLY_TEMPLATE,200,16,50,14
+    PUSHBUTTON      "退出",IDC_BUTTON_EXIT,265,16,50,14
+    LTEXT           "目标:",IDC_STATIC,28,247,21,8
+    EDITTEXT        IDC_EDIT_TARGET_FILE,59,245,296,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "选择目标文件",IDC_BUTTON_CHOOSE_TARGET,90,264,63,14
+    GROUPBOX        "数据转换",IDC_STATIC,13,212,360,74
+    PUSHBUTTON      "开始转换",IDC_BUTTON_START_TRANSFER,245,264,50,14
+    LTEXT           "当前模板:",IDC_STATIC,21,228,37,8
+    EDITTEXT        IDC_EDIT_CURRENT_TEMPLATE,60,226,295,14,ES_AUTOHSCROLL | 
+                    WS_DISABLED
+    PUSHBUTTON      "选择目标文件夹",IDC_BUTTON_CHOOSE_DIR,163,264,72,14
+    PUSHBUTTON      "保存为模板",IDC_BUTTON_SAVE_TEMPLATE,310,163,50,14
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "DataTransferTool Microsoft 基础类应用程序\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "DataTransferTool\0"
+            VALUE "LegalCopyright", "版权所有 (C) 2012\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "DataTransferTool.EXE\0"
+            VALUE "ProductName", "DataTransferTool 应用程序\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_DATATRANSFERTOOL_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 379
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 296
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "关于 DataTransferTool(&A)..."
+END
+
+#endif    // Chinese (中国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE 4, 2
+#pragma code_page(936)
+#endif //_WIN32
+#include "res\DataTransferTool.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.chs\afxres.rc"          // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
