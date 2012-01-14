@@ -297,10 +297,10 @@ void CDataTransferToolDlg::OnButtonStartTransfer()
 	}
 
 	CString message;
-	message.Format("加载模板: %s, 是否确认开始转换?", m_CurrentTemplate);
+	message.Format("加载模板: <[%s]>, 是否确认开始转换?", m_CurrentTemplate);
 	if(MessageBox(message, "信息确认", MB_YESNO | MB_ICONQUESTION) == IDYES)
 	{
-		AfxBeginThread(DataTransferThread, (LPVOID) &m_TargetToTransfer);
+		AfxBeginThread(DataTransferThread, (LPVOID) this);
 	}
 
 //	this->SendMessage(WM_PAINT);
@@ -336,7 +336,7 @@ void CDataTransferToolDlg::OnButtonApplyTemplate()
 	vector<TransferRule> rules = transfer.getRules();
 	int itemNo = 0;
 	for (vector<TransferRule>::iterator ruleIter = rules.begin();
-	ruleIter != rules.end(); ++ruleIter, ++itemNo)
+		ruleIter != rules.end(); ++ruleIter, ++itemNo)
 	{
 		TransferRule rule = (*ruleIter);
 		m_FiledList.InsertItem(itemNo, "");
@@ -476,7 +476,7 @@ void CDataTransferToolDlg::OnButtonDelField()
 			if(MessageBox("确认删除?", "操作提示", MB_YESNO | MB_ICONQUESTION) == IDYES)
 			{
 				transfer.DelRule(rule);
-				//m_FiledList.DeleteItem(i); // 删除GUI上的项
+				m_FiledList.DeleteItem(i); // 删除GUI上的项
 			}
 			break;
 		}

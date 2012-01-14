@@ -261,11 +261,23 @@ DataTransfer::DataTransfer()
 
 	CString dbfile;
 	dbfile.Format("%s\\data.db", currentPath);
-
-	if (sqlite3_open(Convert(dbfile, CP_ACP, CP_UTF8), &db) != SQLITE_OK)
+	CFileStatus status;
+	if (!CFile::GetStatus(dbfile, status))
 	{
-		AfxMessageBox("数据库初始化失败!");
+		if (sqlite3_open(Convert(dbfile, CP_ACP, CP_UTF8), &db) != SQLITE_OK)
+		{
+			AfxMessageBox("数据库初始化失败!");
+		}
+		this->init();
 	}
+	else
+	{
+		if (sqlite3_open(Convert(dbfile, CP_ACP, CP_UTF8), &db) != SQLITE_OK)
+		{
+			AfxMessageBox("数据库初始化失败!");
+		}
+	}
+	
 }
 
 DataTransfer::DataTransfer(CString dbfile)
@@ -317,19 +329,19 @@ void DataTransfer::HandleFile(const char* filename, const char* dirname /* = NUL
 		// 获取当前时间戳
 		CTime t = CTime::GetCurrentTime();
 		CString timestamp;
-		timestamp.Format("%d-%02d-%02d_%02d_%02d_%02d", t.GetYear(), t.GetMonth(), t.GetDay(), t.GetHour(), t.GetMinute(), t.GetSecond());
+		timestamp.Format("%d%02d%02d%02d%02d%02d", t.GetYear(), t.GetMonth(), t.GetDay(), t.GetHour(), t.GetMinute(), t.GetSecond());
 
 		// 输出文件名
-		char outFilename[128];
+		CString outFilename;
 		if (dirname != NULL)
 		{
 			_mkdir(dirname);
 			CString file(filename); 
-			sprintf(outFilename, "%s\\%s", dirname, file.Mid(file.ReverseFind('\\')));
+			outFilename.Format("%s\\%s", dirname, file.Mid(file.ReverseFind('\\')));
 		}
 		else
 		{
-			sprintf(outFilename, "%s_HDP5000_%s", filename, timestamp);
+			outFilename.Format("%s_HDP5000_%s", filename, timestamp);
 		}
 
 		CStdioFile* outFile = new CStdioFile(outFilename, CFile::modeCreate | CFile::modeWrite);
@@ -343,9 +355,8 @@ void DataTransfer::HandleFile(const char* filename, const char* dirname /* = NUL
 			{
 				++fileNo;
 				outFile->Close();
-				char outSplitFilename[128];
-				sprintf(outSplitFilename, "%s_%03d", outFilename, fileNo);
-				
+				CString outSplitFilename;
+				outSplitFilename.Format("%s_%03d", outFilename, fileNo);
 				CFile* temp = outFile;
 				outFile = new CStdioFile(outSplitFilename, CFile::modeCreate | CFile::modeWrite);
 				delete temp;
@@ -387,7 +398,7 @@ void DataTransfer::HandleDir(const char* dirname)
 		// 获取当前时间戳
 		CTime t = CTime::GetCurrentTime();
 		CString timestamp;
-		timestamp.Format("%d-%02d-%02d_%02d_%02d_%02d", t.GetYear(), t.GetMonth(), t.GetDay(), t.GetHour(), t.GetMinute(), t.GetSecond());
+		timestamp.Format("%d%02d%02d%02d%02d%02d", t.GetYear(), t.GetMonth(), t.GetDay(), t.GetHour(), t.GetMinute(), t.GetSecond());
 
 		CString outDir; // 输出文件夹
 		outDir.Format("%s_HDP5000_%s", dirname, timestamp);
@@ -436,7 +447,7 @@ void DataTransfer::Handle(const char* filename)
 void DataTransfer::init()
 {
 	char* errMsg = 0;
-	char* sql = "drop table config;create table config (id integer not null, name text, primary key('id' ASC), CONSTRAINT 'name_unique' UNIQUE ('name'));";
+	char* sql = "create table config (id integer not null, name text, primary key('id' ASC), CONSTRAINT 'name_unique' UNIQUE ('name'));";
 	sqlite3_exec(db, sql, NULL, 0, &errMsg);
 }
 

@@ -55,9 +55,9 @@ void CFieldConfigDialog::OnOK()
 {
 	// TODO: Add extra validation here
 	UpdateData(TRUE);
-	if (m_StartType.IsEmpty() || m_StartData.IsEmpty() || m_EndType.IsEmpty() || m_EndData.IsEmpty() || m_Tag.IsEmpty())
+	if (m_StartType.IsEmpty() && m_StartData.IsEmpty() && m_EndType.IsEmpty() && m_EndData.IsEmpty() && m_Tag.IsEmpty())
 	{
-		AfxMessageBox("输入不正确，有字段未填写！");
+		AfxMessageBox("输入不正确，不可以全部为空！");
 	} 
 	else
 	{
@@ -71,4 +71,11 @@ void CFieldConfigDialog::OnOK()
 		UpdateData(FALSE);
 		CDialog::OnOK();
 	}
+}
+
+void CFieldConfigDialog::OnCancel() 
+{
+	// TODO: Add extra cleanup here
+	
+	CDialog::OnCancel();
 }
