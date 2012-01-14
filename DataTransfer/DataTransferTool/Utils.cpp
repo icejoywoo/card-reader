@@ -5,7 +5,7 @@
 
 UINT DataTransferThread(LPVOID pParam)
 {
-	CString* target = (CString*) pParam;
+	CDataTransferToolDlg* mainFrame = (CDataTransferToolDlg*) pParam;
 
 // 	CString m_FilePath;
 // 	GetModuleFileName(NULL,m_FilePath.GetBufferSetLength(MAX_PATH+1),MAX_PATH);
@@ -19,9 +19,9 @@ UINT DataTransferThread(LPVOID pParam)
 //	::SetCurrentDirectory(currentPath);
 //	DataTransfer transfer(Convert(dbfile, CP_ACP, CP_UTF8));
 	DataTransfer transfer;
-
-	transfer.load("Test");
-	transfer.Handle(*target);
+	
+	transfer.load(mainFrame->m_CurrentTemplate);
+	transfer.Handle(mainFrame->m_TargetToTransfer);
 	
 	AfxMessageBox("数据转换完成!");
 	return 0;
