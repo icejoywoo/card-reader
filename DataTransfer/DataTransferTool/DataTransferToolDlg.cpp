@@ -284,19 +284,25 @@ void CDataTransferToolDlg::OnButtonStartTransfer()
 	// 开始转换
 	UpdateData(TRUE);
 	// 判断是否填写目标文件
-	if (!m_TargetToTransfer.IsEmpty())
-	{
-		CString message;
-		message.Format("加载模板: %s, 是否确认开始转换?", m_CurrentTemplate);
-		if(MessageBox(message, "信息确认", MB_YESNO | MB_ICONQUESTION) == IDYES)
-		{
-			AfxBeginThread(DataTransferThread, (LPVOID) &m_TargetToTransfer);
-		}
-	}
-	else
+	if (m_TargetToTransfer.IsEmpty())
 	{
 		AfxMessageBox("请输入要转换的文件或文件夹!");
+		return;
 	}
+
+	if (m_CurrentTemplate.IsEmpty())
+	{
+		AfxMessageBox("请先加载模板!");
+		return;
+	}
+
+	CString message;
+	message.Format("加载模板: %s, 是否确认开始转换?", m_CurrentTemplate);
+	if(MessageBox(message, "信息确认", MB_YESNO | MB_ICONQUESTION) == IDYES)
+	{
+		AfxBeginThread(DataTransferThread, (LPVOID) &m_TargetToTransfer);
+	}
+
 //	this->SendMessage(WM_PAINT);
 	UpdateData(FALSE);
 	//(CButton*)GetDlgItem(IDC_BUTTON)->EnableWindow(FALSE);
