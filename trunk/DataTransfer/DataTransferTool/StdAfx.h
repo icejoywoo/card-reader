@@ -23,6 +23,7 @@
 #include "sqlite3.h"
 #pragma comment(lib, "sqlite3.lib")
 
+#define UNICODE_ONLY
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

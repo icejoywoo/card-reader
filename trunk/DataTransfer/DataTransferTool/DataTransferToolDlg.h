@@ -4,6 +4,7 @@
 #if !defined(AFX_DATATRANSFERTOOLDLG_H__D31C02BB_95F4_4450_9505_AC977AB74745__INCLUDED_)
 #define AFX_DATATRANSFERTOOLDLG_H__D31C02BB_95F4_4450_9505_AC977AB74745__INCLUDED_
 
+#include "resource.h"
 #include "DataTransfer.h"
 
 #if _MSC_VER > 1000
@@ -18,6 +19,8 @@ class CDataTransferToolDlg : public CDialog
 // Construction
 public:
 	CDataTransferToolDlg(CWnd* pParent = NULL);	// standard constructor
+	CString m_NewTemplateName;
+	TransferRule m_TempRule;
 
 // Dialog Data
 	//{{AFX_DATA(CDataTransferToolDlg)
@@ -26,6 +29,7 @@ public:
 	CListCtrl	m_FiledList;
 	CListCtrl	m_TemplateList;
 	CString		m_TargetToTransfer;
+	CString		m_CurrentTemplate;
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides
@@ -51,6 +55,12 @@ protected:
 	afx_msg void OnButtonStartTransfer();
 	afx_msg void OnButtonApplyTemplate();
 	afx_msg void OnButtonDelTemplate();
+	afx_msg void OnButtonNewTemplate();
+	afx_msg void OnButtonSaveAsTemplate();
+	afx_msg void OnButtonNewField();
+	afx_msg void OnButtonModifyField();
+	afx_msg void OnButtonDelField();
+	afx_msg void OnButtonSaveTemplate();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

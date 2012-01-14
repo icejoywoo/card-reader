@@ -6,28 +6,32 @@
 --------------------Configuration: Demo2 - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP133.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP2C04.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/Demo2.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"F:\Ã÷É­\card-reader\DataTransfer\Demo2\DataTransfer.cpp"
+"I:\DataTransfer\Demo2\DataTransfer.cpp"
+"I:\DataTransfer\Demo2\Demo2.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP133.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP134.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP2C04.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP2C05.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/Demo2.pdb" /debug /machine:I386 /out:"Debug/Demo2.exe" /pdbtype:sept 
-".\Debug\DataTransfer.obj"
-".\Debug\Demo2.obj"
-".\Debug\StdAfx.obj"
-".\Debug\Demo2.res"
+.\Debug\DataTransfer.obj
+.\Debug\Demo2.obj
+.\Debug\StdAfx.obj
+.\Debug\Demo2.res
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP134.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP2C05.tmp"
 <h3>Output Window</h3>
 Compiling...
 DataTransfer.cpp
-F:\Ã÷É­\card-reader\DataTransfer\Demo2\DataTransfer.cpp(260) : warning C4101: 'e' : unreferenced local variable
-F:\Ã÷É­\card-reader\DataTransfer\Demo2\DataTransfer.cpp(297) : warning C4101: 'e' : unreferenced local variable
+I:\DataTransfer\Demo2\DataTransfer.cpp(260) : warning C4101: 'e' : unreferenced local variable
+I:\DataTransfer\Demo2\DataTransfer.cpp(297) : warning C4101: 'e' : unreferenced local variable
+Demo2.cpp
+Generating Code...
 Linking...
-Creating command line "bscmake.exe /nologo /o"Debug/Demo2.bsc"  ".\Debug\StdAfx.sbr" ".\Debug\DataTransfer.sbr" ".\Debug\Demo2.sbr""
+LINK : LNK6004: Debug/Demo2.exe not found or not built by the last incremental link; performing full link
+Creating command line "bscmake.exe /nologo /o"Debug/Demo2.bsc"  .\Debug\StdAfx.sbr .\Debug\DataTransfer.sbr .\Debug\Demo2.sbr"
 Creating browse info file...
 <h3>Output Window</h3>
 

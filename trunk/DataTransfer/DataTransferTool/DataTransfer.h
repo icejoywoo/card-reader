@@ -26,17 +26,19 @@ public:
 	virtual ~TransferRule();
 	
 	// 设置开始类型和数据
-	void SetStart(DataType startType, char* startData);
-	DataType GetStartType();
+	void SetStart(DataType startType, CString startData);
+	void SetStart(CString startType, CString startData);
+	CString GetStartType();
 	CString GetStartData();
 	
 	// 设置结束类型和数据
-	void SetEnd(DataType endType, char* endData);
-	DataType GetEndType();
+	void SetEnd(DataType endType, CString endData);
+	void SetEnd(CString endType, CString endData);
+	CString GetEndType();
 	CString GetEndData();
-	
+
 	// 设置标签名
-	void SetTag(char* tag);
+	void SetTag(CString tag);
 	CString GetTag();
 
 	// 处理数据, 并返回处理结果
@@ -44,12 +46,15 @@ public:
 
 	// operator= overload
 	TransferRule& operator=(const TransferRule &rgt);
+	bool operator==(const TransferRule &rgt);
 
 	// 保存配置
 	void save(sqlite3* db, const char* name);
 	// 加载配置
 	void load(sqlite3* db, const char* name);
 private:
+	// 获取对应字符串的类型, 对应DataType
+	DataType getType(CString type);
 	// 设置待处理对象(在获取长度和开始位置之前调用)
 	void SetTarget(CString target);
 	// 获取匹配的长度
@@ -79,17 +84,24 @@ public:
 
 	// 添加处理规则
 	void AddRule(TransferRule& rule); 
-	
+	// 删除处理规则
+	void DelRule(TransferRule& rule);
+	// 清空规则
+	void ClearRules();
+
 	// 初始化数据库
 	void init();
 	// 保存配置
 	void save(const char* name);
 	// 加载配置
 	void load(const char* name);
+	CString getCurrentTemplate();
 	// 删除配置
 	void del(const char* name);
 	// 获取所有配置
 	vector<CString> getConfigs();
+	// 获取所有规则
+	vector<TransferRule> getRules();
 private:
 	// 处理文件数据
 	void HandleFile(const char* filename, const char* dirname = NULL);
@@ -100,7 +112,7 @@ private:
 	vector<TransferRule> rules;
 	// 操作sqlite3数据库
 	sqlite3* db;
-
+	CString currentTemplate;
 	static CString DBFILE;
 };
 

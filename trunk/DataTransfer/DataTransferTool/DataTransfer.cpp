@@ -1,6 +1,10 @@
 #include "StdAfx.h"
 #include "DataTransfer.h"
+#include "Utils.h"
 #include <direct.h>
+#include <algorithm>
+
+using namespace std;
 
 //////////////////////////////////////////////////////////////////////////
 // TransferRule
@@ -34,20 +38,46 @@ TransferRule& TransferRule::operator=(const TransferRule &rgt)
 	return *this;
 }
 
+bool TransferRule::operator==(const TransferRule &rgt)
+{
+	if (this->startType == rgt.startType && 
+		this->startData == rgt.startData && 
+		this->endType == rgt.endType && 
+		this->endData == rgt.endData && 
+		this->tag == rgt.tag)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 TransferRule::~TransferRule()
 {
 }
 
-void TransferRule::SetStart(DataType startType, char* startData)
+void TransferRule::SetStart(DataType startType, CString startData)
 {
 	this->startType = startType;
 	this->startData = startData;
 }
 
-void TransferRule::SetEnd(DataType endType, char* endData)
+void TransferRule::SetStart(CString startType, CString startData)
+{
+	this->SetStart(this->getType(startType), startData);
+}
+
+void TransferRule::SetEnd(DataType endType, CString endData)
 {
 	this->endType = endType;
 	this->endData = endData;
+}
+
+void TransferRule::SetEnd(CString endType, CString endData)
+{
+	this->SetEnd(this->getType(endType), endData);
 }
 
 void TransferRule::SetTarget(CString target)
@@ -55,24 +85,66 @@ void TransferRule::SetTarget(CString target)
 	this->target = target;
 }
 
-void TransferRule::SetTag(char* tag)
+void TransferRule::SetTag(CString tag)
 {
 	this->tag = tag;
 }
 
-DataType TransferRule::GetStartType()
+// POSITION_TYPE = 0, // 位置, int
+// TAG_TYPE = 1, // 标记, string
+// LENGTH_TYPE = 2, // (只有结束位可用)长度, int
+// UNDEFINED = 3,
+CString TransferRule::GetStartType()
 {
-	return this->startType;
+	switch (this->startType)
+	{
+	case 0:
+		return "POSITION";
+	case 1:
+		return "TAG";
+	default:
+		return "UNDEFINED";
+	}
+}
+
+CString TransferRule::GetEndType()
+{
+	switch (this->endType)
+	{
+	case 0:
+		return "POSITION";
+	case 1:
+		return "TAG";
+	case 2:
+		return "LENGTH";
+	default:
+		return "UNDEFINED";
+	};
+}
+
+DataType TransferRule::getType(CString type)
+{
+	if (type == "POSITION")
+	{
+		return POSITION_TYPE;
+	} 
+	else if (type == "TAG")
+	{
+		return TAG_TYPE;
+	}
+	else if (type == "LENGTH")
+	{
+		return LENGTH_TYPE;
+	}
+	else
+	{
+		return UNDEFINED;
+	}
 }
 
 CString TransferRule::GetStartData()
 {
 	return this->startData;
-}
-
-DataType TransferRule::GetEndType()
-{
-	return this->endType;
 }
 
 CString TransferRule::GetEndData()
@@ -180,7 +252,17 @@ void TransferRule::load(sqlite3* db, const char* name)
 CString DataTransfer::DBFILE = "data.db";
 DataTransfer::DataTransfer()
 {
-	if (sqlite3_open(DBFILE, &db) != SQLITE_OK)
+	CString m_FilePath;
+	GetModuleFileName(NULL,m_FilePath.GetBufferSetLength(MAX_PATH+1),MAX_PATH);
+	m_FilePath.ReleaseBuffer();
+	int m_iPosIndex;
+	m_iPosIndex = m_FilePath.ReverseFind('\\'); 
+	CString currentPath = m_FilePath.Left(m_iPosIndex);
+
+	CString dbfile;
+	dbfile.Format("%s\\data.db", currentPath);
+
+	if (sqlite3_open(Convert(dbfile, CP_ACP, CP_UTF8), &db) != SQLITE_OK)
 	{
 		AfxMessageBox("数据库初始化失败!");
 	}
@@ -204,6 +286,26 @@ void DataTransfer::AddRule(TransferRule& rule)
 {
 	TransferRule _rule(rule);
 	this->rules.push_back(_rule);
+}
+
+void DataTransfer::DelRule(TransferRule& rule)
+{
+	// 删除指定元素
+	remove(rules.begin(), rules.end(), rule); 
+	for (vector<TransferRule>::iterator iter = rules.begin();
+		iter != rules.end(); )
+	{
+		if ((*iter) == rule)
+		{
+			rules.erase(iter);
+			break;
+		}
+	}
+}
+
+void DataTransfer::ClearRules()
+{
+	rules.clear();
 }
 
 void DataTransfer::HandleFile(const char* filename, const char* dirname /* = NULL*/)
@@ -264,7 +366,7 @@ void DataTransfer::HandleFile(const char* filename, const char* dirname /* = NUL
 		}
 		file.Close();
 		outFile->Close();
-		//delete outFile;
+		delete outFile;
 	}
 	catch (CFileException* e)
 	{
@@ -340,6 +442,7 @@ void DataTransfer::init()
 
 void DataTransfer::save(const char* name)
 {
+	CString utf8Name = Convert(name, CP_ACP, CP_UTF8);
 	char* errMsg = 0;
 	int id = 1;
 
@@ -353,41 +456,45 @@ void DataTransfer::save(const char* name)
 	}
 
 	char sql[128];
-	// 删除同名表, 然后建表
-	// 	this->startType,this->startData,this->endType,this->endData,this->tag
-	sprintf(sql, "INSERT INTO config VALUES(%d, '%s');", id, name);
+	
+	sprintf(sql, "INSERT INTO config VALUES(%d, '%s');", id, utf8Name);
 	sqlite3_exec(db, sql, NULL, 0, &errMsg);
 
-	sprintf(sql, "CREATE TABLE %s (startType integer, startData text, endType integer, endData text, tag text);", name, name);
+	// TODO: 删除同名表, 然后建表
+	sprintf(sql, "DROP TABLE %s;", utf8Name);
+	sqlite3_exec(db, sql, NULL, 0, &errMsg);
+
+	sprintf(sql, "CREATE TABLE %s (startType integer, startData text, endType integer, endData text, tag text);", utf8Name, utf8Name);
 	sqlite3_exec(db, sql, NULL, 0, &errMsg);
 
 	for (vector<TransferRule>::iterator iter = rules.begin();
 		iter != rules.end(); ++iter)
 	{
-		iter->save(db, name);
+		iter->save(db, utf8Name);
 	}
 }
 
 void DataTransfer::load(const char* name)
 {
+	CString utf8Name = Convert(name, CP_ACP, CP_UTF8);
 	char* errMsg = 0;
 	int n; // rows
 	int m; // columns
 	char** result;
 	char sql[128];
-	sprintf(sql, "SELECT name FROM config WHERE name = '%s';", name);
+	sprintf(sql, "SELECT name FROM config WHERE name = '%s';", utf8Name);
 	sqlite3_get_table(db, sql, &result, &n, &m, &errMsg);
 	
-	if (n == 1 && strcmp(result[1], name) == 0)
+	if (n == 1 && strcmp(result[1], utf8Name) == 0)
 	{
 		char* errMsg = 0;
 		char sql[128];
-		// 删除同名表, 然后建表
-		// 	this->startType,this->startData,this->endType,this->endData,this->tag
-		sprintf(sql, "select startType, startData, endType, endData, tag from %s", name);
+
+		sprintf(sql, "select startType, startData, endType, endData, tag from %s", utf8Name);
 		int n; // rows
 		int m; // columns
 		char** result;
+		this->rules.clear();
 		sqlite3_get_table(db, sql, &result, &n, &m, &errMsg); //(N+1)*M
 		int i;
 		for (i = 1; i <= n; ++i)
@@ -398,6 +505,7 @@ void DataTransfer::load(const char* name)
 			rule.SetTag(result[i*m + 4]);
 			this->AddRule(rule);
 		}
+		currentTemplate = name;
 	}
 	else
 	{
@@ -407,20 +515,21 @@ void DataTransfer::load(const char* name)
 
 void DataTransfer::del(const char* name)
 {
+	CString utf8Name = Convert(name, CP_ACP, CP_UTF8);
 	char* errMsg = 0;
 	int n; // rows
 	int m; // columns
 	char** result;
 	char sql[128];
-	sprintf(sql, "SELECT name FROM config WHERE name = '%s';", name);
+	sprintf(sql, "SELECT name FROM config WHERE name = '%s';", utf8Name);
 	sqlite3_get_table(db, sql, &result, &n, &m, &errMsg);
 	
-	if (n == 1 && strcmp(result[1], name) == 0)
+	if (n == 1 && strcmp(result[1], utf8Name) == 0)
 	{
-		sprintf(sql, "DELETE FROM config WHERE name = '%s';", name);
+		sprintf(sql, "DELETE FROM config WHERE name = '%s';", utf8Name);
 		sqlite3_exec(db, sql, NULL, NULL, &errMsg);
 
-		sprintf(sql, "DROP TABLE %s;", name);
+		sprintf(sql, "DROP TABLE %s;", utf8Name);
 		sqlite3_exec(db, sql, NULL, NULL, &errMsg);
 	}
 	else
@@ -445,4 +554,9 @@ vector<CString> DataTransfer::getConfigs()
 		configs.push_back(result[i*m + 0]);
 	}
 	return configs;
+}
+
+vector<TransferRule> DataTransfer::getRules()
+{
+	return this->rules;
 }
