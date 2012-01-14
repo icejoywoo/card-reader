@@ -6,6 +6,8 @@
 #include "DataTransferToolDlg.h"
 #include "DataTransfer.h"
 #include "Utils.h"
+#include "TemplateNameDialog.h"
+#include "FieldConfigDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -66,6 +68,7 @@ CDataTransferToolDlg::CDataTransferToolDlg(CWnd* pParent /*=NULL*/)
 {
 	//{{AFX_DATA_INIT(CDataTransferToolDlg)
 	m_TargetToTransfer = _T("");
+	m_CurrentTemplate = _T("");
 	//}}AFX_DATA_INIT
 	// Note that LoadIcon does not require a subsequent DestroyIcon in Win32
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -79,6 +82,7 @@ void CDataTransferToolDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST_FIELD_TABLE, m_FiledList);
 	DDX_Control(pDX, IDC_LIST_TEMPLATES, m_TemplateList);
 	DDX_Text(pDX, IDC_EDIT_TARGET_FILE, m_TargetToTransfer);
+	DDX_Text(pDX, IDC_EDIT_CURRENT_TEMPLATE, m_CurrentTemplate);
 	//}}AFX_DATA_MAP
 }
 
@@ -93,6 +97,12 @@ BEGIN_MESSAGE_MAP(CDataTransferToolDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_START_TRANSFER, OnButtonStartTransfer)
 	ON_BN_CLICKED(IDC_BUTTON_APPLY_TEMPLATE, OnButtonApplyTemplate)
 	ON_BN_CLICKED(IDC_BUTTON_DEL_TEMPLATE, OnButtonDelTemplate)
+	ON_BN_CLICKED(IDC_BUTTON_NEW_TEMPLATE, OnButtonNewTemplate)
+	ON_BN_CLICKED(IDC_BUTTON_SAVEAS_TEMPLATE, OnButtonSaveAsTemplate)
+	ON_BN_CLICKED(IDC_BUTTON_NEW_FIELD, OnButtonNewField)
+	ON_BN_CLICKED(IDC_BUTTON_MODIFY_FIELD, OnButtonModifyField)
+	ON_BN_CLICKED(IDC_BUTTON_DEL_FIELD, OnButtonDelField)
+	ON_BN_CLICKED(IDC_BUTTON_SAVE_TEMPLATE1, OnButtonSaveTemplate)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -127,7 +137,17 @@ BOOL CDataTransferToolDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
 	// TODO: Add extra initialization here
-	
+	m_TemplateList.SetExtendedStyle(LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES|LVS_EX_ONECLICKACTIVATE);
+ 	m_FiledList.SetExtendedStyle(LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES);
+
+	m_TemplateList.InsertColumn(0, "模板名", LVCFMT_LEFT, 200);
+
+	m_FiledList.InsertColumn(0, "起始类型", LVCFMT_LEFT, 70);
+	m_FiledList.InsertColumn(1, "起始数据", LVCFMT_LEFT, 70);
+	m_FiledList.InsertColumn(2, "结束类型", LVCFMT_LEFT, 70);
+	m_FiledList.InsertColumn(3, "结束数据", LVCFMT_LEFT, 70);
+	m_FiledList.InsertColumn(4, "标签名", LVCFMT_LEFT, 100);
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -171,27 +191,35 @@ void CDataTransferToolDlg::OnPaint()
 	{
 		CDialog::OnPaint();
 	}
-	UpdateData(TRUE);
+
 	// 更新数据, 显示已有模板
-	m_TemplateList.SetExtendedStyle(LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES|LVS_EX_ONECLICKACTIVATE);
+
+	m_TemplateList.DeleteAllItems();
 	vector<CString> configs = transfer.getConfigs();
+
 	int itemNo = 0;
-	for (vector<CString>::iterator iter = configs.begin(); iter != configs.end(); ++iter)
+	for (vector<CString>::iterator configIter = configs.begin(); configIter != configs.end(); ++configIter)
 	{
-		m_TemplateList.InsertItem(itemNo++, *iter);
+		m_TemplateList.InsertItem(itemNo++, Convert(*configIter, CP_UTF8, CP_ACP));
 	}
 	
-	// 显示字段信息
-	m_FiledList.SetExtendedStyle(LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES);
-	m_FiledList.InsertColumn(0, "起始类型", LVCFMT_LEFT, 100);
-	m_FiledList.InsertColumn(1, "起始数据", LVCFMT_LEFT, 100);
-	m_FiledList.InsertColumn(2, "结束类型", LVCFMT_LEFT, 100);
-	m_FiledList.InsertColumn(3, "结束数据", LVCFMT_LEFT, 100);
-	m_FiledList.InsertColumn(4, "标签名", LVCFMT_LEFT, 100);
-	m_FiledList.InsertItem(0, "");
-	m_FiledList.SetItemText(0, 1, "位置");
-
-	UpdateData(FALSE);
+	// 更新字段信息
+	m_FiledList.DeleteAllItems();
+	
+	CString lineTitle;
+	vector<TransferRule> rules = transfer.getRules();
+	itemNo = 0;
+	for (vector<TransferRule>::iterator ruleIter = rules.begin();
+		ruleIter != rules.end(); ++ruleIter, ++itemNo)
+	{
+		TransferRule rule = (*ruleIter);
+		m_FiledList.InsertItem(itemNo, "");
+		m_FiledList.SetItemText(itemNo, 0, rule.GetStartType());
+		m_FiledList.SetItemText(itemNo, 1, rule.GetStartData());
+		m_FiledList.SetItemText(itemNo, 2, rule.GetEndType());
+		m_FiledList.SetItemText(itemNo, 3, rule.GetEndData());
+		m_FiledList.SetItemText(itemNo, 4, rule.GetTag());
+	}
 }
 
 // The system calls this to obtain the cursor to display while the user drags
@@ -204,7 +232,11 @@ HCURSOR CDataTransferToolDlg::OnQueryDragIcon()
 void CDataTransferToolDlg::OnButtonExit() 
 {
 	// 退出
-	exit(0);
+	if(MessageBox("确认退出?", "操作提示", MB_YESNO | MB_ICONQUESTION) == IDYES)
+	{
+		this->SendMessage(WM_CLOSE);
+		//::PostMessage(this->GetSafeHwnd(), WM_CLOSE, NULL, NULL);
+	}
 }
 
 void CDataTransferToolDlg::OnButtonChooseTargetFile() 
@@ -216,6 +248,7 @@ void CDataTransferToolDlg::OnButtonChooseTargetFile()
 	UpdateData(TRUE);
 	m_TargetToTransfer = chooser.GetPathName();
 	UpdateData(FALSE);
+	this->SendMessage(WM_PAINT);
 }
 
 void CDataTransferToolDlg::OnButtonChooseDir() 
@@ -227,7 +260,7 @@ void CDataTransferToolDlg::OnButtonChooseDir()
 	bi.hwndOwner = NULL;
 	bi.pidlRoot =NULL;//初始化制定的root目录很不容易，
 	bi.pszDisplayName = Buffer;//此参数如为NULL则不能显示对话框
-	bi.lpszTitle = "修改接收路径";
+	bi.lpszTitle = "请您填写目标路径: ";
 	//bi.ulFlags = BIF_BROWSEINCLUDEFILES;//包括文件
 	bi.ulFlags = BIF_EDITBOX;//包括文件
 	bi.lpfn = NULL;
@@ -242,13 +275,29 @@ void CDataTransferToolDlg::OnButtonChooseDir()
 		m_TargetToTransfer = Buffer;
 		UpdateData(FALSE);
 	}
+
+	this->SendMessage(WM_PAINT);
 }
 
 void CDataTransferToolDlg::OnButtonStartTransfer() 
 {
 	// 开始转换
 	UpdateData(TRUE);
-	AfxBeginThread(DataTransferThread, (LPVOID) &m_TargetToTransfer);
+	// 判断是否填写目标文件
+	if (!m_TargetToTransfer.IsEmpty())
+	{
+		CString message;
+		message.Format("加载模板: %s, 是否确认开始转换?", m_CurrentTemplate);
+		if(MessageBox(message, "信息确认", MB_YESNO | MB_ICONQUESTION) == IDYES)
+		{
+			AfxBeginThread(DataTransferThread, (LPVOID) &m_TargetToTransfer);
+		}
+	}
+	else
+	{
+		AfxMessageBox("请输入要转换的文件或文件夹!");
+	}
+//	this->SendMessage(WM_PAINT);
 	UpdateData(FALSE);
 	//(CButton*)GetDlgItem(IDC_BUTTON)->EnableWindow(FALSE);
 	//m_StartButton.EnableWindow(FALSE);
@@ -256,16 +305,43 @@ void CDataTransferToolDlg::OnButtonStartTransfer()
 
 void CDataTransferToolDlg::OnButtonApplyTemplate() 
 {
+	UpdateData(TRUE);
 	// 应用模板
 	for(int i=0; i<m_TemplateList.GetItemCount(); i++)
 	{
 		if(m_TemplateList.GetItemState(i, LVIS_SELECTED) == LVIS_SELECTED )
 		{
-			CString str;
-			str.Format(_T("选中了第%d行"), i);
-			AfxMessageBox(str);
+			m_CurrentTemplate = m_TemplateList.GetItemText(i, 0);
 		}
 	}
+
+	if (m_CurrentTemplate.IsEmpty())
+	{
+		AfxMessageBox("请先选择模板!");
+		return;
+	}
+
+	// 加载转换配置
+	transfer.load(m_CurrentTemplate);
+	// 显示字段信息
+	m_FiledList.DeleteAllItems();
+	
+	CString lineTitle;
+	vector<TransferRule> rules = transfer.getRules();
+	int itemNo = 0;
+	for (vector<TransferRule>::iterator ruleIter = rules.begin();
+	ruleIter != rules.end(); ++ruleIter, ++itemNo)
+	{
+		TransferRule rule = (*ruleIter);
+		m_FiledList.InsertItem(itemNo, "");
+		m_FiledList.SetItemText(itemNo, 0, rule.GetStartType());
+		m_FiledList.SetItemText(itemNo, 1, rule.GetStartData());
+		m_FiledList.SetItemText(itemNo, 2, rule.GetEndType());
+		m_FiledList.SetItemText(itemNo, 3, rule.GetEndData());
+		m_FiledList.SetItemText(itemNo, 4, rule.GetTag());
+	}
+	this->SendMessage(WM_PAINT);
+	UpdateData(FALSE);
 }
 
 void CDataTransferToolDlg::OnButtonDelTemplate() 
@@ -275,7 +351,145 @@ void CDataTransferToolDlg::OnButtonDelTemplate()
 	{
 		if(m_TemplateList.GetItemState(i, LVIS_SELECTED) == LVIS_SELECTED )
 		{
-			m_TemplateList.DeleteItem(i); // 删除GUI上的项
+			CString configName = m_TemplateList.GetItemText(i, 0);
+			if(MessageBox("确认删除?", "操作提示", MB_YESNO | MB_ICONQUESTION) == IDYES)
+			{
+				transfer.del(configName);
+				m_TemplateList.DeleteItem(i); // 删除GUI上的项
+			}
+			break;
 		}
-   }
+	}
+	this->SendMessage(WM_PAINT);
+}
+
+void CDataTransferToolDlg::OnButtonNewTemplate() 
+{
+	// 新建模板
+	m_FiledList.DeleteAllItems();
+	transfer.ClearRules();
+	this->SendMessage(WM_PAINT);
+}
+
+void CDataTransferToolDlg::OnButtonSaveAsTemplate() 
+{
+	// 另存为模板
+	CTemplateNameDialog dialog;
+	dialog.DoModal();
+	if (m_FiledList.GetItemCount() == 0)
+	{
+		AfxMessageBox("请配置字段!");
+	} 
+	else
+	{
+		transfer.ClearRules();
+		for(int i = 0; i < m_FiledList.GetItemCount(); ++i)
+		{
+			TransferRule rule;
+			CString startType = m_FiledList.GetItemText(i, 0);
+			CString startData = m_FiledList.GetItemText(i, 1);
+			CString endType = m_FiledList.GetItemText(i, 2);
+			CString endData = m_FiledList.GetItemText(i, 3);
+			CString tag = m_FiledList.GetItemText(i, 4);
+			rule.SetStart(startType, startData);
+			rule.SetEnd(endType, endData);
+			rule.SetTag(tag);
+			transfer.AddRule(rule);
+		}
+
+		if (!m_NewTemplateName.IsEmpty())
+		{
+			transfer.save(m_NewTemplateName);
+			m_CurrentTemplate = m_NewTemplateName;
+		}
+
+		this->SendMessage(WM_PAINT);
+	}
+	
+}
+
+void CDataTransferToolDlg::OnButtonNewField() 
+{
+	// TODO: Add your control notification handler code here
+	int newItemNo = m_FiledList.GetItemCount(); // 在最后插入
+	CFieldConfigDialog dialog;
+	dialog.DoModal();
+	transfer.AddRule(m_TempRule);
+	this->SendMessage(WM_PAINT);
+}
+
+void CDataTransferToolDlg::OnButtonModifyField() 
+{
+	// TODO: Add your control notification handler code here
+	CFieldConfigDialog dialog;
+	
+	for(int i=0; i<m_FiledList.GetItemCount(); i++)
+	{
+		if(m_FiledList.GetItemState(i, LVIS_SELECTED) == LVIS_SELECTED )
+		{
+			TransferRule rule;
+			CString startType = m_FiledList.GetItemText(i, 0);
+			CString startData = m_FiledList.GetItemText(i, 1);
+			CString endType = m_FiledList.GetItemText(i, 2);
+			CString endData = m_FiledList.GetItemText(i, 3);
+			CString tag = m_FiledList.GetItemText(i, 4);
+			rule.SetStart(startType, startData);
+			rule.SetEnd(endType, endData);
+			rule.SetTag(tag);
+			transfer.DelRule(rule); // 删除原有的字段
+
+			dialog.m_StartType = startType;
+			dialog.m_StartData = startData;
+			dialog.m_EndType = endType;
+			dialog.m_EndData = endData;
+			dialog.m_Tag = tag;
+			dialog.DoModal();
+			transfer.AddRule(m_TempRule);
+			this->SendMessage(WM_PAINT);
+		}
+	}
+	
+}
+
+void CDataTransferToolDlg::OnButtonDelField() 
+{
+	// 删除字段配置中的所选行
+	for(int i=0; i<m_FiledList.GetItemCount(); i++)
+	{
+		if(m_FiledList.GetItemState(i, LVIS_SELECTED) == LVIS_SELECTED )
+		{
+			TransferRule rule;
+			CString startType = m_FiledList.GetItemText(i, 0);
+			CString startData = m_FiledList.GetItemText(i, 1);
+			CString endType = m_FiledList.GetItemText(i, 2);
+			CString endData = m_FiledList.GetItemText(i, 3);
+			CString tag = m_FiledList.GetItemText(i, 4);
+			rule.SetStart(startType, startData);
+			rule.SetEnd(endType, endData);
+			rule.SetTag(tag);
+			if(MessageBox("确认删除?", "操作提示", MB_YESNO | MB_ICONQUESTION) == IDYES)
+			{
+				transfer.DelRule(rule);
+				//m_FiledList.DeleteItem(i); // 删除GUI上的项
+			}
+			break;
+		}
+	}
+	this->SendMessage(WM_PAINT);
+}
+
+void CDataTransferToolDlg::OnButtonSaveTemplate() 
+{
+	// 保存当前模板
+	if (!m_CurrentTemplate.IsEmpty())
+	{
+		transfer.save(m_CurrentTemplate);
+		AfxMessageBox("保存成功");
+	}
+	else
+	{
+		AfxMessageBox("请先加载模板!");
+	}
+	
+	this->SendMessage(WM_PAINT);
 }

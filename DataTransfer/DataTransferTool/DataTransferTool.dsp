@@ -106,8 +106,16 @@ SOURCE=.\DataTransferToolDlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\FieldConfigDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\TemplateNameDialog.cpp
 # End Source File
 # Begin Source File
 
@@ -131,6 +139,10 @@ SOURCE=.\DataTransferToolDlg.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\FieldConfigDialog.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Resource.h
 # End Source File
 # Begin Source File
@@ -140,6 +152,10 @@ SOURCE=.\sqlite3.h
 # Begin Source File
 
 SOURCE=.\StdAfx.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TemplateNameDialog.h
 # End Source File
 # Begin Source File
 

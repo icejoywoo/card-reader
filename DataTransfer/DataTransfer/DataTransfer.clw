@@ -13,9 +13,9 @@ Class2=CDataTransferDlg
 Class3=CAboutDlg
 
 ResourceCount=3
-Resource1=IDD_ABOUTBOX
+Resource1=IDD_DATATRANSFER_DIALOG
 Resource2=IDR_MAINFRAME
-Resource3=IDD_DATATRANSFER_DIALOG
+Resource3=IDD_ABOUTBOX
 
 [CLS:CDataTransferApp]
 Type=0

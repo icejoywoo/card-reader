@@ -2,6 +2,7 @@
        MICROSOFT FOUNDATION CLASS LIBRARY : DataTransferTool
 ========================================================================
 
+数据配置文件在程序所在目录的
 
 AppWizard has created this DataTransferTool application for you.  This application
 not only demonstrates the basics of using the Microsoft Foundation classes
