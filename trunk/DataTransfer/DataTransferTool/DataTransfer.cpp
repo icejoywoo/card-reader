@@ -3,6 +3,7 @@
 #include "Utils.h"
 #include <direct.h>
 #include <algorithm>
+#include "DataTransferToolDlg.h"
 
 using namespace std;
 
@@ -348,6 +349,7 @@ void DataTransfer::HandleFile(const char* filename, const char* dirname /* = NUL
 		CString line;
 		int lineNo = 0; // 行号
 		int fileNo = 0; // 文件超过10000行, 会被分割
+
 		while (file.ReadString(line))
 		{
 			++lineNo;
@@ -365,6 +367,7 @@ void DataTransfer::HandleFile(const char* filename, const char* dirname /* = NUL
 			}
 			CString result;
 			CString temp;
+			
 
 			for (vector<TransferRule>::iterator iter = rules.begin();
 				iter != rules.end(); ++iter)

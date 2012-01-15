@@ -15,11 +15,11 @@ Class3=CAboutDlg
 ResourceCount=4
 Resource1=IDR_MAINFRAME
 Class4=TargetFileChooseDialog
-Resource2=IDD_DIALOG_TEMPLATE_NAME
+Resource2=IDD_DIALOG_FIELD_CONFIG
 Class5=CTemplateNameDialog
-Resource3=IDD_DATATRANSFERTOOL_DIALOG
+Resource3=IDD_DIALOG_TEMPLATE_NAME
 Class6=CFieldConfigDialog
-Resource4=IDD_DIALOG_FIELD_CONFIG
+Resource4=IDD_DATATRANSFERTOOL_DIALOG
 
 [CLS:CDataTransferToolApp]
 Type=0
@@ -34,7 +34,7 @@ ImplementationFile=DataTransferToolDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=IDC_BUTTON_SAVEAS_TEMPLATE
+LastObject=CDataTransferToolDlg
 
 [CLS:CAboutDlg]
 Type=0
