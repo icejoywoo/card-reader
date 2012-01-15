@@ -304,9 +304,9 @@ void DataTransfer::AddRule(TransferRule& rule)
 void DataTransfer::DelRule(TransferRule& rule)
 {
 	// É¾³ýÖ¸¶¨ÔªËØ
-	remove(rules.begin(), rules.end(), rule); 
+//	remove(rules.begin(), rules.end(), rule); 
 	for (vector<TransferRule>::iterator iter = rules.begin();
-		iter != rules.end(); )
+		iter != rules.end(); ++iter)
 	{
 		if ((*iter) == rule)
 		{

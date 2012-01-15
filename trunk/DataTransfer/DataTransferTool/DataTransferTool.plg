@@ -6,19 +6,13 @@
 --------------------Configuration: DataTransferTool - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating command line "rc.exe /l 0x804 /fo"Debug/DataTransferTool.res" /d "_DEBUG" /d "_AFXDLL" "F:\MingSen\card-reader\DataTransfer\DataTransferTool\DataTransferTool.rc"" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP95CC.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPDEF3.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/DataTransferTool.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
 "F:\MingSen\card-reader\DataTransfer\DataTransferTool\DataTransfer.cpp"
-"F:\MingSen\card-reader\DataTransfer\DataTransferTool\DataTransferTool.cpp"
-"F:\MingSen\card-reader\DataTransfer\DataTransferTool\DataTransferToolDlg.cpp"
-"F:\MingSen\card-reader\DataTransfer\DataTransferTool\FieldConfigDialog.cpp"
-"F:\MingSen\card-reader\DataTransfer\DataTransferTool\TemplateNameDialog.cpp"
-"F:\MingSen\card-reader\DataTransfer\DataTransferTool\Utils.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP95CC.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP95CD.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPDEF3.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPDEF4.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/DataTransferTool.pdb" /debug /machine:I386 /out:"Debug/DataTransferTool.exe" /pdbtype:sept 
 ".\Debug\DataTransfer.obj"
@@ -30,22 +24,12 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP95CD.tmp" with 
 ".\Debug\Utils.obj"
 ".\Debug\DataTransferTool.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP95CD.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPDEF4.tmp"
 <h3>Output Window</h3>
-Compiling resources...
 Compiling...
-DataTransferToolDlg.cpp
-F:\MingSen\card-reader\DataTransfer\DataTransferTool\DataTransferToolDlg.cpp(309) : warning C4101: 'i' : unreferenced local variable
-Generating Code...
-Compiling...
-DataTransferTool.cpp
-Utils.cpp
-Generating Code...
-F:\MingSen\card-reader\DataTransfer\DataTransferTool\Utils.cpp(44) : warning C4700: local variable 'pTargetData' used without having been initialized
-Skipping... (no relevant changes detected)
 DataTransfer.cpp
-FieldConfigDialog.cpp
-TemplateNameDialog.cpp
+F:\MingSen\card-reader\DataTransfer\DataTransferTool\DataTransfer.cpp(385) : warning C4101: 'e' : unreferenced local variable
+F:\MingSen\card-reader\DataTransfer\DataTransferTool\DataTransfer.cpp(422) : warning C4101: 'e' : unreferenced local variable
 Linking...
 Creating command line "bscmake.exe /nologo /o"Debug/DataTransferTool.bsc"  ".\Debug\StdAfx.sbr" ".\Debug\DataTransfer.sbr" ".\Debug\DataTransferTool.sbr" ".\Debug\DataTransferToolDlg.sbr" ".\Debug\FieldConfigDialog.sbr" ".\Debug\TemplateNameDialog.sbr" ".\Debug\Utils.sbr""
 Creating browse info file...
