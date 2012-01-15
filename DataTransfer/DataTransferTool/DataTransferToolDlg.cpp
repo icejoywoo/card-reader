@@ -298,11 +298,24 @@ void CDataTransferToolDlg::OnButtonStartTransfer()
 
 	CString message;
 	message.Format("加载模板: <[%s]>, 是否确认开始转换?", m_CurrentTemplate);
+	CWinThread* thread;
 	if(MessageBox(message, "信息确认", MB_YESNO | MB_ICONQUESTION) == IDYES)
 	{
-		AfxBeginThread(DataTransferThread, (LPVOID) this);
+		thread = ::AfxBeginThread(DataTransferThread, (LPVOID) this);
 	}
-
+	// 改为等待状态
+	SetCursor(AfxGetApp()->LoadStandardCursor(IDC_WAIT));
+	(CButton*)GetDlgItem(IDC_BUTTON_START_TRANSFER)->EnableWindow(FALSE);
+	int i;
+	while (WAIT_OBJECT_0 == WaitForSingleObject(thread->m_hThread, INFINITE))
+	{
+		::Sleep(100);
+	}
+	AfxMessageBox("数据转换完成!");
+	// 回复为标准状态
+	SetCursor(AfxGetApp()->LoadStandardCursor(IDC_ARROW));
+	(CButton*)GetDlgItem(IDC_BUTTON_START_TRANSFER)->EnableWindow(TRUE);
+	
 //	this->SendMessage(WM_PAINT);
 	UpdateData(FALSE);
 	//(CButton*)GetDlgItem(IDC_BUTTON)->EnableWindow(FALSE);

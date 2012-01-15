@@ -23,7 +23,6 @@ UINT DataTransferThread(LPVOID pParam)
 	transfer.load(mainFrame->m_CurrentTemplate);
 	transfer.Handle(mainFrame->m_TargetToTransfer);
 	
-	AfxMessageBox("数据转换完成!");
 	return 0;
 }
 
