@@ -34,6 +34,7 @@ public:
 
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDataTransferToolDlg)
+	public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 	//}}AFX_VIRTUAL
@@ -62,6 +63,7 @@ protected:
 	afx_msg void OnButtonDelField();
 	afx_msg void OnButtonSaveTemplate();
 	afx_msg void OnButtonAbout();
+	afx_msg void OnClose();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
