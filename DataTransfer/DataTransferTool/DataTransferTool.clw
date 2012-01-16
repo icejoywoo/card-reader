@@ -12,14 +12,15 @@ Class1=CDataTransferToolApp
 Class2=CDataTransferToolDlg
 Class3=CAboutDlg
 
-ResourceCount=4
+ResourceCount=5
 Resource1=IDR_MAINFRAME
 Class4=TargetFileChooseDialog
-Resource2=IDD_DIALOG_TEMPLATE_NAME
+Resource2=IDD_DIALOG_FIELD_CONFIG
 Class5=CTemplateNameDialog
-Resource3=IDD_DATATRANSFERTOOL_DIALOG
+Resource3=IDD_DIALOG_TEMPLATE_NAME
 Class6=CFieldConfigDialog
-Resource4=IDD_DIALOG_FIELD_CONFIG
+Resource4=IDD_DATATRANSFERTOOL_DIALOG
+Resource5=IDD_ABOUTBOX
 
 [CLS:CDataTransferToolApp]
 Type=0
@@ -45,7 +46,7 @@ Filter=D
 [DLG:IDD_DATATRANSFERTOOL_DIALOG]
 Type=1
 Class=CDataTransferToolDlg
-ControlCount=21
+ControlCount=22
 Control1=IDC_LIST_TEMPLATES,SysListView32,1350631433
 Control2=IDC_STATIC,button,1342178055
 Control3=IDC_STATIC,button,1342178055
@@ -67,6 +68,7 @@ Control18=IDC_EDIT_CURRENT_TEMPLATE,edit,1484849280
 Control19=IDC_BUTTON_CHOOSE_DIR,button,1342242816
 Control20=IDC_BUTTON_SAVEAS_TEMPLATE,button,1342242816
 Control21=IDC_BUTTON_SAVE_TEMPLATE1,button,1342242816
+Control22=IDC_BUTTON_ABOUT,button,1342242816
 
 [CLS:TargetFileChooseDialog]
 Type=0
@@ -118,4 +120,12 @@ BaseClass=CDialog
 Filter=D
 LastObject=IDC_EDIT_END_DATA
 VirtualFilter=dWC
+
+[DLG:IDD_ABOUTBOX]
+Type=1
+Class=?
+ControlCount=3
+Control1=IDC_STATIC,static,1342177283
+Control2=IDC_STATIC,static,1342308876
+Control3=IDC_STATIC,static,1342308352
 

@@ -61,6 +61,7 @@ protected:
 	afx_msg void OnButtonModifyField();
 	afx_msg void OnButtonDelField();
 	afx_msg void OnButtonSaveTemplate();
+	afx_msg void OnButtonAbout();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
