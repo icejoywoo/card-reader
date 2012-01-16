@@ -119,6 +119,10 @@ SOURCE=.\TemplateNameDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TransferingDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Utils.cpp
 # End Source File
 # End Group
@@ -156,6 +160,10 @@ SOURCE=.\StdAfx.h
 # Begin Source File
 
 SOURCE=.\TemplateNameDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TransferingDialog.h
 # End Source File
 # Begin Source File
 

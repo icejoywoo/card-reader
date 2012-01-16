@@ -78,7 +78,7 @@ STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION |
     WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "明森HDP5000 Goldpac数据转换工具 "
-FONT 9, "宋体"
+FONT 9, "宋体", 0, 0, 0x1
 BEGIN
     CONTROL         "List2",IDC_LIST_TEMPLATES,"SysListView32",LVS_REPORT | 
                     LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,18,53,74,145
@@ -143,7 +143,7 @@ END
 IDD_ABOUTBOX DIALOGEX 0, 0, 179, 49
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "关于"
-FONT 10, "System"
+FONT 10, "System", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,9,7,16,16
     CONTROL         "明森数据转换工具 v1.0",IDC_STATIC,"Static",
@@ -151,6 +151,13 @@ BEGIN
                     WS_EX_TRANSPARENT
     LTEXT           "广州明森机电设备有限公司 版权所有 (C) 2012",IDC_STATIC,
                     9,30,160,8
+END
+
+IDD_DIALOG_TRANSFERING DIALOG DISCARDABLE  0, 0, 159, 46
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP
+FONT 10, "System"
+BEGIN
+    LTEXT           "正在进行数据转换处理...",IDC_STATIC,36,19,87,8
 END
 
 
@@ -228,6 +235,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 122
     END
+
+    IDD_DIALOG_TRANSFERING, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 152
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 39
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -289,3 +304,4 @@ LANGUAGE 4, 2
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+
