@@ -2,25 +2,27 @@
 
 [General Info]
 Version=1
-LastClass=CDataTransferToolDlg
+LastClass=CTransferingDialog
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "DataTransferTool.h"
 
-ClassCount=6
+ClassCount=7
 Class1=CDataTransferToolApp
 Class2=CDataTransferToolDlg
 Class3=CAboutDlg
 
-ResourceCount=5
+ResourceCount=6
 Resource1=IDR_MAINFRAME
 Class4=TargetFileChooseDialog
-Resource2=IDD_DATATRANSFERTOOL_DIALOG
+Resource2=IDD_DIALOG_TEMPLATE_NAME
 Class5=CTemplateNameDialog
-Resource3=IDD_DIALOG_FIELD_CONFIG
+Resource3=IDD_ABOUTBOX
 Class6=CFieldConfigDialog
-Resource4=IDD_DIALOG_TEMPLATE_NAME
-Resource5=IDD_ABOUTBOX
+Resource4=IDD_DIALOG_FIELD_CONFIG
+Resource5=IDD_DATATRANSFERTOOL_DIALOG
+Class7=CTransferingDialog
+Resource6=IDD_DIALOG_TRANSFERING
 
 [CLS:CDataTransferToolApp]
 Type=0
@@ -128,4 +130,19 @@ ControlCount=3
 Control1=IDC_STATIC,static,1342177283
 Control2=IDC_STATIC,static,1342308876
 Control3=IDC_STATIC,static,1342308352
+
+[DLG:IDD_DIALOG_TRANSFERING]
+Type=1
+Class=CTransferingDialog
+ControlCount=1
+Control1=IDC_STATIC,static,1342308352
+
+[CLS:CTransferingDialog]
+Type=0
+HeaderFile=TransferingDialog.h
+ImplementationFile=TransferingDialog.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=CTransferingDialog
+VirtualFilter=dWC
 

@@ -8,6 +8,7 @@
 #include "Utils.h"
 #include "TemplateNameDialog.h"
 #include "FieldConfigDialog.h"
+#include "TransferingDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -300,19 +301,29 @@ void CDataTransferToolDlg::OnButtonStartTransfer()
 	if(MessageBox(message, "信息确认", MB_YESNO | MB_ICONQUESTION) == IDYES)
 	{
 		thread = ::AfxBeginThread(DataTransferThread, (LPVOID) this);
+
+		// 改为等待状态
+		SetCursor(AfxGetApp()->LoadStandardCursor(IDC_WAIT));
+		(CButton*)GetDlgItem(IDC_BUTTON_START_TRANSFER)->EnableWindow(FALSE);
+
+		CTransferingDialog dialog(this);
+		dialog.Create(IDD_DIALOG_TRANSFERING, this);
+		dialog.ShowWindow(SW_SHOWNORMAL);
+		dialog.UpdateWindow();
+		
+		// 等待处理完成
+		while (WAIT_OBJECT_0 == WaitForSingleObject(thread->m_hThread, INFINITE))
+		{
+			::Sleep(100);
+		}
+		
+		dialog.ShowWindow(SW_HIDE);
+		AfxMessageBox("数据转换完成!");
+
+		// 回复为标准状态
+		SetCursor(AfxGetApp()->LoadStandardCursor(IDC_ARROW));
+		(CButton*)GetDlgItem(IDC_BUTTON_START_TRANSFER)->EnableWindow(TRUE);
 	}
-	// 改为等待状态
-	SetCursor(AfxGetApp()->LoadStandardCursor(IDC_WAIT));
-	(CButton*)GetDlgItem(IDC_BUTTON_START_TRANSFER)->EnableWindow(FALSE);
-	while (WAIT_OBJECT_0 == WaitForSingleObject(thread->m_hThread, INFINITE))
-	{
-		::Sleep(100);
-	}
-	AfxMessageBox("数据转换完成!");
-	// 回复为标准状态
-	SetCursor(AfxGetApp()->LoadStandardCursor(IDC_ARROW));
-	(CButton*)GetDlgItem(IDC_BUTTON_START_TRANSFER)->EnableWindow(TRUE);
-	
 //	this->SendMessage(WM_PAINT);
 	UpdateData(FALSE);
 	this->SendMessage(WM_PAINT);
