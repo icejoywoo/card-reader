@@ -103,6 +103,7 @@ BEGIN_MESSAGE_MAP(CDataTransferToolDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_MODIFY_FIELD, OnButtonModifyField)
 	ON_BN_CLICKED(IDC_BUTTON_DEL_FIELD, OnButtonDelField)
 	ON_BN_CLICKED(IDC_BUTTON_SAVE_TEMPLATE1, OnButtonSaveTemplate)
+	ON_BN_CLICKED(IDC_BUTTON_ABOUT, OnButtonAbout)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -248,7 +249,7 @@ void CDataTransferToolDlg::OnButtonChooseTargetFile()
 	UpdateData(TRUE);
 	m_TargetToTransfer = chooser.GetPathName();
 	UpdateData(FALSE);
-	UpdateWindow();
+	this->SendMessage(WM_PAINT);
 }
 
 void CDataTransferToolDlg::OnButtonChooseDir() 
@@ -276,7 +277,7 @@ void CDataTransferToolDlg::OnButtonChooseDir()
 		UpdateData(FALSE);
 	}
 
-	UpdateWindow();
+	this->SendMessage(WM_PAINT);
 }
 
 void CDataTransferToolDlg::OnButtonStartTransfer() 
@@ -318,7 +319,7 @@ void CDataTransferToolDlg::OnButtonStartTransfer()
 	
 //	this->SendMessage(WM_PAINT);
 	UpdateData(FALSE);
-	UpdateWindow();
+	this->SendMessage(WM_PAINT);
 	//(CButton*)GetDlgItem(IDC_BUTTON)->EnableWindow(FALSE);
 	//m_StartButton.EnableWindow(FALSE);
 }
@@ -360,7 +361,7 @@ void CDataTransferToolDlg::OnButtonApplyTemplate()
 		m_FiledList.SetItemText(itemNo, 3, rule.GetEndData());
 		m_FiledList.SetItemText(itemNo, 4, rule.GetTag());
 	}
-	UpdateWindow();
+	this->SendMessage(WM_PAINT);
 	UpdateData(FALSE);
 }
 
@@ -380,7 +381,7 @@ void CDataTransferToolDlg::OnButtonDelTemplate()
 			break;
 		}
 	}
-	UpdateWindow();
+	this->SendMessage(WM_PAINT);
 }
 
 void CDataTransferToolDlg::OnButtonNewTemplate() 
@@ -388,7 +389,7 @@ void CDataTransferToolDlg::OnButtonNewTemplate()
 	// 新建模板
 	m_FiledList.DeleteAllItems();
 	transfer.ClearRules();
-	UpdateWindow();
+	this->SendMessage(WM_PAINT);
 }
 
 void CDataTransferToolDlg::OnButtonSaveAsTemplate() 
@@ -423,7 +424,7 @@ void CDataTransferToolDlg::OnButtonSaveAsTemplate()
 			m_CurrentTemplate = m_NewTemplateName;
 		}
 
-		UpdateWindow();
+		this->SendMessage(WM_PAINT);
 	}
 	
 }
@@ -435,7 +436,7 @@ void CDataTransferToolDlg::OnButtonNewField()
 	CFieldConfigDialog dialog;
 	dialog.DoModal();
 	transfer.AddRule(m_TempRule);
-	UpdateWindow();
+	this->SendMessage(WM_PAINT);
 }
 
 void CDataTransferToolDlg::OnButtonModifyField() 
@@ -466,7 +467,7 @@ void CDataTransferToolDlg::OnButtonModifyField()
 			dialog.DoModal();
 			transfer.AddRule(m_TempRule);
 			AfxMessageBox("修改完成, 请点击<保存当前模板>来保存!");
-			UpdateWindow();
+			this->SendMessage(WM_PAINT);
 			break;
 		}
 	}
@@ -498,7 +499,7 @@ void CDataTransferToolDlg::OnButtonDelField()
 			break;
 		}
 	}
-	UpdateWindow();
+	this->SendMessage(WM_PAINT);
 }
 
 void CDataTransferToolDlg::OnButtonSaveTemplate() 
@@ -514,5 +515,11 @@ void CDataTransferToolDlg::OnButtonSaveTemplate()
 		AfxMessageBox("请先加载模板!");
 	}
 	
-	UpdateWindow();
+	this->SendMessage(WM_PAINT);
+}
+
+void CDataTransferToolDlg::OnButtonAbout() 
+{
+	CAboutDlg dialog;
+	dialog.DoModal();
 }

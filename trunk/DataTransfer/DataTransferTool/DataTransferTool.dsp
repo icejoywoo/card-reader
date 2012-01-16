@@ -176,6 +176,10 @@ SOURCE=.\res\DataTransferTool.rc2
 # End Group
 # Begin Source File
 
+SOURCE=.\DataTransferTool.manifest
+# End Source File
+# Begin Source File
+
 SOURCE=.\ReadMe.txt
 # End Source File
 # End Target
