@@ -104,6 +104,7 @@ BEGIN_MESSAGE_MAP(CDataTransferToolDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_DEL_FIELD, OnButtonDelField)
 	ON_BN_CLICKED(IDC_BUTTON_SAVE_TEMPLATE1, OnButtonSaveTemplate)
 	ON_BN_CLICKED(IDC_BUTTON_ABOUT, OnButtonAbout)
+	ON_WM_CLOSE()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -233,11 +234,7 @@ HCURSOR CDataTransferToolDlg::OnQueryDragIcon()
 void CDataTransferToolDlg::OnButtonExit() 
 {
 	// 退出
-	if(MessageBox("确认退出?", "操作提示", MB_YESNO | MB_ICONQUESTION) == IDYES)
-	{
-		this->SendMessage(WM_CLOSE);
-		//::PostMessage(this->GetSafeHwnd(), WM_CLOSE, NULL, NULL);
-	}
+	this->SendMessage(WM_CLOSE);
 }
 
 void CDataTransferToolDlg::OnButtonChooseTargetFile() 
@@ -307,7 +304,6 @@ void CDataTransferToolDlg::OnButtonStartTransfer()
 	// 改为等待状态
 	SetCursor(AfxGetApp()->LoadStandardCursor(IDC_WAIT));
 	(CButton*)GetDlgItem(IDC_BUTTON_START_TRANSFER)->EnableWindow(FALSE);
-	int i;
 	while (WAIT_OBJECT_0 == WaitForSingleObject(thread->m_hThread, INFINITE))
 	{
 		::Sleep(100);
@@ -522,4 +518,15 @@ void CDataTransferToolDlg::OnButtonAbout()
 {
 	CAboutDlg dialog;
 	dialog.DoModal();
+}
+
+
+void CDataTransferToolDlg::OnClose() 
+{
+	// 关闭前提示保存
+	
+	if (MessageBox("请确保在退出前保存模板, 确定退出?", "退出提示",MB_YESNO | MB_ICONQUESTION) == IDYES)
+	{
+		CDialog::OnClose();
+	} 
 }
