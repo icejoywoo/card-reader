@@ -41,13 +41,14 @@ CDataTransferToolApp theApp;
 
 BOOL CDataTransferToolApp::InitInstance()
 {
+	skinppLoadSkin("xp_corona.ssk"); // º”‘ÿ∆§∑Ù
 	AfxEnableControlContainer();
 
 	// Standard initialization
 	// If you are not using these features and wish to reduce the size
 	//  of your final executable, you should remove from the following
 	//  the specific initialization routines you do not need.
-
+	
 #ifdef _AFXDLL
 	Enable3dControls();			// Call this when using MFC in a shared DLL
 #else
@@ -71,4 +72,10 @@ BOOL CDataTransferToolApp::InitInstance()
 	// Since the dialog has been closed, return FALSE so that we exit the
 	//  application, rather than start the application's message pump.
 	return FALSE;
+}
+
+int CDataTransferToolApp::ExitInstance() 
+{
+	skinppExitSkin(); // –∂‘ÿ∆§∑Ù
+	return CWinApp::ExitInstance();
 }

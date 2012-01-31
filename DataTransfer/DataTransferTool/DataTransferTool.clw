@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CTransferingDialog
+LastClass=CDataTransferToolApp
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "DataTransferTool.h"
@@ -29,6 +29,9 @@ Type=0
 HeaderFile=DataTransferTool.h
 ImplementationFile=DataTransferTool.cpp
 Filter=N
+LastObject=CDataTransferToolApp
+BaseClass=CWinApp
+VirtualFilter=AC
 
 [CLS:CDataTransferToolDlg]
 Type=0
