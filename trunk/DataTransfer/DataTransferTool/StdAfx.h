@@ -20,6 +20,9 @@
 #include <afxcmn.h>			// MFC support for Windows Common Controls
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
+#include "SkinPPWTL.h"
+#pragma comment(lib, "SkinPPWTL.lib")
+
 #include "sqlite3.h"
 #pragma comment(lib, "sqlite3.lib")
 

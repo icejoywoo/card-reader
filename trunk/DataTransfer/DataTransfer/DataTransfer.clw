@@ -28,7 +28,7 @@ Type=0
 HeaderFile=DataTransferDlg.h
 ImplementationFile=DataTransferDlg.cpp
 Filter=D
-LastObject=IDC_LIST1
+LastObject=IDC_BUTTON1
 
 [CLS:CAboutDlg]
 Type=0
