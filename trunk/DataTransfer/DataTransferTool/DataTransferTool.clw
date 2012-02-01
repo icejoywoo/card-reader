@@ -15,12 +15,12 @@ Class3=CAboutDlg
 ResourceCount=6
 Resource1=IDR_MAINFRAME
 Class4=TargetFileChooseDialog
-Resource2=IDD_DIALOG_TEMPLATE_NAME
+Resource2=IDD_DIALOG_FIELD_CONFIG
 Class5=CTemplateNameDialog
-Resource3=IDD_ABOUTBOX
+Resource3=IDD_DATATRANSFERTOOL_DIALOG
 Class6=CFieldConfigDialog
-Resource4=IDD_DIALOG_FIELD_CONFIG
-Resource5=IDD_DATATRANSFERTOOL_DIALOG
+Resource4=IDD_DIALOG_TEMPLATE_NAME
+Resource5=IDD_ABOUTBOX
 Class7=CTransferingDialog
 Resource6=IDD_DIALOG_TRANSFERING
 

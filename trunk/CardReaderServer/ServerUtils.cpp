@@ -27,19 +27,21 @@ int parseCommand(Client* client, int readerId, char* command, string& operationN
 	Communicator communicator; // 与读卡器通信的通信
 
 	// readerId的含义, 表示读卡器相应的com号
-// 	if (GetOneCOMCommunicator(communicator, readerId) != 0) // 获取通信器, 第二个参数与
-// 	{
-// 		SimpleLog::error("通信器初始化失败");
-// 		return GET_COMMUNICATOR_FAILED;
-// 	}
-	// TODO: 测试使用, 使用udp通信器
-	const char* dstIP = "192.168.1.138";
-	int port = 10000 + readerId;
-	if (GetOneUDPCommunicator(communicator, dstIP, port) != 0)// 获取通信器, 第二个参数与
+	if (GetOneCOMCommunicator(communicator, readerId) != 0) // 获取通信器, 第二个参数与
 	{
-		SimpleLog::error("通信器初始化失败");
+		sprintf(log, "[读卡器 %d]通信器初始化失败", readerId);
+		SimpleLog::error(log);
 		return GET_COMMUNICATOR_FAILED;
 	}
+	// TODO: 测试使用, 使用udp通信器
+// 	const char* dstIP = "192.168.1.138";
+// 	int port = 10000 + readerId;
+// 	if (GetOneUDPCommunicator(communicator, dstIP, port) != 0)// 获取通信器, 第二个参数与
+// 	{
+// 		sprintf(log, "[读卡器 %d]通信器初始化失败", readerId);
+// 		SimpleLog::error(log);
+// 		return GET_COMMUNICATOR_FAILED;
+// 	}
 	sprintf(log, "[读卡器 %d]通信器初始化完成", readerId);
 	SimpleLog::info(log);
 
