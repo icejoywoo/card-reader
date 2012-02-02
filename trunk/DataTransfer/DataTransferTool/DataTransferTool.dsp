@@ -151,6 +151,10 @@ SOURCE=.\Resource.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\SkinPlusPlus.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\sqlite3.h
 # End Source File
 # Begin Source File
