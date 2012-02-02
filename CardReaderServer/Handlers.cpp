@@ -38,11 +38,11 @@ UINT defaultServerHandler(LPVOID pParam)
 	Server* serv = (Server*) pParam;
 
 	// TODO: 初始化读卡器(用udp测试的时候使用, 应该使用com串口方式访问)
-	if (InitUDPComm() == -1) {
-		AfxMessageBox("与卡片读写器的通信初始化失败");
-		SimpleLog::error("与卡片读写器的通信初始化失败");
-		return INIT_FAILED; // 与卡片读写器的通信初始化失败
-	}
+// 	if (InitUDPComm() == -1) {
+// 		AfxMessageBox("与卡片读写器的通信初始化失败");
+// 		SimpleLog::error("与卡片读写器的通信初始化失败");
+// 		return INIT_FAILED; // 与卡片读写器的通信初始化失败
+// 	}
 	
 	// 对读卡器的访问控制, 在服务器启动的时候进行初始化设置
 	for (set<int>::iterator iter = ServerParam::instance->readerIdSet.begin(); 

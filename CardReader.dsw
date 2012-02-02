@@ -63,6 +63,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "SmartCommDemo"=".\SmartCommDemo\SmartCommDemo.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "UnitTest"=".\UnitTest\UnitTest.dsp" - Package Owner=<4>
 
 Package=<5>

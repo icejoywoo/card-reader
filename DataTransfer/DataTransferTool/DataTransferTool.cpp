@@ -41,7 +41,7 @@ CDataTransferToolApp theApp;
 
 BOOL CDataTransferToolApp::InitInstance()
 {
-	skinppLoadSkin("xp_corona.ssk"); // º”‘ÿ∆§∑Ù
+	InitializeSkin("XPCorona.ssk"); // º”‘ÿ∆§∑Ù
 	AfxEnableControlContainer();
 
 	// Standard initialization
@@ -76,6 +76,6 @@ BOOL CDataTransferToolApp::InitInstance()
 
 int CDataTransferToolApp::ExitInstance() 
 {
-	skinppExitSkin(); // –∂‘ÿ∆§∑Ù
+	ExitSkin(); // –∂‘ÿ∆§∑Ù
 	return CWinApp::ExitInstance();
 }
