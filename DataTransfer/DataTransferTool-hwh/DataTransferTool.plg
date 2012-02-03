@@ -1,0 +1,65 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: DataTransferTool - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPDA4E.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Release/DataTransferTool.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Users\icejoywoo\Desktop\复件 DataTransferTool\DataTransfer.cpp"
+"C:\Users\icejoywoo\Desktop\复件 DataTransferTool\DataTransferTool.cpp"
+"C:\Users\icejoywoo\Desktop\复件 DataTransferTool\DataTransferToolDlg.cpp"
+"C:\Users\icejoywoo\Desktop\复件 DataTransferTool\FieldConfigDialog.cpp"
+"C:\Users\icejoywoo\Desktop\复件 DataTransferTool\TemplateNameDialog.cpp"
+"C:\Users\icejoywoo\Desktop\复件 DataTransferTool\TransferingDialog.cpp"
+"C:\Users\icejoywoo\Desktop\复件 DataTransferTool\Utils.cpp"
+]
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPDA4E.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPDA8D.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Release/DataTransferTool.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Users\icejoywoo\Desktop\复件 DataTransferTool\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPDA8D.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPDA9E.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"Release/DataTransferTool.pdb" /machine:I386 /out:"Release/DataTransferTool.exe" 
+".\Release\DataTransfer.obj"
+".\Release\DataTransferTool.obj"
+".\Release\DataTransferToolDlg.obj"
+".\Release\FieldConfigDialog.obj"
+".\Release\StdAfx.obj"
+".\Release\TemplateNameDialog.obj"
+".\Release\TransferingDialog.obj"
+".\Release\Utils.obj"
+".\Release\DataTransferTool.res"
+]
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPDA9E.tmp"
+<h3>Output Window</h3>
+Compiling...
+StdAfx.cpp
+Automatically linking with SkinPlusPlusDLL.dll
+Compiling...
+DataTransfer.cpp
+C:\Users\icejoywoo\Desktop\复件 DataTransferTool\DataTransfer.cpp(385) : warning C4101: 'e' : unreferenced local variable
+C:\Users\icejoywoo\Desktop\复件 DataTransferTool\DataTransfer.cpp(422) : warning C4101: 'e' : unreferenced local variable
+DataTransferTool.cpp
+DataTransferToolDlg.cpp
+FieldConfigDialog.cpp
+TemplateNameDialog.cpp
+TransferingDialog.cpp
+Utils.cpp
+Generating Code...
+C:\Users\icejoywoo\Desktop\复件 DataTransferTool\Utils.cpp(44) : warning C4700: local variable 'pTargetData' used without having been initialized
+Linking...
+
+
+
+<h3>Results</h3>
+DataTransferTool.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
