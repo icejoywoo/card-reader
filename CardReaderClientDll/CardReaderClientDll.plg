@@ -3,31 +3,45 @@
 <pre>
 <h1>Build Log</h1>
 <h3>
---------------------Configuration: CardReaderClientDll - Win32 Debug--------------------
+--------------------Configuration: CardReaderClientDll - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP99B3.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8611.tmp" with contents
 [
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CARDREADERCLIENTDLL_EXPORTS" /D "SMARTCOMSTRING_EXPORTS_MACRO" /D "_WINDLL" /D "_AFXDLL" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"F:\Ã÷É­\card-reader\CardReaderClientDll\CardReaderClientDll.cpp"
+/nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CARDREADERCLIENTDLL_EXPORTS" /D "SMARTCOMSTRING_EXPORTS_MACRO" /Fp"Release/CardReaderClientDll.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"F:\MingSen\card-reader\CardReaderClientDll\CardReaderClientDll.cpp"
+"F:\MingSen\card-reader\CardReaderClientDll\ClientParam.cpp"
+"F:\MingSen\card-reader\CardReaderClientDll\ClientUtils.cpp"
+"F:\MingSen\card-reader\CardReaderClientDll\SmartComString.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP99B3.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP99B4.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8611.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8622.tmp" with contents
 [
-/nologo /dll /incremental:yes /pdb:"Debug/CardReaderClientDll.pdb" /debug /machine:I386 /out:"Debug/CardReaderClientDll.dll" /implib:"Debug/CardReaderClientDll.lib" /pdbtype:sept 
-".\Debug\CardReaderClientDll.obj"
-".\Debug\ClientParam.obj"
-".\Debug\ClientUtils.obj"
-".\Debug\SmartComString.obj"
-".\Debug\StdAfx.obj"
+/nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CARDREADERCLIENTDLL_EXPORTS" /D "SMARTCOMSTRING_EXPORTS_MACRO" /Fp"Release/CardReaderClientDll.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"F:\MingSen\card-reader\CardReaderClientDll\StdAfx.cpp"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP99B4.tmp"
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8622.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8623.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:no /pdb:"Release/CardReaderClientDll.pdb" /machine:I386 /out:"Release/CardReaderClientDll.dll" /implib:"Release/CardReaderClientDll.lib" 
+".\Release\CardReaderClientDll.obj"
+".\Release\ClientParam.obj"
+".\Release\ClientUtils.obj"
+".\Release\SmartComString.obj"
+".\Release\StdAfx.obj"
+]
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8623.tmp"
 <h3>Output Window</h3>
 Compiling...
+StdAfx.cpp
+Compiling...
 CardReaderClientDll.cpp
+ClientParam.cpp
+ClientUtils.cpp
+SmartComString.cpp
+Generating Code...
 Linking...
-LINK : LNK6004: Debug/CardReaderClientDll.dll not found or not built by the last incremental link; performing full link
-   Creating library Debug/CardReaderClientDll.lib and object Debug/CardReaderClientDll.exp
+   Creating library Release/CardReaderClientDll.lib and object Release/CardReaderClientDll.exp
 
 
 

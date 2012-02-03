@@ -16,29 +16,38 @@ using namespace std;
 ServerParam* ServerParam::instance = new ServerParam();
 ServerParam::ServerParam()
 {
-	// 读取配置文件
-	ifstream fin("readers.config");
-	string config;
-	if (!(fin >> config))
+	serverPort = getConfigInt("Server", "port");
+	if (serverPort == 0) // 没有配置端口号, 使用默认端口号60000
 	{
-		AfxMessageBox("读卡器配置文件读取错误");
+		serverPort = 60000; 
 	}
-	vector<string> result = splitString(config.c_str());
-	for (vector<string>::iterator iter = result.begin(); iter != result.end(); ++iter)
+
+	int count = getConfigInt("Readers", "count"); // 读卡器数量
+	int i;
+	char temp[512];
+
+	for (i = 1; i <= count; ++i)
 	{
-		int data = atoi((*iter).c_str());
-		this->readerIdSet.insert(data);
+		sprintf(temp, "%d", i);
+		readers[i] = getConfigInt("Readers", temp);
 	}
-	fin.close();
 }
 
 void ServerParam::saveConfig() 
 {
-	// 保存配置到
-	ofstream fout("readers.config");
-	for (set<int>::iterator iter = this->readerIdSet.begin(); iter != this->readerIdSet.end(); ++iter)
+	char temp[512];
+	sprintf(temp, "%d", serverPort);
+	writeConfig("Server", "port", temp);
+
+	char temp2[512];
+	for (map<int, int>::iterator iter = readers.begin(); iter != readers.end(); ++iter)
 	{
-		fout << (*iter) << ",";
+		sprintf(temp, "%d", iter->first);
+		sprintf(temp2, "%d", iter->second);
+		writeConfig("Readers", temp, temp2);
 	}
-	fout.close();
+
+	int count = getConfigInt("Readers", "count");
+	sprintf(temp, "%d", readers.size());
+	writeConfig("Readers", "count", temp);
 }

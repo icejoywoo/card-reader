@@ -27,7 +27,7 @@ int parseCommand(Client* client, int readerId, char* command, string& operationN
 	Communicator communicator; // 与读卡器通信的通信
 
 	// readerId的含义, 表示读卡器相应的com号
-	if (GetOneCOMCommunicator(communicator, readerId) != 0) // 获取通信器, 第二个参数与
+	if (GetOneCOMCommunicator(communicator, ServerParam::instance->readers[readerId]) != 0) // 获取通信器, 第二个参数与
 	{
 		sprintf(log, "[读卡器 %d]通信器初始化失败", readerId);
 		SimpleLog::error(log);
@@ -261,4 +261,28 @@ vector<string> splitString(const char* splitedStr)
 		result.push_back(string(others));
 	}
 	return result;
+}
+
+void writeConfig(LPCTSTR lpAppName,  // section name
+				 LPCTSTR lpKeyName,  // key name
+				 LPCTSTR lpString   // string to add
+				 )
+{
+	::WritePrivateProfileString(lpAppName, lpKeyName, lpString, CONFIG_PATH);
+}
+
+void getConfig(LPCTSTR lpAppName,        // section name
+			   LPCTSTR lpKeyName,        // key name
+			   LPTSTR lpReturnedString,  // destination buffer
+			   DWORD nSize              // size of destination buffer
+			   )
+{
+	::GetPrivateProfileString(lpAppName, lpKeyName, "", lpReturnedString, nSize, CONFIG_PATH);
+}
+
+UINT getConfigInt(LPCTSTR lpAppName,  // section name
+				  LPCTSTR lpKeyName  // key name
+				  )
+{
+	return ::GetPrivateProfileInt(lpAppName, lpKeyName, 0, CONFIG_PATH);
 }

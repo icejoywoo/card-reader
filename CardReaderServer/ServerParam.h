@@ -9,6 +9,7 @@
 
 #include "StdAfx.h"
 #include "ServerParam.h"
+#include <map>
 #include <set>
 
 using namespace std;
@@ -25,7 +26,8 @@ private:
 public:
 	virtual ~ServerParam() {}
 	void saveConfig();
-	set<int> readerIdSet; // 读卡器id集合, 保存读卡器的id
+//	set<int> readerIdSet; // 读卡器id集合, 保存读卡器的id
+	map<int, int> readers; 
 	int serverPort; /// 服务器的端口
 	HWND mainFrame;
 	static ServerParam* instance;

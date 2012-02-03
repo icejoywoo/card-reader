@@ -6,13 +6,13 @@
 --------------------Configuration: CardReaderServer - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPED32.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPBD3B.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"F:\MingSen\card-reader\CardReaderServer\Handlers.cpp"
+"F:\MingSen\card-reader\CardReaderServer\ServerParam.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPED32.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPED33.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPBD3B.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPBD3C.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderServer.pdb" /debug /machine:I386 /out:"Debug/CardReaderServer.exe" /pdbtype:sept 
 ".\Debug\CardReaderServer.obj"
@@ -27,12 +27,12 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPED33.tmp" with 
 ".\Debug\StdAfx.obj"
 ".\Debug\CardReaderServer.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPED33.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPBD3C.tmp"
 <h3>Output Window</h3>
 Compiling...
-Handlers.cpp
+ServerParam.cpp
 Linking...
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP56.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPC0B7.tmp" with contents
 [
 /nologo /o"Debug/CardReaderServer.bsc" 
 ".\Debug\StdAfx.sbr"
@@ -45,7 +45,7 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP56.tmp" with co
 ".\Debug\ServerSetting.sbr"
 ".\Debug\ServerUtils.sbr"
 ".\Debug\SimpleLog.sbr"]
-Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP56.tmp"
+Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPC0B7.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
 

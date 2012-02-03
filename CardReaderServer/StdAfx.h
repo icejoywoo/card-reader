@@ -11,6 +11,9 @@
 #endif // _MSC_VER > 1000
 
 #define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
+#ifndef _WIN32_IE // 允许使用 IE 4.0 或更高版本的特定功能。
+#define _WIN32_IE 0x0500 //为 IE 5.0 及更新版本改变为适当的值。
+#endif
 
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions
@@ -31,8 +34,6 @@
 #pragma comment(lib, "WS2_32")
 #include "Server.h"
 
-#define DEFAULT_PORT (60000) // 服务器默认端口号
-
 // 导入SmartCom
 #include "SmartCom.h"
 #pragma comment(lib, "SmartCom")
@@ -43,6 +44,9 @@ using namespace std;
 #include "SplitStr.h" // 分割字符串的类
 
 #include "CustomErrorCode.h"
+
+#define CONFIG_PATH (".\\server.ini")
+
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

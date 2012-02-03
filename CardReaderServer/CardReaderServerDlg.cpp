@@ -308,12 +308,12 @@ LRESULT CCardReaderServerDlg::UpdateLog(WPARAM wparam,LPARAM lparam)
 
 	// 添加所有读卡器
 	map<int, HTREEITEM> readersTree;
-	for (set<int>::iterator i = ServerParam::instance->readerIdSet.begin();
-		i != ServerParam::instance->readerIdSet.end(); ++i)
+	for (map<int, int>::iterator i = ServerParam::instance->readers.begin();
+		i != ServerParam::instance->readers.end(); ++i)
 	{
 		char name[512];
-		sprintf(name, "读卡器 %d", (*i));
-		readersTree[(*i)] = m_Tree.InsertItem(name, root);
+		sprintf(name, "读卡器 %d", i->first);
+		readersTree[i->first] = m_Tree.InsertItem(name, root);
 	}
 	EnterCriticalSection(&(Server::getInstance()->clients_cs));
 	// 添加所有客户端到对应读卡器节点
@@ -366,11 +366,18 @@ void CCardReaderServerDlg::ToTray()
     nid.cbSize=(DWORD)sizeof(NOTIFYICONDATA); 
     nid.hWnd=this->m_hWnd; 
     nid.uID=IDR_MAINFRAME; 
-    nid.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP ; 
+    nid.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP|NIF_INFO; 
     nid.uCallbackMessage=WM_SHOWTASK;//自定义的消息名称 
     nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
-    strcpy(nid.szTip, "密钥保安站");    //信息提示条 
+    strcpy(nid.szTip, "密钥保安站");    //信息提示条
     Shell_NotifyIcon(NIM_ADD,&nid);    //在托盘区添加图标 
+
+	nid.uTimeout = 1000;
+	nid.uVersion=NOTIFYICON_VERSION;
+	strcpy(nid.szInfoTitle,_T("密钥保安站"));
+	strcpy(nid.szInfo,_T("密钥保安站最小化到托盘了!"));
+	Shell_NotifyIcon(NIM_MODIFY,&nid);
+
     ShowWindow(SW_HIDE);    //隐藏主窗口
 }
 

@@ -13,11 +13,11 @@ Class2=CCardReaderServerDlg
 Class3=CAboutDlg
 
 ResourceCount=4
-Resource1=IDD_SERVERSETTING_DIALOG
+Resource1=IDD_ABOUTBOX
 Resource2=IDR_MAINFRAME
 Resource3=IDD_CARDREADERSERVER_DIALOG
 Class4=ServerSetting
-Resource4=IDD_ABOUTBOX
+Resource4=IDD_SERVERSETTING_DIALOG
 
 [CLS:CCardReaderServerApp]
 Type=0
@@ -72,7 +72,7 @@ Control13=IDC_STATIC,button,1342177287
 [DLG:IDD_SERVERSETTING_DIALOG]
 Type=1
 Class=ServerSetting
-ControlCount=11
+ControlCount=14
 Control1=IDOK,button,1342242817
 Control2=IDCANCEL,button,1342242816
 Control3=IDC_STATIC,static,1342308353
@@ -81,9 +81,12 @@ Control5=IDC_STATIC,button,1342177287
 Control6=IDC_STATIC,button,1342177287
 Control7=IDC_BUTTON_ADD,button,1342242816
 Control8=IDC_BUTTON_DEL,button,1342242816
-Control9=IDC_LIST_READERS,listbox,1352728833
-Control10=IDC_EDIT_READER_ID,edit,1350631552
-Control11=IDC_STATIC,static,1342308352
+Control9=IDC_EDIT_READER_ID,edit,1350631552
+Control10=IDC_STATIC,static,1342308352
+Control11=IDC_STATIC,button,1342177287
+Control12=IDC_STATIC,static,1342308352
+Control13=IDC_EDIT_READER_COM,edit,1350631552
+Control14=IDC_LIST_READERS,SysListView32,1350631425
 
 [CLS:ServerSetting]
 Type=0
@@ -91,6 +94,6 @@ HeaderFile=ServerSetting.h
 ImplementationFile=ServerSetting.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=IDC_EDIT_READER_ID
+LastObject=IDC_EDIT_PORT
 VirtualFilter=dWC
 

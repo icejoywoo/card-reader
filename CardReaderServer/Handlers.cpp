@@ -45,10 +45,10 @@ UINT defaultServerHandler(LPVOID pParam)
 // 	}
 	
 	// 对读卡器的访问控制, 在服务器启动的时候进行初始化设置
-	for (set<int>::iterator iter = ServerParam::instance->readerIdSet.begin(); 
-			iter != ServerParam::instance->readerIdSet.end(); ++iter) // 遍历当前读卡器id的集合
+	for (map<int, int>::iterator iter = ServerParam::instance->readers.begin(); 
+			iter != ServerParam::instance->readers.end(); ++iter) // 遍历当前读卡器id的集合
 	{
-		serv->readerUsage[*iter] = 0; // 初始化控制列表, 都未使用
+		serv->readerUsage[iter->first] = 0; // 初始化控制列表, 都未使用
 	}
 
 	SOCKET clientSocket;
@@ -84,7 +84,7 @@ UINT defaultServerHandler(LPVOID pParam)
 		// 接收客户端的请求, 首先读取读卡器id
 		int readerId; // 读卡器号
 		receiveData(clientSocket, readerId);
-		if (ServerParam::instance->readerIdSet.count(readerId) > 0 )
+		if (ServerParam::instance->readers.count(readerId) > 0 )
 		{
 			sprintf(log, "接收读卡器com号: [%d]", readerId);
 			SimpleLog::info(log);

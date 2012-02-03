@@ -19,10 +19,11 @@ public:
 // Dialog Data
 	//{{AFX_DATA(ServerSetting)
 	enum { IDD = IDD_SERVERSETTING_DIALOG };
-	CListBox	m_ReaderList;
+	CListCtrl	m_ReaderList;
 	int		m_Port;
 	int		m_AddReaderId;
 	BOOL isChanged;
+	int		m_AddReaderCom;
 	//}}AFX_DATA
 
 
