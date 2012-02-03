@@ -15,7 +15,6 @@ Server* Server::instance = new Server();
 Server::Server()
 {
 	WSAStartup(MAKEWORD(2,2), &this->wsaData); // init winsock
-	this->port = DEFAULT_PORT;
 	//this->log = "";
 
 	this->clientHandler = defaultClientHandler;
@@ -36,7 +35,8 @@ Server::~Server()
 
 int Server::start()
 {
-	
+	this->setPort(ServerParam::instance->serverPort);
+
 	if ((this->server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
 	{
 		SimpleLog::error("服务器创建Socket失败");

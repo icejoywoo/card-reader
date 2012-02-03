@@ -41,7 +41,6 @@ CDataTransferToolApp theApp;
 
 BOOL CDataTransferToolApp::InitInstance()
 {
-	InitializeSkin("XPCorona.ssk"); // º”‘ÿ∆§∑Ù
 	AfxEnableControlContainer();
 
 	// Standard initialization
@@ -54,6 +53,7 @@ BOOL CDataTransferToolApp::InitInstance()
 #else
 	Enable3dControlsStatic();	// Call this when linking to MFC statically
 #endif
+	InitializeSkin("XPCorona.ssk"); // º”‘ÿ∆§∑Ù
 
 	CDataTransferToolDlg dlg;
 	m_pMainWnd = &dlg;

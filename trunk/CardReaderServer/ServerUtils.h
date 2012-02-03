@@ -98,4 +98,19 @@ int receiveData(SOCKET s, int& data);
  */
 vector<string> splitString(const char* splitedStr);
 
+void writeConfig(LPCTSTR lpAppName,  // section name
+				 LPCTSTR lpKeyName,  // key name
+				 LPCTSTR lpString   // string to add
+				 );
+
+void getConfig(LPCTSTR lpAppName,        // section name
+			   LPCTSTR lpKeyName,        // key name
+			   LPTSTR lpReturnedString,  // destination buffer
+			   DWORD nSize              // size of destination buffer
+			   );
+
+UINT getConfigInt(LPCTSTR lpAppName,  // section name
+				  LPCTSTR lpKeyName  // key name
+				  );
+
 #endif
