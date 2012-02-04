@@ -76,3 +76,27 @@ void ClientUtils::splitString(const char* buf, string& first, int& second)
 	string secondstr = str.substr(loc + 1);
 	second = atoi(secondstr.c_str());
 }
+
+void ClientUtils::writeConfig(LPCTSTR lpAppName,  // section name
+				 LPCTSTR lpKeyName,  // key name
+				 LPCTSTR lpString   // string to add
+				 )
+{
+	::WritePrivateProfileString(lpAppName, lpKeyName, lpString, CONFIG_PATH);
+}
+
+void ClientUtils::getConfig(LPCTSTR lpAppName,        // section name
+			   LPCTSTR lpKeyName,        // key name
+			   LPTSTR lpReturnedString,  // destination buffer
+			   DWORD nSize              // size of destination buffer
+			   )
+{
+	::GetPrivateProfileString(lpAppName, lpKeyName, "", lpReturnedString, nSize, CONFIG_PATH);
+}
+
+UINT ClientUtils::getConfigInt(LPCTSTR lpAppName,  // section name
+				  LPCTSTR lpKeyName  // key name
+				  )
+{
+	return ::GetPrivateProfileInt(lpAppName, lpKeyName, 0, CONFIG_PATH);
+}
