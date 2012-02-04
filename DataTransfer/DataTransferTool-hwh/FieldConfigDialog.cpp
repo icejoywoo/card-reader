@@ -26,6 +26,7 @@ CFieldConfigDialog::CFieldConfigDialog(CWnd* pParent /*=NULL*/)
 	m_EndData = _T("");
 	m_StartData = _T("");
 	m_Tag = _T("");
+	m_InsertLoc = -1;
 	//}}AFX_DATA_INIT
 }
 
@@ -39,6 +40,7 @@ void CFieldConfigDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_END_DATA, m_EndData);
 	DDX_Text(pDX, IDC_EDIT_START_DATA, m_StartData);
 	DDX_Text(pDX, IDC_EDIT_TAG, m_Tag);
+	DDX_Text(pDX, IDC_EDIT_INSERT_LOC, m_InsertLoc);
 	//}}AFX_DATA_MAP
 }
 

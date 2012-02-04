@@ -76,36 +76,44 @@ public:
 	DataTransfer(CString dbfile);
 	virtual ~DataTransfer();
 	// 处理文件或文件夹的数据, filename是路径(推荐使用)
-	void Handle(const char* filename);
+	void Handle(const char* filename, const char* outputDir = NULL);
 	// 添加处理规则
 	void AddRule(TransferRule& rule); 
+	void AddRule(TransferRule& rule, vector<TransferRule>::iterator loc); 
+	void AddRule(TransferRule& rule, int loc); 
 	// 删除处理规则
-	void DelRule(TransferRule& rule);
+	vector<TransferRule>::iterator DelRule(TransferRule& rule);
 	// 清空规则
 	void ClearRules();
 	// 初始化数据库
 	void init();
 	// 保存配置
-	void save(const char* name);
+	void save(const char* name, const char* comment);
 	// 加载配置
 	void load(const char* name);
 	CString getCurrentTemplate();
+	CString getTemplateComment();
 	// 删除配置
 	void del(const char* name);
 	// 获取所有配置
 	vector<CString> getConfigs();
 	// 获取所有规则
 	vector<TransferRule> getRules();
+
+	CString inputPath; // 输入路径
+	CString outputPath; // 输出路径
 private:
 	// 处理文件数据
 	void HandleFile(const char* filename, const char* dirname = NULL);	
 	// 处理文件夹数据
-	void HandleDir(const char* filename);
+	void HandleDir(const char* filename, const char* outputDir = NULL);
 	// 转换规则
 	vector<TransferRule> rules;
 	// 操作sqlite3数据库
 	sqlite3* db;
-	CString currentTemplate;
+	CString currentTemplate; // 当前模板
+	CString templateComment; // 模板备注信息
+
 	static CString DBFILE;
 };
 

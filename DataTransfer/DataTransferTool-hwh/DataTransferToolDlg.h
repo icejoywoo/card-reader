@@ -29,8 +29,10 @@ public:
 	CButton	m_StartButton;
 	CListCtrl	m_FiledList;
 	CListCtrl	m_TemplateList;
-	CString		m_TargetToTransfer;
 	CString		m_CurrentTemplate;
+	CString	m_InputFile;
+	CString	m_TargetFile;
+	CString	m_TemplateComment;
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides
@@ -52,8 +54,6 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg void OnButtonExit();
-	afx_msg void OnButtonChooseTargetFile();
-	afx_msg void OnButtonChooseDir();
 	afx_msg void OnButtonStartTransfer();
 	afx_msg void OnButtonApplyTemplate();
 	afx_msg void OnButtonDelTemplate();
@@ -65,6 +65,10 @@ protected:
 	afx_msg void OnButtonSaveTemplate();
 	afx_msg void OnButtonAbout();
 	afx_msg void OnClose();
+	afx_msg void OnButtonRenameTemplate();
+	afx_msg void OnButtonChooseInput();
+	afx_msg void OnButtonChooseInputDir();
+	afx_msg void OnButtonChooseTargetdir();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
