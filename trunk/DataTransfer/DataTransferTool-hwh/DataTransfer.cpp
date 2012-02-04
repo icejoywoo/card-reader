@@ -253,6 +253,7 @@ void TransferRule::load(sqlite3* db, const char* name)
 CString DataTransfer::DBFILE = "data.db";
 DataTransfer::DataTransfer()
 {
+	// 获取应用程序下面的data.db
 	CString m_FilePath;
 	GetModuleFileName(NULL,m_FilePath.GetBufferSetLength(MAX_PATH+1),MAX_PATH);
 	m_FilePath.ReleaseBuffer();
@@ -301,19 +302,48 @@ void DataTransfer::AddRule(TransferRule& rule)
 	this->rules.push_back(_rule);
 }
 
-void DataTransfer::DelRule(TransferRule& rule)
+void DataTransfer::AddRule(TransferRule& rule, vector<TransferRule>::iterator loc)
+{
+	TransferRule _rule(rule);
+	this->rules.insert(loc, 1, _rule);
+}
+
+void DataTransfer::AddRule(TransferRule& rule, int loc)
+{
+	TransferRule _rule(rule);
+	int i = 0;
+	if (loc < 0)
+	{
+		AfxMessageBox("插入位置不可以是负数!");
+	}
+	
+	for (vector<TransferRule>::iterator iter = rules.begin(); 
+		iter != rules.end(); ++iter, ++i)
+	{
+		if (i == loc)
+		{
+			this->AddRule(_rule, iter);
+			return;
+		}
+	}
+	this->AddRule(_rule);
+}
+
+vector<TransferRule>::iterator DataTransfer::DelRule(TransferRule& rule)
 {
 	// 删除指定元素
 //	remove(rules.begin(), rules.end(), rule); 
+	vector<TransferRule>::iterator result;
 	for (vector<TransferRule>::iterator iter = rules.begin();
 		iter != rules.end(); ++iter)
 	{
 		if ((*iter) == rule)
 		{
-			rules.erase(iter);
+			result = rules.erase(iter);
 			break;
 		}
 	}
+	return result;
 }
 
 void DataTransfer::ClearRules()
@@ -388,7 +418,7 @@ void DataTransfer::HandleFile(const char* filename, const char* dirname /* = NUL
 	}
 }
 
-void DataTransfer::HandleDir(const char* dirname)
+void DataTransfer::HandleDir(const char* dirname, const char* outputDir /*= NULL*/)
 {
 	try
 	{
@@ -402,9 +432,20 @@ void DataTransfer::HandleDir(const char* dirname)
 		CTime t = CTime::GetCurrentTime();
 		CString timestamp;
 		timestamp.Format("%d%02d%02d%02d%02d%02d", t.GetYear(), t.GetMonth(), t.GetDay(), t.GetHour(), t.GetMinute(), t.GetSecond());
-
+		
 		CString outDir; // 输出文件夹
-		outDir.Format("%s_HDP5000_%s", dirname, timestamp);
+		if (outputDir == NULL)
+		{
+			outDir.Format("%s_HDP5000_%s", dirname, timestamp);
+		}
+		else
+		{
+			// dirname.Mid(dirname.ReverseFind('\\'))
+			CString temp(dirname);
+			outDir.Format("%s\\%s_HDP5000_%s", outputDir, temp.Mid(temp.ReverseFind('\\')), timestamp);
+			TRACE(outDir);
+		}
+		
 		CString outFile;
 
 		while (working)
@@ -425,7 +466,7 @@ void DataTransfer::HandleDir(const char* dirname)
 	}
 }
 
-void DataTransfer::Handle(const char* filename)
+void DataTransfer::Handle(const char* filename, const char* outputDir /*= NULL*/)
 {
 	CFileFind finder;
 	BOOL working = finder.FindFile(filename);
@@ -434,11 +475,11 @@ void DataTransfer::Handle(const char* filename)
 		working = finder.FindNextFile();
 		if (finder.IsDirectory())
 		{
-			HandleDir(filename);
+			HandleDir(filename, outputDir);
 		}
 		else
 		{
-			HandleFile(filename);
+			HandleFile(filename, outputDir);
 		}
 	}
 	else
@@ -450,13 +491,15 @@ void DataTransfer::Handle(const char* filename)
 void DataTransfer::init()
 {
 	char* errMsg = 0;
-	char* sql = "create table config (id integer not null, name text, primary key('id' ASC), CONSTRAINT 'name_unique' UNIQUE ('name'));";
+	char* sql = "create table config (id integer not null, name text, comment text, inputPath text, outputPath text, primary key('id' ASC), CONSTRAINT 'name_unique' UNIQUE ('name'));";
 	sqlite3_exec(db, sql, NULL, 0, &errMsg);
 }
 
-void DataTransfer::save(const char* name)
+void DataTransfer::save(const char* name, const char* comment /* = "" */)
 {
 	CString utf8Name = Convert(name, CP_ACP, CP_UTF8);
+	CString utf8Comment = Convert(comment, CP_ACP, CP_UTF8);
+
 	char* errMsg = 0;
 	int id = 1;
 
@@ -470,9 +513,24 @@ void DataTransfer::save(const char* name)
 	}
 
 	char sql[128];
+	sprintf(sql, "SELECT name FROM config WHERE name = '%s';", utf8Name);
+	sqlite3_get_table(db, sql, &result, &n, &m, &errMsg);
 	
-	sprintf(sql, "INSERT INTO config VALUES(%d, '%s');", id, utf8Name);
-	sqlite3_exec(db, sql, NULL, 0, &errMsg);
+	if (n == 1 && strcmp(result[1], utf8Name) == 0) // 模板已经存在
+	{
+		sprintf(sql, "UPDATE config SET comment = '%s' WHERE name = '%s';", utf8Comment, utf8Name);
+		sqlite3_exec(db, sql, NULL, 0, &errMsg);
+		sprintf(sql, "UPDATE config SET inputPath = '%s' WHERE name = '%s';", Convert(this->inputPath, CP_ACP, CP_UTF8), utf8Name);
+		sqlite3_exec(db, sql, NULL, 0, &errMsg);
+		sprintf(sql, "UPDATE config SET outputPath = '%s' WHERE name = '%s';", Convert(this->outputPath, CP_ACP, CP_UTF8), utf8Name);
+		sqlite3_exec(db, sql, NULL, 0, &errMsg);
+	}
+	else // 新建模板
+	{
+		sprintf(sql, "INSERT INTO config VALUES(%d, '%s', '%s', '%s', '%s');", id, utf8Name, utf8Comment, Convert(this->inputPath, CP_ACP, CP_UTF8), Convert(this->outputPath, CP_ACP, CP_UTF8));
+		sqlite3_exec(db, sql, NULL, 0, &errMsg);
+	}
+
 
 	// TODO: 删除同名表, 然后建表
 	sprintf(sql, "DROP TABLE %s;", utf8Name);
@@ -498,12 +556,18 @@ void DataTransfer::load(const char* name)
 	char sql[128];
 	sprintf(sql, "SELECT name FROM config WHERE name = '%s';", utf8Name);
 	sqlite3_get_table(db, sql, &result, &n, &m, &errMsg);
-	
+
 	if (n == 1 && strcmp(result[1], utf8Name) == 0)
 	{
+		sprintf(sql, "SELECT comment, inputPath, outputPath FROM config WHERE name = '%s';", utf8Name);
+		sqlite3_get_table(db, sql, &result, &n, &m, &errMsg);
+		this->templateComment = Convert(result[m + 0], CP_UTF8, CP_ACP);
+		this->inputPath = Convert(result[m + 1], CP_UTF8, CP_ACP);
+		this->outputPath = Convert(result[m + 2], CP_UTF8, CP_ACP);
+
 		char* errMsg = 0;
 		char sql[128];
-
+		
 		sprintf(sql, "select startType, startData, endType, endData, tag from %s", utf8Name);
 		int n; // rows
 		int m; // columns
@@ -572,4 +636,9 @@ vector<CString> DataTransfer::getConfigs()
 vector<TransferRule> DataTransfer::getRules()
 {
 	return this->rules;
+}
+
+CString DataTransfer::getTemplateComment()
+{
+	return this->templateComment;
 }

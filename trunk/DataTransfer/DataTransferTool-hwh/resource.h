@@ -21,14 +21,18 @@
 #define IDC_BUTTON_EXIT                 1009
 #define IDC_EDIT_TARGET_FILE            1010
 #define IDC_BUTTON_CHOOSE_TARGET        1011
+#define IDC_BUTTON_CHOOSE_INPUT         1011
 #define IDC_EDIT_TARGET_FILE2           1012
+#define IDC_EDIT_INPUT_FILE             1012
 #define IDC_BUTTON_START_TRANSFER       1013
 #define IDC_EDIT_CURRENT_TEMPLATE       1014
 #define IDC_BUTTON_CHOOSE_DIR           1015
+#define IDC_BUTTON_CHOOSE_INPUT_DIR     1015
 #define IDC_BUTTON_SAVE_TEMPLATE        1016
 #define IDC_BUTTON_SAVEAS_TEMPLATE      1016
 #define IDC_EDIT_TEMPLATE_NAME          1018
 #define IDC_BUTTON_CHOOSE_DIR2          1018
+#define IDC_BUTTON_CHOOSE_TARGETDIR     1018
 #define IDC_EDIT_START_DATA             1022
 #define IDC_EDIT_END_DATA               1024
 #define IDC_EDIT_TAG                    1025
@@ -38,6 +42,9 @@
 #define IDC_BUTTON_ABOUT                1030
 #define IDC_OK                          1031
 #define IDC_EDIT1                       1032
+#define IDC_EDIT_TEMPLATE_COMMENT       1032
+#define IDC_EDIT_INSERT_LOC             1032
+#define IDC_BUTTON_RENAME_TEMPLATE      1033
 
 // Next default values for new objects
 // 
@@ -45,7 +52,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        136
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1033
+#define _APS_NEXT_CONTROL_VALUE         1034
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

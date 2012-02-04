@@ -24,6 +24,7 @@ public:
 	CString	m_EndData;
 	CString	m_StartData;
 	CString	m_Tag;
+	int		m_InsertLoc;
 	//}}AFX_DATA
 
 

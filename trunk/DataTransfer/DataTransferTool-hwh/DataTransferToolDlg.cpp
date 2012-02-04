@@ -68,8 +68,10 @@ CDataTransferToolDlg::CDataTransferToolDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CDataTransferToolDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDataTransferToolDlg)
-	m_TargetToTransfer = _T("");
 	m_CurrentTemplate = _T("");
+	m_InputFile = _T("");
+	m_TargetFile = _T("");
+	m_TemplateComment = _T("");
 	//}}AFX_DATA_INIT
 	// Note that LoadIcon does not require a subsequent DestroyIcon in Win32
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -82,8 +84,10 @@ void CDataTransferToolDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_START_TRANSFER, m_StartButton);
 	DDX_Control(pDX, IDC_LIST_FIELD_TABLE, m_FiledList);
 	DDX_Control(pDX, IDC_LIST_TEMPLATES, m_TemplateList);
-	DDX_Text(pDX, IDC_EDIT_TARGET_FILE, m_TargetToTransfer);
 	DDX_Text(pDX, IDC_EDIT_CURRENT_TEMPLATE, m_CurrentTemplate);
+	DDX_Text(pDX, IDC_EDIT_INPUT_FILE, m_InputFile);
+	DDX_Text(pDX, IDC_EDIT_TARGET_FILE, m_TargetFile);
+	DDX_Text(pDX, IDC_EDIT_TEMPLATE_COMMENT, m_TemplateComment);
 	//}}AFX_DATA_MAP
 }
 
@@ -93,8 +97,6 @@ BEGIN_MESSAGE_MAP(CDataTransferToolDlg, CDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON_EXIT, OnButtonExit)
-	ON_BN_CLICKED(IDC_BUTTON_CHOOSE_TARGET, OnButtonChooseTargetFile)
-	ON_BN_CLICKED(IDC_BUTTON_CHOOSE_DIR, OnButtonChooseDir)
 	ON_BN_CLICKED(IDC_BUTTON_START_TRANSFER, OnButtonStartTransfer)
 	ON_BN_CLICKED(IDC_BUTTON_APPLY_TEMPLATE, OnButtonApplyTemplate)
 	ON_BN_CLICKED(IDC_BUTTON_DEL_TEMPLATE, OnButtonDelTemplate)
@@ -106,6 +108,10 @@ BEGIN_MESSAGE_MAP(CDataTransferToolDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_SAVE_TEMPLATE1, OnButtonSaveTemplate)
 	ON_BN_CLICKED(IDC_BUTTON_ABOUT, OnButtonAbout)
 	ON_WM_CLOSE()
+	ON_BN_CLICKED(IDC_BUTTON_RENAME_TEMPLATE, OnButtonRenameTemplate)
+	ON_BN_CLICKED(IDC_BUTTON_CHOOSE_INPUT, OnButtonChooseInput)
+	ON_BN_CLICKED(IDC_BUTTON_CHOOSE_INPUT_DIR, OnButtonChooseInputDir)
+	ON_BN_CLICKED(IDC_BUTTON_CHOOSE_TARGETDIR, OnButtonChooseTargetdir)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -239,53 +245,12 @@ void CDataTransferToolDlg::OnButtonExit()
 	this->SendMessage(WM_CLOSE);
 }
 
-void CDataTransferToolDlg::OnButtonChooseTargetFile() 
-{
-	// 选择文件
-	CFileDialog chooser(TRUE);
-	chooser.DoModal();
-
-	UpdateData(TRUE);
-	m_TargetToTransfer = chooser.GetPathName();
-	UpdateData(FALSE);
-	ShowInfor();
-	//this->SendMessage(WM_PAINT);
-}
-
-void CDataTransferToolDlg::OnButtonChooseDir() 
-{
-	// 选择目标文件
-	BROWSEINFO bi;
-	char Buffer[MAX_PATH];
-	//初始化入口参数bi开始
-	bi.hwndOwner = NULL;
-	bi.pidlRoot =NULL;//初始化制定的root目录很不容易，
-	bi.pszDisplayName = Buffer;//此参数如为NULL则不能显示对话框
-	bi.lpszTitle = "请您填写目标路径: ";
-	//bi.ulFlags = BIF_BROWSEINCLUDEFILES;//包括文件
-	bi.ulFlags = BIF_EDITBOX;//包括文件
-	bi.lpfn = NULL;
-	bi.iImage=IDR_MAINFRAME;
-	//初始化入口参数bi结束
-	LPITEMIDLIST pIDList = SHBrowseForFolder(&bi);//调用显示选择对话框
-	if(pIDList)
-	{
-		SHGetPathFromIDList(pIDList,Buffer);
-		//取得文件夹路径到Buffer里
-		UpdateData(TRUE);
-		m_TargetToTransfer = Buffer;
-		UpdateData(FALSE);
-	}
-    
-	//this->SendMessage(WM_PAINT);
-}
-
 void CDataTransferToolDlg::OnButtonStartTransfer() 
 {
 	// 开始转换
 	UpdateData(TRUE);
 	// 判断是否填写目标文件
-	if (m_TargetToTransfer.IsEmpty())
+	if (m_InputFile.IsEmpty())
 	{
 		AfxMessageBox("请输入要转换的文件或文件夹!");
 		return;
@@ -367,6 +332,11 @@ void CDataTransferToolDlg::OnButtonApplyTemplate()
 		m_FiledList.SetItemText(itemNo, 3, rule.GetEndData());
 		m_FiledList.SetItemText(itemNo, 4, rule.GetTag());
 	}
+
+	m_TemplateComment = transfer.getTemplateComment();
+	m_InputFile = transfer.inputPath;
+	m_TargetFile = transfer.outputPath;
+
 	ShowInfor();
 	//this->SendMessage(WM_PAINT);
 	UpdateData(FALSE);
@@ -404,6 +374,7 @@ void CDataTransferToolDlg::OnButtonNewTemplate()
 void CDataTransferToolDlg::OnButtonSaveAsTemplate() 
 {
 	// 另存为模板
+	UpdateData(TRUE);
 	CTemplateNameDialog dialog;
 	dialog.DoModal();
 	if (m_FiledList.GetItemCount() == 0)
@@ -429,13 +400,15 @@ void CDataTransferToolDlg::OnButtonSaveAsTemplate()
 
 		if (!m_NewTemplateName.IsEmpty())
 		{
-			transfer.save(m_NewTemplateName);
+			transfer.inputPath = m_InputFile;
+			transfer.outputPath = m_TargetFile;
+			transfer.save(m_NewTemplateName, m_TemplateComment);
 			m_CurrentTemplate = m_NewTemplateName;
 		}
 		ShowInfor();
 		//this->SendMessage(WM_PAINT);
 	}
-	
+	UpdateData(FALSE);
 }
 
 void CDataTransferToolDlg::OnButtonNewField() 
@@ -445,7 +418,15 @@ void CDataTransferToolDlg::OnButtonNewField()
 	CFieldConfigDialog dialog;
 	if (IDOK == dialog.DoModal())
 	{
-		transfer.AddRule(m_TempRule);
+		if (dialog.m_InsertLoc >= 0)
+		{
+			transfer.AddRule(m_TempRule, dialog.m_InsertLoc);
+		}
+		else
+		{
+			transfer.AddRule(m_TempRule);
+		}
+		
 		ShowInfor();
 	}
 	//this->SendMessage(WM_PAINT);
@@ -455,7 +436,7 @@ void CDataTransferToolDlg::OnButtonModifyField()
 {
 	// 修改字段
 	CFieldConfigDialog dialog;
-	
+
 	for(int i=0; i<m_FiledList.GetItemCount(); i++)
 	{
 		if(m_FiledList.GetItemState(i, LVIS_SELECTED) == LVIS_SELECTED )
@@ -469,7 +450,7 @@ void CDataTransferToolDlg::OnButtonModifyField()
 			rule.SetStart(startType, startData);
 			rule.SetEnd(endType, endData);
 			rule.SetTag(tag);
-			transfer.DelRule(rule); // 删除原有的字段
+			vector<TransferRule>::iterator loc = transfer.DelRule(rule); // 删除原有的字段
 
 			dialog.m_StartType = startType;
 			dialog.m_StartData = startData;
@@ -478,8 +459,16 @@ void CDataTransferToolDlg::OnButtonModifyField()
 			dialog.m_Tag = tag;
 			if (IDOK == dialog.DoModal())
 			{
-				transfer.AddRule(m_TempRule);
-				AfxMessageBox("修改完成, 请点击<保存当前模板>来保存!");
+				if (dialog.m_InsertLoc >= 0)
+				{
+					transfer.AddRule(m_TempRule, dialog.m_InsertLoc);
+				}
+				else
+				{
+					transfer.AddRule(m_TempRule, loc);
+				}
+
+				AfxMessageBox("修改完成, 请点击<保存>来保存!");
 				ShowInfor();
 			}
 			//this->SendMessage(WM_PAINT);
@@ -505,11 +494,14 @@ void CDataTransferToolDlg::OnButtonDelField()
 			rule.SetStart(startType, startData);
 			rule.SetEnd(endType, endData);
 			rule.SetTag(tag);
-			if(MessageBox("确认删除?", "操作提示", MB_YESNO | MB_ICONQUESTION) == IDYES)
+			char message[1024];
+			sprintf(message, "字段信息为: \n起始类型: %s\n起始数据: %s\n结束类型: %s\n结束数据: %s\n标记: %s\n确认删除?", 
+				rule.GetStartType(), rule.GetStartData(), rule.GetEndType(), rule.GetEndData(), rule.GetTag());
+			if(MessageBox(message, "操作提示", MB_YESNO | MB_ICONQUESTION) == IDYES)
 			{
 				transfer.DelRule(rule);
 				m_FiledList.DeleteItem(i); // 删除GUI上的项
-				AfxMessageBox("修改完成, 请点击<保存当前模板>来保存!");
+				AfxMessageBox("修改完成, 请点击<保存>来保存!");
 			}
 			break;
 		}
@@ -521,9 +513,12 @@ void CDataTransferToolDlg::OnButtonDelField()
 void CDataTransferToolDlg::OnButtonSaveTemplate() 
 {
 	// 保存当前模板
+	UpdateData(TRUE);
 	if (!m_CurrentTemplate.IsEmpty())
 	{
-		transfer.save(m_CurrentTemplate);
+		transfer.inputPath = m_InputFile;
+		transfer.outputPath = m_TargetFile;
+		transfer.save(m_CurrentTemplate, m_TemplateComment);
 		AfxMessageBox("保存成功");
 	}
 	else
@@ -531,6 +526,7 @@ void CDataTransferToolDlg::OnButtonSaveTemplate()
 		AfxMessageBox("请先加载模板!");
 	}	
 	ShowInfor();
+	UpdateData(FALSE);
 	//this->SendMessage(WM_PAINT);
 }
 
@@ -583,4 +579,114 @@ int CDataTransferToolDlg::ShowInfor()
 		break;
 	}
 	return rs;
+}
+
+void CDataTransferToolDlg::OnButtonRenameTemplate() 
+{
+	UpdateData(TRUE);
+	// 重命名 操作顺序: 删除模板, 加载, 保存
+	CString chosenTemplate;
+
+	for(int i=0; i<m_TemplateList.GetItemCount(); i++)
+	{
+		if(m_TemplateList.GetItemState(i, LVIS_SELECTED) == LVIS_SELECTED )
+		{
+			chosenTemplate = m_TemplateList.GetItemText(i, 0);
+		}
+	}
+	
+	if (chosenTemplate.IsEmpty())
+	{
+		AfxMessageBox("请先选择模板!");
+		return;
+	}
+	
+	// 加载转换配置
+	transfer.load(chosenTemplate);
+
+	// 保存模板
+	CTemplateNameDialog dialog;
+	dialog.DoModal();
+	if (!m_NewTemplateName.IsEmpty())
+	{
+		transfer.del(chosenTemplate);
+		transfer.inputPath = m_InputFile;
+		transfer.outputPath = m_TargetFile;
+		transfer.save(m_NewTemplateName, m_TemplateComment);
+		m_CurrentTemplate = m_NewTemplateName;
+	}
+	
+	// 回复原来加载的模板
+	transfer.load(m_CurrentTemplate);
+	UpdateData(FALSE);
+	ShowInfor();
+}
+
+void CDataTransferToolDlg::OnButtonChooseInput() 
+{
+	// 输入 选择文件
+	CFileDialog chooser(TRUE);
+	chooser.DoModal();
+	
+	UpdateData(TRUE);
+	m_InputFile = chooser.GetPathName();
+	UpdateData(FALSE);
+	ShowInfor();
+	//this->SendMessage(WM_PAINT);
+}
+
+void CDataTransferToolDlg::OnButtonChooseInputDir() 
+{
+	// 选择目标文件
+	BROWSEINFO bi;
+	char Buffer[MAX_PATH];
+	//初始化入口参数bi开始
+	bi.hwndOwner = NULL;
+	bi.pidlRoot =NULL;//初始化制定的root目录很不容易，
+	bi.pszDisplayName = Buffer;//此参数如为NULL则不能显示对话框
+	bi.lpszTitle = "请您选择路径: ";
+	//bi.ulFlags = BIF_BROWSEINCLUDEFILES;//包括文件
+	bi.ulFlags = BIF_EDITBOX;//包括文件
+	bi.lpfn = NULL;
+	bi.iImage=IDR_MAINFRAME;
+	//初始化入口参数bi结束
+	LPITEMIDLIST pIDList = SHBrowseForFolder(&bi);//调用显示选择对话框
+	if(pIDList)
+	{
+		SHGetPathFromIDList(pIDList,Buffer);
+		//取得文件夹路径到Buffer里
+		UpdateData(TRUE);
+		m_InputFile = Buffer;
+		UpdateData(FALSE);
+	}
+    
+	//this->SendMessage(WM_PAINT);
+}
+
+void CDataTransferToolDlg::OnButtonChooseTargetdir() 
+{
+	// 选择目标文件
+	BROWSEINFO bi;
+	char Buffer[MAX_PATH];
+	//初始化入口参数bi开始
+	bi.hwndOwner = NULL;
+	bi.pidlRoot =NULL;//初始化制定的root目录很不容易，
+	bi.pszDisplayName = Buffer;//此参数如为NULL则不能显示对话框
+	bi.lpszTitle = "请您选择路径: ";
+	//bi.ulFlags = BIF_BROWSEINCLUDEFILES;//包括文件
+	bi.ulFlags = BIF_EDITBOX;//包括文件
+	bi.lpfn = NULL;
+	bi.iImage=IDR_MAINFRAME;
+	//初始化入口参数bi结束
+	LPITEMIDLIST pIDList = SHBrowseForFolder(&bi);//调用显示选择对话框
+	if(pIDList)
+	{
+		SHGetPathFromIDList(pIDList,Buffer);
+		//取得文件夹路径到Buffer里
+		UpdateData(TRUE);
+		m_TargetFile = Buffer;
+		UpdateData(FALSE);
+	}
+    
+	//this->SendMessage(WM_PAINT);
 }
