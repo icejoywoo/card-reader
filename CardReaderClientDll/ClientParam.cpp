@@ -22,29 +22,13 @@ ClientParam::ClientParam()
 	this->mutex = CreateMutex(NULL, FALSE, LPCTSTR("clients"));
 
 	// 读取配置文件, 目前读取有问题
-	ifstream fin("client.config");
-	string config;
-	if (!(fin >> config))
-	{
-		cout << "读取配置文件出错" << endl;
-	}
-
-	string first;
-	string second;
-
-	ClientUtils::splitString(config.c_str(), first, second);
-	this->serverIp = new char[20];
-	strcpy(this->serverIp, first.c_str());
-	this->serverPort = atoi(second.c_str());
-	
-//	cout << this->serverIp << ", " << this->serverPort << endl;
-
-	fin.close();
-// 	this->serverIp = "127.0.0.1";
-// 	this->serverPort = 60000;
+	this->serverIp = new char[512];
+	ClientUtils::getConfig("Server", "ip", this->serverIp, 512);
+	this->serverPort = ClientUtils::getConfigInt("Server", "port");
 }
 ClientParam::~ClientParam() 
 {
+	delete serverIp;
 	delete instance;
 }
 

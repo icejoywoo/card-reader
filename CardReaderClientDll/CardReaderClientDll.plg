@@ -6,22 +6,13 @@
 --------------------Configuration: CardReaderClientDll - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8611.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPE3E7.tmp" with contents
 [
 /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CARDREADERCLIENTDLL_EXPORTS" /D "SMARTCOMSTRING_EXPORTS_MACRO" /Fp"Release/CardReaderClientDll.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
-"F:\MingSen\card-reader\CardReaderClientDll\CardReaderClientDll.cpp"
 "F:\MingSen\card-reader\CardReaderClientDll\ClientParam.cpp"
-"F:\MingSen\card-reader\CardReaderClientDll\ClientUtils.cpp"
-"F:\MingSen\card-reader\CardReaderClientDll\SmartComString.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8611.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8622.tmp" with contents
-[
-/nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CARDREADERCLIENTDLL_EXPORTS" /D "SMARTCOMSTRING_EXPORTS_MACRO" /Fp"Release/CardReaderClientDll.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
-"F:\MingSen\card-reader\CardReaderClientDll\StdAfx.cpp"
-]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8622.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8623.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPE3E7.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPE3F8.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:no /pdb:"Release/CardReaderClientDll.pdb" /machine:I386 /out:"Release/CardReaderClientDll.dll" /implib:"Release/CardReaderClientDll.lib" 
 ".\Release\CardReaderClientDll.obj"
@@ -30,16 +21,10 @@ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32
 ".\Release\SmartComString.obj"
 ".\Release\StdAfx.obj"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8623.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPE3F8.tmp"
 <h3>Output Window</h3>
 Compiling...
-StdAfx.cpp
-Compiling...
-CardReaderClientDll.cpp
 ClientParam.cpp
-ClientUtils.cpp
-SmartComString.cpp
-Generating Code...
 Linking...
    Creating library Release/CardReaderClientDll.lib and object Release/CardReaderClientDll.exp
 

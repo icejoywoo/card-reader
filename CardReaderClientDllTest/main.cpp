@@ -37,7 +37,7 @@ DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 	// ÅäÖÃ¶Á¿¨Æ÷
 	Reader* reader = new Reader();
 	//reader->readerId = floor(rand() % (readerNum) + 1); // Ëæ»ú¶Á¿¨Æ÷id
-	reader->readerId = 248;
+	reader->readerId = 1;
 	char log[512];
 	sprintf(log, "¶Á¿¨Æ÷id %d\n", reader->readerId);
 	OutputDebugString(log);

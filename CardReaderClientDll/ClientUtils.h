@@ -90,6 +90,21 @@ public:
 	 */
 	static void splitString(const char* buf, string& first, string& second);
 	static void splitString(const char* buf, string& first, int& second);
+
+	static void writeConfig(LPCTSTR lpAppName,  // section name
+		LPCTSTR lpKeyName,  // key name
+		LPCTSTR lpString   // string to add
+		);
+	
+	static void getConfig(LPCTSTR lpAppName,        // section name
+		LPCTSTR lpKeyName,        // key name
+		LPTSTR lpReturnedString,  // destination buffer
+		DWORD nSize              // size of destination buffer
+		);
+	
+	static UINT getConfigInt(LPCTSTR lpAppName,  // section name
+		LPCTSTR lpKeyName  // key name
+		);
 };
 
 #endif
