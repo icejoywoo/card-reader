@@ -218,7 +218,7 @@ CString TransferRule::Handle(CString target)
 void TransferRule::save(sqlite3* db, const char* name)
 {
 	char* errMsg = 0;
-	char sql[128];
+	char sql[1024];
 	// 删除同名表, 然后建表
 	// 	this->startType,this->startData,this->endType,this->endData,this->tag
 	sprintf(sql, "INSERT INTO %s VALUES(%d, '%s', %d, '%s', '%s')", name, this->startType, this->startData, this->endType, this->endData, this->tag);
@@ -499,6 +499,8 @@ void DataTransfer::save(const char* name, const char* comment /* = "" */)
 {
 	CString utf8Name = Convert(name, CP_ACP, CP_UTF8);
 	CString utf8Comment = Convert(comment, CP_ACP, CP_UTF8);
+	CString utf8InputPath = Convert(this->inputPath, CP_ACP, CP_UTF8);
+	CString utf8OutputPath = Convert(this->outputPath, CP_ACP, CP_UTF8);
 
 	char* errMsg = 0;
 	int id = 1;
@@ -512,31 +514,31 @@ void DataTransfer::save(const char* name, const char* comment /* = "" */)
 		id = atoi(result[1]) + 1;
 	}
 
-	char sql[128];
-	sprintf(sql, "SELECT name FROM config WHERE name = '%s';", utf8Name);
+	CString sql;
+	sql.Format("SELECT name FROM config WHERE name = '%s';", utf8Name);
 	sqlite3_get_table(db, sql, &result, &n, &m, &errMsg);
 	
 	if (n == 1 && strcmp(result[1], utf8Name) == 0) // 模板已经存在
 	{
-		sprintf(sql, "UPDATE config SET comment = '%s' WHERE name = '%s';", utf8Comment, utf8Name);
+		sql.Format("UPDATE config SET comment = '%s' WHERE name = '%s';", utf8Comment, utf8Name);
 		sqlite3_exec(db, sql, NULL, 0, &errMsg);
-		sprintf(sql, "UPDATE config SET inputPath = '%s' WHERE name = '%s';", Convert(this->inputPath, CP_ACP, CP_UTF8), utf8Name);
+		sql.Format("UPDATE config SET inputPath = '%s' WHERE name = '%s';", utf8InputPath, utf8Name);
 		sqlite3_exec(db, sql, NULL, 0, &errMsg);
-		sprintf(sql, "UPDATE config SET outputPath = '%s' WHERE name = '%s';", Convert(this->outputPath, CP_ACP, CP_UTF8), utf8Name);
+		sql.Format("UPDATE config SET outputPath = '%s' WHERE name = '%s';", utf8OutputPath, utf8Name);
 		sqlite3_exec(db, sql, NULL, 0, &errMsg);
 	}
 	else // 新建模板
 	{
-		sprintf(sql, "INSERT INTO config VALUES(%d, '%s', '%s', '%s', '%s');", id, utf8Name, utf8Comment, Convert(this->inputPath, CP_ACP, CP_UTF8), Convert(this->outputPath, CP_ACP, CP_UTF8));
+		sql.Format("INSERT INTO config VALUES(%d, '%s', '%s', '%s', '%s');", id, utf8Name, utf8Comment, utf8InputPath, utf8OutputPath);
 		sqlite3_exec(db, sql, NULL, 0, &errMsg);
 	}
 
 
 	// TODO: 删除同名表, 然后建表
-	sprintf(sql, "DROP TABLE %s;", utf8Name);
+	sql.Format("DROP TABLE %s;", utf8Name);
 	sqlite3_exec(db, sql, NULL, 0, &errMsg);
 
-	sprintf(sql, "CREATE TABLE %s (startType integer, startData text, endType integer, endData text, tag text);", utf8Name, utf8Name);
+	sql.Format("CREATE TABLE %s (startType integer, startData text, endType integer, endData text, tag text);", utf8Name, utf8Name);
 	sqlite3_exec(db, sql, NULL, 0, &errMsg);
 
 	for (vector<TransferRule>::iterator iter = rules.begin();
@@ -553,7 +555,7 @@ void DataTransfer::load(const char* name)
 	int n; // rows
 	int m; // columns
 	char** result;
-	char sql[128];
+	char sql[1024];
 	sprintf(sql, "SELECT name FROM config WHERE name = '%s';", utf8Name);
 	sqlite3_get_table(db, sql, &result, &n, &m, &errMsg);
 
@@ -566,7 +568,7 @@ void DataTransfer::load(const char* name)
 		this->outputPath = Convert(result[m + 2], CP_UTF8, CP_ACP);
 
 		char* errMsg = 0;
-		char sql[128];
+		char sql[1024];
 		
 		sprintf(sql, "select startType, startData, endType, endData, tag from %s", utf8Name);
 		int n; // rows
@@ -598,7 +600,7 @@ void DataTransfer::del(const char* name)
 	int n; // rows
 	int m; // columns
 	char** result;
-	char sql[128];
+	char sql[1024];
 	sprintf(sql, "SELECT name FROM config WHERE name = '%s';", utf8Name);
 	sqlite3_get_table(db, sql, &result, &n, &m, &errMsg);
 	
@@ -623,7 +625,7 @@ vector<CString> DataTransfer::getConfigs()
 	int n; // rows
 	int m; // columns
 	char** result;
-	char sql[128];
+	char sql[1024];
 	sprintf(sql, "SELECT name FROM config");
 	sqlite3_get_table(db, sql, &result, &n, &m, &errMsg);	
 	for (int i = 1; i <= n; ++i)
