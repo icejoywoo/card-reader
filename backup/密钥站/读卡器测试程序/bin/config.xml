@@ -1,0 +1,6 @@
+<PowerTool>
+	<COMM_COM PortNo="248" BraudRate="115200" MidTimeout="1000" FirstTimeout="1000"/>
+	<COMM_TCPCLIENT DestIP="192.168.1.201" DestPort="10001" MidTimeout="1000" FirstTimeout="1000"/>
+	<COMM_TCPSERVER LocalPort="10001" MidTimeout="1000" FirstTimeout="1000"/>
+	<COMM_UDP DestIP="192.168.1.201" DestPort="10001" LocalPort="30001" MidTimeout="1000" FirstTimeout="1000"/>
+</PowerTool>
