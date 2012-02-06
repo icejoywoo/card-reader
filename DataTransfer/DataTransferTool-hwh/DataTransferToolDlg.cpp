@@ -263,7 +263,7 @@ void CDataTransferToolDlg::OnButtonStartTransfer()
 	}
 
 	CString message;
-	message.Format("加载模板: <[%s]>, 是否确认开始转换?", m_CurrentTemplate);
+	message.Format("模板: %s\n模板备注: %s\n输入路径: %s\n输出路径: %s\n是否确认开始转换?", m_CurrentTemplate, m_TemplateComment, m_InputFile, m_TargetFile);
 	CWinThread* thread;
 	if(MessageBox(message, "信息确认", MB_YESNO | MB_ICONQUESTION) == IDYES)
 	{
@@ -584,6 +584,7 @@ int CDataTransferToolDlg::ShowInfor()
 void CDataTransferToolDlg::OnButtonRenameTemplate() 
 {
 	UpdateData(TRUE);
+	transfer.save(m_CurrentTemplate, m_TemplateComment);
 	// 重命名 操作顺序: 删除模板, 加载, 保存
 	CString chosenTemplate;
 
