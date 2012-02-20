@@ -1,0 +1,11 @@
+used_times(unsigned long, 4 bytes) + last modify time(long, 4 bytes)
+ + contract life start_time(long, 4bytes) + contract life end_time(long, 4bytes) + undefined
+
+product_code(产品型号) + (产品编号) + manufacture_date(生产日期) + 系统盘 硬盘uuid + undefined
+-------------------------------------------------------------------------------------------------
+10:02 2012/2/17
+
+serial|count|ip|mac
+
+1|10000|192.168.0.105|08-00-27-00-F0-54
+-------------------------------------------------------------------------------------------------

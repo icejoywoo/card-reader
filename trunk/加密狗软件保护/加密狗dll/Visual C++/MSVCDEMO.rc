@@ -1,0 +1,269 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE MOVEABLE PURE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE MOVEABLE PURE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE MOVEABLE PURE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\MSVCDEMO.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\MSVCDEMO.ico"
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MSVCDEMO_DIALOG DIALOGEX 0, 0, 427, 340
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "MSVCDEMO"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,301,316,50,14
+    GROUPBOX        "Dog Operation",IDC_STATIC,15,7,203,70
+    PUSHBUTTON      "OpenDog",IDC_BUTTON_OPEN_DOG,19,45,50,14
+    PUSHBUTTON      "CheckDog",IDC_BUTTON_CHECK_DOG,141,182,50,14
+    PUSHBUTTON      "GetProductCurrentNo",IDC_BUTTON_GET_PRODUCT_INFO,76,45,
+                    84,14
+    PUSHBUTTON      "GetDogInfo",IDC_BUTTON_GET_DOG_INFO,19,60,50,14
+    PUSHBUTTON      "CloseDog",IDC_BUTTON_CLOSE_DOG,76,60,50,14
+    LTEXT           "ProductName",IDC_STATIC,22,16,45,8
+    EDITTEXT        IDC_EDIT_PRODUCT_NAME,81,14,120,14,ES_AUTOHSCROLL
+    COMBOBOX        IDC_COMBO_OPEN_FLAG,81,29,120,72,CBS_DROPDOWN | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Open Flag",IDC_STATIC,21,31,37,8
+    GROUPBOX        "Password Operation",IDC_STATIC,15,80,203,50
+    PUSHBUTTON      "VerifyPassword",IDC_BUTTON_VERIFY_PASSWORD,19,91,63,14
+    PUSHBUTTON      "ChangePassword",IDC_BUTTON_CHANGE_PASSWORD,19,110,61,14
+    CONTROL         "User",IDC_RADIO_USER,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,88,93,32,10
+    CONTROL         "Developer",IDC_RADIO_DEVELOPER,"Button",
+                    BS_AUTORADIOBUTTON,141,93,52,10
+    EDITTEXT        IDC_EDIT_PASSWORD,132,111,73,14,ES_AUTOHSCROLL
+    LTEXT           "Password",IDC_STATIC,90,114,37,8
+    GROUPBOX        "Crypt Operation",IDC_STATIC,15,135,203,66
+    PUSHBUTTON      "SetKey",IDC_BUTTON_SET_KEY,19,147,50,14
+    PUSHBUTTON      "EncryptData",IDC_BUTTON_ENCRYPT_DATA,19,164,50,14
+    PUSHBUTTON      "DecryptData",IDC_BUTTON_DECRYPT_DATA,19,181,50,14
+    PUSHBUTTON      "SignData",IDC_BUTTON_SIGN_DATA,76,147,50,14
+    PUSHBUTTON      "ConvertData",IDC_BUTTON_CONVERT_DATA,76,164,50,14
+    PUSHBUTTON      "GetRandom",IDC_BUTTON_GET_RANDOM,76,181,50,14
+    GROUPBOX        "Upgrade Operation",IDC_STATIC,15,283,203,46
+    PUSHBUTTON      "GetRequest",IDC_BUTTON_GET_REQUEST,21,295,50,14
+    PUSHBUTTON      "Upgrade",IDC_BUTTON_UPGRADE,21,311,50,14
+    PUSHBUTTON      "BrowseUpgradeFile",IDC_BUTTON_BROWSE,76,295,72,14
+    GROUPBOX        "File Operation",IDC_STATIC,15,205,203,76
+    PUSHBUTTON      "CreateDir",IDC_BUTTON_CREATE_DIR,19,215,50,14
+    PUSHBUTTON      "CreateFile",IDC_BUTTON_CREATE_FILE,19,231,50,14
+    PUSHBUTTON      "ReadFile",IDC_BUTTON_READ_FILE,19,247,50,14
+    PUSHBUTTON      "WriteFile",IDC_BUTTON_WRITE_FILE,19,263,50,14
+    PUSHBUTTON      "VisitLicenseFile",IDC_BUTTON_VISIT_LICENSE_FILE,76,247,
+                    68,14
+    PUSHBUTTON      "DeleteFile",IDC_BUTTON_DELETE_FILE,76,232,50,14
+    PUSHBUTTON      "DeleteDir",IDC_BUTTON_DELETE_DIR,76,215,50,14
+    PUSHBUTTON      "DefragFileSystem",IDC_BUTTON_DEFLAG_FILE_SYSTEM,76,263,
+                    71,14
+    EDITTEXT        IDC_EDIT_DIR_ID,161,216,46,14,ES_AUTOHSCROLL
+    LTEXT           "DirID",IDC_STATIC,132,219,21,8
+    LTEXT           "FileID",IDC_STATIC,132,234,25,8
+    EDITTEXT        IDC_EDIT_FILE_ID,161,232,46,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "ExecuteFile",IDC_BUTTON_EXECUTE_FILE,158,263,50,14
+    CONTROL         "Sign Key",IDC_RADIO_SIGN_KEY,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,144,150,48,10
+    CONTROL         "AES Key",IDC_RADIO_EN_DECRYPT_KEY,"Button",
+                    BS_AUTORADIOBUTTON,144,167,44,10
+    EDITTEXT        IDC_EDIT_UPGRADE_FILE_PATH,119,311,93,14,ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_STATIC_RESULT,229,10,188,303,SS_SUNKEN
+    LTEXT           "FilePath",IDC_STATIC,78,315,33,8
+    PUSHBUTTON      "GetLicenseInfo",IDC_BUTTON_GET_LICENSE_INFO,150,247,58,
+                    14
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 2,0,0,0
+ PRODUCTVERSION 2,0,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "MSVCDEMO MFC Application\0"
+            VALUE "FileVersion", "2, 0, 0, 0\0"
+            VALUE "InternalName", "MSVCDEMO\0"
+            VALUE "LegalCopyright", "Copyright (C) 2010\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "MSVCDEMO.EXE\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "MSVCDEMO Application\0"
+            VALUE "ProductVersion", "2, 0, 0, 0\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO MOVEABLE PURE 
+BEGIN
+    IDD_MSVCDEMO_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 420
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 333
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_MSVCDEMO_DIALOG DLGINIT
+BEGIN
+    IDC_COMBO_OPEN_FLAG, 0x403, 20, 0
+0x3a31, 0x4f20, 0x6570, 0x466e, 0x7269, 0x7473, 0x6e49, 0x6f4c, 0x6163, 
+0x006c, 
+    IDC_COMBO_OPEN_FLAG, 0x403, 19, 0
+0x3a32, 0x4f20, 0x6570, 0x4e6e, 0x7865, 0x4974, 0x4c6e, 0x636f, 0x6c61, 
+"\000" 
+    IDC_COMBO_OPEN_FLAG, 0x403, 13, 0
+0x3a33, 0x4f20, 0x6570, 0x496e, 0x4c6e, 0x6e61, "\000" 
+    IDC_COMBO_OPEN_FLAG, 0x403, 18, 0
+0x3a34, 0x4f20, 0x6570, 0x4c6e, 0x636f, 0x6c61, 0x6946, 0x7372, 0x0074, 
+
+    IDC_COMBO_OPEN_FLAG, 0x403, 16, 0
+0x3a35, 0x4f20, 0x6570, 0x4c6e, 0x6e61, 0x6946, 0x7372, 0x0074, 
+    0
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\MSVCDEMO.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

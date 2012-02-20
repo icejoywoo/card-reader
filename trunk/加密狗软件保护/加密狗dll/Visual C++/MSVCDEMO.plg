@@ -1,0 +1,42 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: MSVCDEMO - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA75D.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/MSVCDEMO.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Program Files (x86)\SafeNet China\GrandDog SDK V2.0\19568\Windows\DLL\Visual C++\MSVCDEMO.cpp"
+"C:\Program Files (x86)\SafeNet China\GrandDog SDK V2.0\19568\Windows\DLL\Visual C++\MSVCDEMODlg.cpp"
+]
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA75D.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA75E.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/MSVCDEMO.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Program Files (x86)\SafeNet China\GrandDog SDK V2.0\19568\Windows\DLL\Visual C++\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA75E.tmp" 
+<h3>Output Window</h3>
+Compiling...
+StdAfx.cpp
+Compiling...
+MSVCDEMO.cpp
+MSVCDEMODlg.cpp
+Generating Code...
+Creating command line "link.exe /nologo /subsystem:windows /incremental:yes /pdb:"Debug/MSVCDEMO.pdb" /debug /machine:I386 /out:"Debug/MSVCDEMO.exe" /pdbtype:sept  ".\Debug\MSVCDEMO.obj" ".\Debug\MSVCDEMODlg.obj" ".\Debug\StdAfx.obj" ".\Debug\MSVCDEMO.res" "
+<h3>Output Window</h3>
+Linking...
+Creating command line "bscmake.exe /nologo /o"Debug/MSVCDEMO.bsc"  ".\Debug\StdAfx.sbr" ".\Debug\MSVCDEMO.sbr" ".\Debug\MSVCDEMODlg.sbr""
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+MSVCDEMO.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
