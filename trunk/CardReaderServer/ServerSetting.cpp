@@ -157,38 +157,12 @@ void ServerSetting::OnButtonDelReader()
 			if(MessageBox("确认删除?", "操作提示", MB_YESNO | MB_ICONQUESTION) == IDYES)
 			{
 				m_ReaderList.DeleteItem(i); // 删除GUI上的项
+				ServerParam::instance->readers.erase(i-1);
 			}
 			break;
 		}
 	}
-// 	int index = m_ReaderList.GetCurSel();
-// 	int count = m_ReaderList.GetCount();
-// 	if (index != LB_ERR && count > 1)
-// 	{
-// 		int readerId = m_ReaderList.GetItemData(index);
-// 		TRACE(CString(i2str(index)) + "," +i2str(readerId) + "\n");
-// 
-// 		for (map<int, int>::iterator iter = ServerParam::instance->readers.begin(); iter != ServerParam::instance->readers.end();)
-// 		{
-// 			if (iter->first == readerId)
-// 			{
-// 				ServerParam::instance->readers.erase(iter++);
-// 			}
-// 			else
-// 			{
-// 				++iter;
-// 			}
-// 		}
-// 
-// 		m_ReaderList.DeleteString(index);
-// 
-// 		if (++index < count)
-// 		{
-// 			m_ReaderList.SetCurSel(index);
-// 		} else {
-// 			m_ReaderList.SetCurSel(0);
-// 		}
-// 	}
+	
 	isChanged = TRUE;
 	UpdateData(FALSE);
 }
