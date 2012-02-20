@@ -1,0 +1,33 @@
+ 
+            ---------------------------------------------------
+                     宏狗套装  Visual C++  DLL 模块文件列表 
+            ---------------------------------------------------
+              版权所有 (c) 2010  赛孚耐（北京）信息技术有限公司
+
+============
+File List
+============
+文件名			 说明
+
+filelist-chn.txt	 本文件
+GrandDogofDll.h		 API接口头文件
+msvcdemo.cpp		 例子工程的源程序
+msvcdemo.dsp		 VC6 工程文件
+msvcdemo.dsw		 VC6 工程文件
+MSVCDEMO_2003.sln	 VS2003 工程文件
+MSVCDEMO_2003.vcproj     VS2003 工程文件
+MSVCDEMO_2010.sln	 VS2010 工程文件
+MSVCDEMO_2010.vcproj     VS2010 工程文件
+msvcdemo.exe		 例子的32位可执行文件
+msvcdemo.h		 例子工程的头文件
+msvcdemo.rc		 资源文件
+msvcdemodlg.cpp		 对话框程序的源文件（演示程序在此文件中实现）
+msvcdemodlg.h		 对话框程序的头文件
+resource.h		 资源头文件
+res<DIR>		 包含资源的文件夹
+stdafx.cpp		 预编译文件
+stdafx.h		 预编译头文件
+x64\msvcdemo.exe	 例子的64位可执行文件
+..\RCGrandDogW32.dll	 32位调用接口模块的动态库
+..\x64\RCGrandDogW32.dll 64位调用接口模块的动态库
+..\Readme-chn.txt	 说明文档

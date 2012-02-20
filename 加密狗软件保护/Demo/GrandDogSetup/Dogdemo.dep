@@ -1,0 +1,21 @@
+# Microsoft Developer Studio Generated Dependency File, included by Dogdemo.mak
+
+.\Dogdemo.cpp : \
+	".\Dogdemo.h"\
+	".\DogdemoDlg.h"\
+	
+
+.\Dogdemo.rc : \
+	".\res\Dogdemo.ico"\
+	".\res\Dogdemo.rc2"\
+	
+
+.\DogdemoDlg.cpp : \
+	".\Dogdemo.h"\
+	".\DogdemoDlg.h"\
+	
+
+.\StdAfx.cpp : \
+	".\StdAfx.h"\
+	"g:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	

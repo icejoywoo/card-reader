@@ -1,0 +1,54 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: HardwareInfo - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Debug/HardwareInfo.res" /d "_DEBUG" /d "_AFXDLL" "C:\Users\icejoywoo\Desktop\¼ÓÃÜ¹·\HardwareInfo\HardwareInfo.rc"" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP75B2.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/HardwareInfo.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\icejoywoo\Desktop\¼ÓÃÜ¹·\HardwareInfo\HardwareInfo.cpp"
+"C:\Users\icejoywoo\Desktop\¼ÓÃÜ¹·\HardwareInfo\HardwareInfoClass.cpp"
+"C:\Users\icejoywoo\Desktop\¼ÓÃÜ¹·\HardwareInfo\HardwareInfoDlg.cpp"
+]
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP75B2.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP75C2.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/HardwareInfo.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\icejoywoo\Desktop\¼ÓÃÜ¹·\HardwareInfo\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP75C2.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP75C3.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/HardwareInfo.pdb" /debug /machine:I386 /out:"Debug/HardwareInfo.exe" /pdbtype:sept 
+".\Debug\HardwareInfo.obj"
+".\Debug\HardwareInfoClass.obj"
+".\Debug\HardwareInfoDlg.obj"
+".\Debug\StdAfx.obj"
+".\Debug\HardwareInfo.res"
+]
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP75C3.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+HardwareInfo.cpp
+HardwareInfoClass.cpp
+HardwareInfoDlg.cpp
+Generating Code...
+Linking...
+Creating command line "bscmake.exe /nologo /o"Debug/HardwareInfo.bsc"  ".\Debug\StdAfx.sbr" ".\Debug\HardwareInfo.sbr" ".\Debug\HardwareInfoClass.sbr" ".\Debug\HardwareInfoDlg.sbr""
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+HardwareInfo.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
