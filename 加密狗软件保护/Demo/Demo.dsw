@@ -27,6 +27,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "KeyGenerator"=".\KeyGenerator\KeyGenerator.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "Mac_Volume_Info"=".\Mac_Volume_Info\Mac_Volume_Info.dsp" - Package Owner=<4>
 
 Package=<5>

@@ -35,11 +35,9 @@ int main(void)
 	GetIP(ip);
 
 	// 读取配置文件的mac地址
-	char mac[6];
-	ifstream in("request.key");
-	in.read(mac, 6);
-	in.close();
-	
+	char mac[7];
+	//GetMacAddress(mac);
+	GetPrivateProfileString("request", "mac", "", mac, 7, ".//request.ini");
 	mac[6] = '\0';
 
 	cout << "IP: " << ip << ", MAC: " << mac << endl;
@@ -49,7 +47,7 @@ int main(void)
 	strcpy(dogInfo.mac, mac);
 
 	char message[1024];
-	dogInfo.serial = 2;
+	dogInfo.serial = GetPrivateProfileInt("request", "serial", 1, ".//request.ini") + 1;
 	dogInfo.count = 10000;
 	sprintf(message, "%ld|%ld|%s", dogInfo.serial, dogInfo.count, dogInfo.mac);
 	string encodeStr = _(string(message));
