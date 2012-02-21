@@ -10,8 +10,9 @@
 #include "Base64.h"
 #include "HardwareInfo.h"
 #include <string>
+#include <fstream>
 
-using std::string;
+using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -420,21 +421,24 @@ void CDogControllerDlg::OnButtonStartInit()
 		return;
 	}
 
-	char mac[12];
-	GetMAC(mac); 
+	char mac[6];
+	GetMacAddress(mac); 
+
+	ofstream out("request.key");
+	out.write(mac, 6);
+	out.flush();
+	out.close();
 
 	UCHAR buf[200]; // 与文件大小一致
 	UpdateData(TRUE);
 	ULONG serial = 1;
 	ULONG countMinutes = m_ContractDays * 20 * 60; // 20个小时, 60分钟, 假设机器每天生产20小时
-// 	ULONG serial = 0xFFFFFFFF;
-// 	ULONG countMinutes = 0xFFFFFFFF;
 	UpdateData(FALSE);
 
 	memset(buf, 0, 200);
 	memcpy(buf, &serial, sizeof(long));
 	memcpy(&buf[4], &countMinutes, sizeof(long));
-	memcpy(&buf[8], &mac, 12 * sizeof(char));
+	memcpy(&buf[8], &mac, 6 * sizeof(char));
 	retCode = RC_WriteFile(DogHandle, 1, 2, 0l, 200l, buf);
 	if (retCode == S_OK)
 	{
@@ -564,8 +568,9 @@ void CDogControllerDlg::OnButtonUpdate()
 	memcpy(&serialInDog, buf1, sizeof(long));
 	long countInDog;
 	memcpy(&countInDog, &buf1[4], sizeof(long));
-	char macInDog[12];
-	memcpy(&macInDog, &buf1[8], 12 * sizeof(char));
+	char macInDog[6];
+	memcpy(&macInDog, &buf1[8], 6 * sizeof(char));
+	macInDog[6] = '\0';
 
 	if (serial != serialInDog + 1)
 	{

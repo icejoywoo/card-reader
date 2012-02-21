@@ -9,3 +9,8 @@ serial|count|ip|mac
 
 1|10000|192.168.0.105|08-00-27-00-F0-54
 -------------------------------------------------------------------------------------------------
+mingsen.key文件结构, 用来升级狗的key, 凭借serial来保证只升级一次, mac匹配来保证更新某台机
+serial(long, 4 bytes)|count(long, 4 bytes)|mac(6 bytes)
+
+request.key文件结构, 用来生成mingsen.key的文件, 保存serial和mac
+mac(6 bytes)

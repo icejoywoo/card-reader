@@ -6,13 +6,13 @@
 --------------------Configuration: DogController - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP335E.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA3EA.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/DogController.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"C:\Users\icejoywoo\Desktop\加密狗\Demo\DogController\DogControllerDlg.cpp"
+"F:\明森\card-reader\加密狗软件保护\Demo\DogController\DogControllerDlg.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP335E.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP335F.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA3EA.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA3EB.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/DogController.pdb" /debug /machine:I386 /out:"Debug/DogController.exe" /pdbtype:sept 
 ".\Debug\Base64.obj"
@@ -22,10 +22,12 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP335F.tmp" with 
 ".\Debug\StdAfx.obj"
 ".\Debug\DogController.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP335F.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA3EB.tmp"
 <h3>Output Window</h3>
 Compiling...
 DogControllerDlg.cpp
+f:\明森\card-reader\加密狗软件保护\demo\dogcontroller\ipexport.h(14) : warning C4068: unknown pragma
+f:\明森\card-reader\加密狗软件保护\demo\dogcontroller\ipexport.h(217) : warning C4068: unknown pragma
 Linking...
 Creating command line "bscmake.exe /nologo /o"Debug/DogController.bsc"  ".\Debug\StdAfx.sbr" ".\Debug\Base64.sbr" ".\Debug\DogController.sbr" ".\Debug\DogControllerDlg.sbr" ".\Debug\HardwareInfo.sbr""
 Creating browse info file...

@@ -73,7 +73,7 @@ int GetMAC(char * mac)
 	strcpy((char*)ncb.ncb_callname, "*");     //远程系统名赋值为*  
 	ncb.ncb_buffer = (unsigned char *)&Adapter; //指定返回的信息存放的变量  
 	ncb.ncb_length = sizeof(Adapter);  
-	//接着发送NCBASTAT命令以获取网卡的信息  
+	//接着发送NCBASTAT命令以获取网卡的信息 
 	uRetCode = Netbios(&ncb);   
 	//   取得网卡的信息，并且如果网卡正常工作的话，返回标准的冒号分隔格式。     
 	if(uRetCode != NRC_GOODRET)     
@@ -88,4 +88,41 @@ int GetMAC(char * mac)
         Adapter.adapt.adapter_address[5]   
     );   
     return 0;
+}
+
+BOOL GetMacAddress(char* mac)  
+{  
+	PIP_ADAPTER_INFO pAdapterInfo;  
+	DWORD AdapterInfoSize;  
+	TCHAR szMac[32]   =   {0};  
+	DWORD Err;    
+	AdapterInfoSize   =   0;  
+	Err   =   GetAdaptersInfo(NULL,   &AdapterInfoSize);  
+	if((Err   !=   0)   &&   (Err   !=   ERROR_BUFFER_OVERFLOW)){  
+		printf("获得网卡信息失败！");  
+		return   FALSE;  
+	}  
+	//   分配网卡信息内存  
+	pAdapterInfo   =   (PIP_ADAPTER_INFO)   GlobalAlloc(GPTR,   AdapterInfoSize);  
+	if(pAdapterInfo   ==   NULL){  
+		printf("分配网卡信息内存失败");  
+		return   FALSE;  
+	}    
+	if(GetAdaptersInfo(pAdapterInfo,   &AdapterInfoSize)   !=   0){  
+		printf("获得网卡信息失败！\n");  
+		GlobalFree(pAdapterInfo);  
+		return   FALSE;  
+	} 
+	/*    
+	strMac.Format(_T("%02X%02X%02X%02X%02X%02X"),    
+		pAdapterInfo->Address[0],  
+		pAdapterInfo->Address[1],  
+		pAdapterInfo->Address[2],  
+		pAdapterInfo->Address[3],  
+		pAdapterInfo->Address[4],  
+		pAdapterInfo->Address[5]);  
+    */
+	memcpy(mac,&pAdapterInfo->Address[0],6);
+	GlobalFree(pAdapterInfo);  
+	return   TRUE;  
 }

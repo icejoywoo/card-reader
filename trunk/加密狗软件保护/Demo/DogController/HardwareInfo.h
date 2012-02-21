@@ -16,4 +16,9 @@ int GetIP(char* ip);
 //数目和每张网卡的内部编号,然后对每个网卡标号发送NCBASTAT命令获取其MAC地址。  
 int GetMAC(char * mac);
 
+#include "IPHLPAPI.H"
+#pragma comment(lib, "IPHlpApi.Lib")
+
+BOOL GetMacAddress(char* mac);
+
 #endif

@@ -10,6 +10,9 @@
 #pragma comment(lib,"ws2_32.lib")    //连接ws2_32.lib库.只要程序中用到Winsock API 函数，都要用到 Ws2_32.lib  
 #pragma comment(lib,"netapi32.lib")   //连接Netapi32.lib库，MAC获取中用到了NetApi32.DLL的功能
 
+#include "IPHLPAPI.H"
+#pragma comment(lib, "IPHlpApi.Lib")
+
 #define _ Base64::encode
 #define __ Base64::decode
 
@@ -17,6 +20,7 @@ using namespace std;
 
 int GetIP(char* ip);
 int GetMAC(char * mac);
+BOOL GetMacAddress(char* mac);
 
 typedef struct _DogInformation
 {
@@ -29,9 +33,15 @@ int main(void)
 {
 	char ip[512];
 	GetIP(ip);
-	//char* mac = "F0DEF1A3C9FD";
-	char mac[512];
-	GetMAC(mac);
+
+	// 读取配置文件的mac地址
+	char mac[6];
+	ifstream in("request.key");
+	in.read(mac, 6);
+	in.close();
+	
+	mac[6] = '\0';
+
 	cout << "IP: " << ip << ", MAC: " << mac << endl;
 
 	DogInformation dogInfo;
@@ -144,4 +154,41 @@ int GetMAC(char * mac)
         Adapter.adapt.adapter_address[5]   
 		);   
     return 0;
+}
+
+BOOL GetMacAddress(char* mac)  
+{  
+	PIP_ADAPTER_INFO pAdapterInfo;  
+	DWORD AdapterInfoSize;  
+	TCHAR szMac[32]   =   {0};  
+	DWORD Err;    
+	AdapterInfoSize   =   0;  
+	Err   =   GetAdaptersInfo(NULL,   &AdapterInfoSize);  
+	if((Err   !=   0)   &&   (Err   !=   ERROR_BUFFER_OVERFLOW)){  
+		printf("获得网卡信息失败！");  
+		return   FALSE;  
+	}  
+	//   分配网卡信息内存  
+	pAdapterInfo   =   (PIP_ADAPTER_INFO)   GlobalAlloc(GPTR,   AdapterInfoSize);  
+	if(pAdapterInfo   ==   NULL){  
+		printf("分配网卡信息内存失败");  
+		return   FALSE;  
+	}    
+	if(GetAdaptersInfo(pAdapterInfo,   &AdapterInfoSize)   !=   0){  
+		printf("获得网卡信息失败！\n");  
+		GlobalFree(pAdapterInfo);  
+		return   FALSE;  
+	} 
+	/*    
+	strMac.Format(_T("%02X%02X%02X%02X%02X%02X"),    
+		pAdapterInfo->Address[0],  
+		pAdapterInfo->Address[1],  
+		pAdapterInfo->Address[2],  
+		pAdapterInfo->Address[3],  
+		pAdapterInfo->Address[4],  
+		pAdapterInfo->Address[5]);  
+    */
+	memcpy(mac,&pAdapterInfo->Address[0],6);
+	GlobalFree(pAdapterInfo);  
+	return   TRUE;  
 }
