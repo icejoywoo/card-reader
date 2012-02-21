@@ -6,13 +6,13 @@
 --------------------Configuration: DogController - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA3EA.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP2620.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/DogController.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
 "F:\明森\card-reader\加密狗软件保护\Demo\DogController\DogControllerDlg.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA3EA.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA3EB.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP2620.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP2630.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/DogController.pdb" /debug /machine:I386 /out:"Debug/DogController.exe" /pdbtype:sept 
 ".\Debug\Base64.obj"
@@ -22,7 +22,7 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA3EB.tmp" with 
 ".\Debug\StdAfx.obj"
 ".\Debug\DogController.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPA3EB.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP2630.tmp"
 <h3>Output Window</h3>
 Compiling...
 DogControllerDlg.cpp

@@ -104,6 +104,7 @@ BEGIN_MESSAGE_MAP(CDogControllerDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_START_INIT, OnButtonStartInit)
 	ON_BN_CLICKED(IDC_BUTTON_CHOOSE_UPDATE_FILE, OnButtonChooseUpdateFile)
 	ON_BN_CLICKED(IDC_BUTTON_UPDATE, OnButtonUpdate)
+	ON_BN_CLICKED(IDC_BUTTON_REQUEST, OnButtonRequest)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -421,19 +422,19 @@ void CDogControllerDlg::OnButtonStartInit()
 		return;
 	}
 
-	char mac[6];
+	char mac[7];
+	mac[6] = '\0';
 	GetMacAddress(mac); 
-
-	ofstream out("request.key");
-	out.write(mac, 6);
-	out.flush();
-	out.close();
 
 	UCHAR buf[200]; // 与文件大小一致
 	UpdateData(TRUE);
 	ULONG serial = 1;
 	ULONG countMinutes = m_ContractDays * 20 * 60; // 20个小时, 60分钟, 假设机器每天生产20小时
 	UpdateData(FALSE);
+	
+	// 写入request.ini
+	WritePrivateProfileString("request", "serial", "1", ".//request.ini");
+	WritePrivateProfileString("request", "mac", mac, ".//request.ini");
 
 	memset(buf, 0, 200);
 	memcpy(buf, &serial, sizeof(long));
@@ -568,18 +569,18 @@ void CDogControllerDlg::OnButtonUpdate()
 	memcpy(&serialInDog, buf1, sizeof(long));
 	long countInDog;
 	memcpy(&countInDog, &buf1[4], sizeof(long));
-	char macInDog[6];
+	char macInDog[7];
 	memcpy(&macInDog, &buf1[8], 6 * sizeof(char));
 	macInDog[6] = '\0';
 
+	// 序列号, 防止重复升级
 	if (serial != serialInDog + 1)
 	{
 		AfxMessageBox("该更新文件已无效!");
 		return;
 	}
-	strResult.Format("硬件狗中计数器为: %d.", countInDog);
-	m_ResultList.AddString(strResult);
-	
+
+	// 保证更新的机器是与够匹配的	
 	if (strcmp(macInDog, mac.c_str()) != 0)
 	{
 		AfxMessageBox("请保证更新的机器是与硬件狗匹配的机器以保证更新正常!");
@@ -602,6 +603,100 @@ void CDogControllerDlg::OnButtonUpdate()
 		strResult.Format("向文件中写数据失败, 错误码: 0X%X.", retCode);
 		m_ResultList.AddString(strResult);
 		return;
+	}
+
+	retCode = RC_CloseDog(DogHandle);
+	if (retCode == S_OK)
+	{
+		strResult.Format("关闭硬件狗成功.");
+		m_ResultList.AddString(strResult);
+	}
+	else
+	{
+		strResult.Format("关闭硬件狗失败, 错误码: 0X%X.", retCode);
+		m_ResultList.AddString(strResult);
+		return;
+	}
+}
+
+void CDogControllerDlg::OnButtonRequest() 
+{
+	HRESULT retCode;
+	ULONG DogHandle;
+	CString strResult;
+	retCode = RC_OpenDog(RC_OPEN_FIRST_IN_LOCAL, m_ProductName.GetBuffer(16), &DogHandle);
+
+	if (retCode == S_OK)
+	{
+		strResult.Format("打开硬件狗成功, 硬件狗句柄为0X%X.", DogHandle);
+		m_ResultList.AddString(strResult);
+	} 
+	else if (retCode == 0xA8160002L)
+	{
+		strResult.Format("打开硬件狗失败, 没有发现硬件狗, 错误码是0X%X.", retCode);
+		m_ResultList.AddString(strResult);
+		return;
+	}
+	else if (retCode == 0xA8160001L)
+	{
+		strResult.Format("打开硬件狗失败, 没有发现驱动或驱动安装不正确, 错误码是0X%X.", retCode);
+		m_ResultList.AddString(strResult);
+		return;
+	}
+	else
+	{
+		strResult.Format("打开硬件狗失败, 错误码是0X%X.", retCode);
+		m_ResultList.AddString(strResult);
+		return;
+	}
+
+	UCHAR ucDegree = 0;
+	retCode = RC_VerifyPassword(DogHandle, RC_PASSWORDTYPE_DEVELOPER, m_DeveloperPassword.GetBuffer(512), &ucDegree);
+
+	if (retCode == S_OK)
+	{
+		strResult.Format("开发者密码校验成功.");
+		m_ResultList.AddString(strResult);
+	}
+	else
+	{
+		strResult.Format("开发者密码校验失败, 剩余校验次数: %d.", ucDegree);
+		m_ResultList.AddString(strResult);
+		return;
+	}
+
+	char buf[200];
+	retCode = RC_ReadFile(DogHandle, 1, 2, 0l, 200l, (UCHAR*)buf);
+	if (retCode == S_OK)
+	{
+		strResult.Format("读取硬件狗数据成功.");
+		m_ResultList.AddString(strResult);
+	}
+	else
+	{
+		strResult.Format("读取硬件狗数据失败.");
+		m_ResultList.AddString(strResult);
+		return;
+	}
+	ULONG serialInDog;
+	memcpy(&serialInDog, buf, sizeof(long));
+	ULONG countInDog;
+	memcpy(&countInDog, &buf[4], sizeof(long));
+	char macInDog[7];
+	memcpy(&macInDog, &buf[8], 6 * sizeof(char));
+	macInDog[6] = '\0';
+
+	char temp[128];
+	sprintf(temp, "%ld", serialInDog);
+	// 写入request.ini
+	if ( WritePrivateProfileString("request", "serial", temp, ".//request.ini") 
+		&& WritePrivateProfileString("request", "mac", macInDog, ".//request.ini"))
+	{
+		AfxMessageBox("生成请求成功!");
+	}
+	else
+	{
+		AfxMessageBox("生成请求失败!请再次尝试!");
 	}
 
 	retCode = RC_CloseDog(DogHandle);

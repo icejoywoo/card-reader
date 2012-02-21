@@ -50,7 +50,7 @@ BEGIN
     "LANGUAGE 4, 2\r\n"
     "#pragma code_page(936)\r\n"
     "#endif //_WIN32\r\n"
-    "#include ""res\\DogController.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""res\\KeyGenerator.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
     "#include ""l.chs\\afxres.rc""          // Standard components\r\n"
     "#endif\r\n"
     "\0"
@@ -66,7 +66,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON    DISCARDABLE     "res\\DogController.ico"
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\KeyGenerator.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -75,45 +75,32 @@ IDR_MAINFRAME           ICON    DISCARDABLE     "res\\DogController.ico"
 
 IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "关于 DogController"
+CAPTION "关于 KeyGenerator"
 FONT 9, "宋体"
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "DogController 1.0 版",IDC_STATIC,40,10,119,8,
-                    SS_NOPREFIX
-    LTEXT           "广州明森机电设备有限公司 版权所有 (C) 2012",IDC_STATIC,
-                    40,25,176,8
+    LTEXT           "KeyGenerator 1.0 版",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "版权所有 (C) 2012",IDC_STATIC,40,25,119,8
     DEFPUSHBUTTON   "确定",IDOK,178,7,50,14,WS_GROUP
 END
 
-IDD_DOGCONTROLLER_DIALOG DIALOGEX 0, 0, 321, 229
+IDD_KEYGENERATOR_DIALOG DIALOGEX 0, 0, 338, 173
 STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
     WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "宏狗Key导入工具"
+CAPTION "升级Key生成工具"
 FONT 9, "宋体"
 BEGIN
-    PUSHBUTTON      "检查驱动",IDC_BUTTON_CHECK_VERSION,50,24,50,14
-    PUSHBUTTON      "安装驱动",IDC_BUTTON_INSTALL_DRIVER,135,24,50,14
-    PUSHBUTTON      "卸载驱动",IDC_BUTTON_UNINSTALL_DRIVER,220,24,50,14
-    GROUPBOX        "驱动管理",IDC_STATIC,23,13,276,32
-    LTEXT           "产品名称:",IDC_STATIC,44,63,37,8
-    EDITTEXT        IDC_EDIT_PRODUCT_NAME,90,60,62,14,ES_AUTOHSCROLL
-    LTEXT           "开发商密码:",IDC_STATIC,161,63,45,8
-    EDITTEXT        IDC_EDIT_DEVELOPER_PASSWORD,215,60,61,14,ES_AUTOHSCROLL
-    LTEXT           "使用日期(天):",IDC_STATIC,43,93,53,8
-    EDITTEXT        IDC_EDIT_CONTRACT_DAYS,102,91,40,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "开始初始化",IDC_BUTTON_START_INIT,167,91,50,14
-    GROUPBOX        "初始化",IDC_STATIC,22,82,276,30
-    GROUPBOX        "更新",IDC_STATIC,23,118,276,34
-    EDITTEXT        IDC_EDIT_UPDATE_FILE,73,130,143,14,ES_AUTOHSCROLL
-    LTEXT           "更新文件:",IDC_STATIC,29,132,37,8
-    PUSHBUTTON      "选择",IDC_BUTTON_CHOOSE_UPDATE_FILE,222,130,31,14
-    PUSHBUTTON      "更新",IDC_BUTTON_UPDATE,259,130,31,14
-    LISTBOX         IDC_LIST_RESULT,23,160,276,56,LBS_NOINTEGRALHEIGHT | 
+    LTEXT           "请求配置:",IDC_STATIC,37,26,37,8
+    EDITTEXT        IDC_EDIT_REQUEST_FILE,85,24,179,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "文件",IDC_BUTTON_CHOOSE_FILE,275,24,29,14
+    PUSHBUTTON      "生成Key",IDC_BUTTON_GENERATE_KEY,118,73,107,25
+    LISTBOX         IDC_LIST_RESULT,38,110,264,36,LBS_NOINTEGRALHEIGHT | 
                     WS_VSCROLL | WS_TABSTOP
-    GROUPBOX        "硬件狗信息",IDC_STATIC,23,51,276,27
-    PUSHBUTTON      "生成请求文件",IDC_BUTTON_REQUEST,233,91,53,14
+    GROUPBOX        "结果",IDC_STATIC,24,100,291,50
+    LTEXT           "授权时间(天):",IDC_STATIC,37,52,53,8
+    EDITTEXT        IDC_EDIT_DAYS,101,48,40,14,ES_AUTOHSCROLL
+    GROUPBOX        "配置",IDC_STATIC,23,13,288,56
 END
 
 
@@ -141,13 +128,13 @@ BEGIN
         BLOCK "080404B0"
         BEGIN
             VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "DogController Microsoft 基础类应用程序\0"
+            VALUE "FileDescription", "KeyGenerator Microsoft 基础类应用程序\0"
             VALUE "FileVersion", "1, 0, 0, 1\0"
-            VALUE "InternalName", "DogController\0"
+            VALUE "InternalName", "KeyGenerator\0"
             VALUE "LegalCopyright", "版权所有 (C) 2012\0"
             VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "DogController.EXE\0"
-            VALUE "ProductName", "DogController 应用程序\0"
+            VALUE "OriginalFilename", "KeyGenerator.EXE\0"
+            VALUE "ProductName", "KeyGenerator 应用程序\0"
             VALUE "ProductVersion", "1, 0, 0, 1\0"
         END
     END
@@ -176,11 +163,12 @@ BEGIN
         BOTTOMMARGIN, 48
     END
 
-    IDD_DOGCONTROLLER_DIALOG, DIALOG
+    IDD_KEYGENERATOR_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 314
-        BOTTOMMARGIN, 222
+        RIGHTMARGIN, 331
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 166
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -193,7 +181,7 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_ABOUTBOX            "关于 DogController(&A)..."
+    IDS_ABOUTBOX            "关于 KeyGenerator(&A)..."
 END
 
 #endif    // Chinese (中国) resources
@@ -216,7 +204,7 @@ END
 LANGUAGE 4, 2
 #pragma code_page(936)
 #endif //_WIN32
-#include "res\DogController.rc2"  // non-Microsoft Visual C++ edited resources
+#include "res\KeyGenerator.rc2"  // non-Microsoft Visual C++ edited resources
 #include "l.chs\afxres.rc"          // Standard components
 #endif
 

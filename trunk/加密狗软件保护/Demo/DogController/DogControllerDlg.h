@@ -49,6 +49,7 @@ protected:
 	afx_msg void OnButtonStartInit();
 	afx_msg void OnButtonChooseUpdateFile();
 	afx_msg void OnButtonUpdate();
+	afx_msg void OnButtonRequest();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
