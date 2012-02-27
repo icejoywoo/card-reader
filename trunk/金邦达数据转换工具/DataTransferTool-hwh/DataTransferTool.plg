@@ -3,16 +3,103 @@
 <pre>
 <h1>Build Log</h1>
 <h3>
+--------------------Configuration: DataTransferTool - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Release/DataTransferTool.res" /d "NDEBUG" /d "_AFXDLL" "D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\DataTransferTool.rc"" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP259.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Release/" /Fp"Release/DataTransferTool.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\DataTransfer.cpp"
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\DataTransferTool.cpp"
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\DataTransferToolDlg.cpp"
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\FieldConfigDialog.cpp"
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\TemplateNameDialog.cpp"
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\TransferingDialog.cpp"
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\Utils.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP259.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP25A.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Release/" /Fp"Release/DataTransferTool.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP25A.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP25B.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"Release/DataTransferTool.pdb" /machine:I386 /out:"Release/DataTransferTool.exe" 
+".\Release\DataTransfer.obj"
+".\Release\DataTransferTool.obj"
+".\Release\DataTransferToolDlg.obj"
+".\Release\FieldConfigDialog.obj"
+".\Release\StdAfx.obj"
+".\Release\TemplateNameDialog.obj"
+".\Release\TransferingDialog.obj"
+".\Release\Utils.obj"
+".\Release\DataTransferTool.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP25B.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Automatically linking with SkinPlusPlusDLL.dll
+Compiling...
+DataTransfer.cpp
+D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\DataTransfer.cpp(415) : warning C4101: 'e' : unreferenced local variable
+D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\DataTransfer.cpp(463) : warning C4101: 'e' : unreferenced local variable
+DataTransferTool.cpp
+DataTransferToolDlg.cpp
+FieldConfigDialog.cpp
+TemplateNameDialog.cpp
+TransferingDialog.cpp
+Utils.cpp
+Generating Code...
+D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\Utils.cpp(51) : warning C4700: local variable 'pTargetData' used without having been initialized
+Linking...
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP25D.tmp" with contents
+[
+/nologo /o"Release/DataTransferTool.bsc" 
+".\Release\StdAfx.sbr"
+".\Release\DataTransfer.sbr"
+".\Release\DataTransferTool.sbr"
+".\Release\DataTransferToolDlg.sbr"
+".\Release\FieldConfigDialog.sbr"
+".\Release\TemplateNameDialog.sbr"
+".\Release\TransferingDialog.sbr"
+".\Release\Utils.sbr"]
+Creating command line "bscmake.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP25D.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+DataTransferTool.exe - 0 error(s), 3 warning(s)
+<h3>
 --------------------Configuration: DataTransferTool - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP624A.tmp" with contents
+Creating command line "rc.exe /l 0x804 /fo"Debug/DataTransferTool.res" /d "_DEBUG" /d "_AFXDLL" "D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\DataTransferTool.rc"" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP25E.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/DataTransferTool.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"F:\MingSen\card-reader\DataTransfer\DataTransferTool-hwh\DataTransfer.cpp"
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\DataTransfer.cpp"
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\DataTransferTool.cpp"
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\DataTransferToolDlg.cpp"
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\FieldConfigDialog.cpp"
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\TemplateNameDialog.cpp"
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\TransferingDialog.cpp"
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\Utils.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP624A.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP625B.tmp" with contents
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP25E.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP25F.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/DataTransferTool.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP25F.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP260.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/DataTransferTool.pdb" /debug /machine:I386 /out:"Debug/DataTransferTool.exe" /pdbtype:sept 
 ".\Debug\DataTransfer.obj"
@@ -25,14 +112,26 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP625B.tmp" with 
 ".\Debug\Utils.obj"
 ".\Debug\DataTransferTool.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP625B.tmp"
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP260.tmp"
 <h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Automatically linking with SkinPlusPlusDLL.dll
 Compiling...
 DataTransfer.cpp
-F:\MingSen\card-reader\DataTransfer\DataTransferTool-hwh\DataTransfer.cpp(415) : warning C4101: 'e' : unreferenced local variable
-F:\MingSen\card-reader\DataTransfer\DataTransferTool-hwh\DataTransfer.cpp(463) : warning C4101: 'e' : unreferenced local variable
+D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\DataTransfer.cpp(415) : warning C4101: 'e' : unreferenced local variable
+D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\DataTransfer.cpp(463) : warning C4101: 'e' : unreferenced local variable
+DataTransferTool.cpp
+DataTransferToolDlg.cpp
+FieldConfigDialog.cpp
+TemplateNameDialog.cpp
+TransferingDialog.cpp
+Utils.cpp
+Generating Code...
+D:\mingsen\trunk\金邦达数据转换工具\DataTransferTool-hwh\Utils.cpp(51) : warning C4700: local variable 'pTargetData' used without having been initialized
 Linking...
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP6346.tmp" with contents
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP262.tmp" with contents
 [
 /nologo /o"Debug/DataTransferTool.bsc" 
 ".\Debug\StdAfx.sbr"
@@ -43,14 +142,14 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP6346.tmp" with 
 ".\Debug\TemplateNameDialog.sbr"
 ".\Debug\TransferingDialog.sbr"
 ".\Debug\Utils.sbr"]
-Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP6346.tmp"
+Creating command line "bscmake.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP262.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
 
 
 
 <h3>Results</h3>
-DataTransferTool.exe - 0 error(s), 0 warning(s)
+DataTransferTool.exe - 0 error(s), 3 warning(s)
 </pre>
 </body>
 </html>

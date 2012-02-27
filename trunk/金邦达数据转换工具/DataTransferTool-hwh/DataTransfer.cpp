@@ -221,7 +221,7 @@ void TransferRule::save(sqlite3* db, const char* name)
 	char sql[1024];
 	// 删除同名表, 然后建表
 	// 	this->startType,this->startData,this->endType,this->endData,this->tag
-	sprintf(sql, "INSERT INTO %s VALUES(%d, '%s', %d, '%s', '%s')", name, this->startType, this->startData, this->endType, this->endData, this->tag);
+	sprintf(sql, "INSERT INTO '%s' VALUES(%d, '%s', %d, '%s', '%s')", name, this->startType, this->startData, this->endType, this->endData, this->tag);
 	sqlite3_exec(db, sql, NULL, 0, &errMsg);
 }
 
@@ -231,7 +231,7 @@ void TransferRule::load(sqlite3* db, const char* name)
 // 	char sql[128];
 // 	// 删除同名表, 然后建表
 // 	// 	this->startType,this->startData,this->endType,this->endData,this->tag
-// 	sprintf(sql, "select startType, startData, endType, endData, tag from %s", name);
+// 	sprintf(sql, "select startType, startData, endType, endData, tag from '%s'", name);
 // 	int n; // rows
 // 	int m; // columns
 // 	char** result;
@@ -535,10 +535,10 @@ void DataTransfer::save(const char* name, const char* comment /* = "" */)
 
 
 	// TODO: 删除同名表, 然后建表
-	sql.Format("DROP TABLE %s;", utf8Name);
+	sql.Format("DROP TABLE '%s';", utf8Name);
 	sqlite3_exec(db, sql, NULL, 0, &errMsg);
 
-	sql.Format("CREATE TABLE %s (startType integer, startData text, endType integer, endData text, tag text);", utf8Name, utf8Name);
+	sql.Format("CREATE TABLE '%s' (startType integer, startData text, endType integer, endData text, tag text);", utf8Name, utf8Name);
 	sqlite3_exec(db, sql, NULL, 0, &errMsg);
 
 	for (vector<TransferRule>::iterator iter = rules.begin();
@@ -570,7 +570,7 @@ void DataTransfer::load(const char* name)
 		char* errMsg = 0;
 		char sql[1024];
 		
-		sprintf(sql, "select startType, startData, endType, endData, tag from %s", utf8Name);
+		sprintf(sql, "select startType, startData, endType, endData, tag from '%s'", utf8Name);
 		int n; // rows
 		int m; // columns
 		char** result;
@@ -609,7 +609,7 @@ void DataTransfer::del(const char* name)
 		sprintf(sql, "DELETE FROM config WHERE name = '%s';", utf8Name);
 		sqlite3_exec(db, sql, NULL, NULL, &errMsg);
 
-		sprintf(sql, "DROP TABLE %s;", utf8Name);
+		sprintf(sql, "DROP TABLE '%s';", utf8Name);
 		sqlite3_exec(db, sql, NULL, NULL, &errMsg);
 	}
 	else
