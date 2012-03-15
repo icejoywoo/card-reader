@@ -1,8 +1,0 @@
-Wed Mar 14 15:56:23 2012
- WSAStartup初始化成功!
-Wed Mar 14 15:56:23 2012
- 开始建立socket...
-Wed Mar 14 15:56:23 2012
- socket建立成功!
-Wed Mar 14 15:56:23 2012
- 读卡器获取成功!

@@ -18,31 +18,39 @@ using namespace std;
 
 ClientParam::ClientParam() 
 {
-	OutputDebugString("ClientParam初始化...");
 	this->clientNum = 0; // 初始化客户端数量为0
 	this->mutex = CreateMutex(NULL, FALSE, LPCTSTR("clients"));
 	this->isInit = false;
 	char logfile[512];
+	// 开启日志文件
 	time_t t;
 	time(&t);
 	tm * current_tm = localtime(&t);
 	sprintf(logfile, "CardReaderClientDll-log-%04d-%02d-%02d-%d.txt", current_tm->tm_year + 1900, current_tm->tm_mon + 1, current_tm->tm_mday, t);
 	this->log = fopen(logfile, "w");
+	time(&t);
+	fprintf(this->log, "%s\tClientParam: Client初始化...\n", asctime(localtime(&t)));
+	fflush(this->log);
 
 	// 读取配置文件, 目前读取有问题
-	this->serverIp = new char[512];
-	ClientUtils::getConfig("Server", "ip", this->serverIp, 512);
+	this->serverIp = new char[64];
+	ClientUtils::getConfig("Server", "ip", this->serverIp, 64);
+	
 	this->serverPort = ClientUtils::getConfigInt("Server", "port");
 }
 ClientParam::~ClientParam() 
 {
-	delete serverIp;
-	fclose(this->log);
 	// 在析构函数的时候, 调用释放socket环境
 	if (ClientParam::instance->isClientEmpty())
 	{
 		WSACleanup();
+		time_t t;
+		time(&t);
+		fprintf(this->log, "%s\tClientParam: WSACleanup windows socket环境清理!\n", asctime(localtime(&t)));
+		fflush(this->log);
 	}
+	delete this->serverIp;
+	fclose(this->log);
 }
 
 ClientParam* ClientParam::instance = new ClientParam();

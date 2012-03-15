@@ -35,7 +35,7 @@ public:
 	// 客户端数量
 	unsigned int clientNum;
 	// 是否初始化socket环境
-	bool isInit;
+	volatile bool isInit;
 	// 单例
 	static ClientParam* instance;
 	// 日志文件
