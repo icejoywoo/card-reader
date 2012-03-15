@@ -93,29 +93,53 @@ CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long c
 	if (!ClientParam::instance->isInit)
 	{
 		WSADATA wsaData;
-		if (0 !=WSAStartup(0x101,&wsaData))
+		WORD wVersionRequested = MAKEWORD(2,1);
+		if (0 !=WSAStartup(wVersionRequested,&wsaData)) // 初始化socket环境
+		{
+			time(&t);
+			fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: WSAStartup初始化失败!\n", asctime(localtime(&t)), reader->readerId);
+			fflush(ClientParam::instance->log);
 			return -4;
-		time(&t);
-		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: WSAStartup初始化成功!\n", asctime(localtime(&t)), reader->readerId);
-		fflush(ClientParam::instance->log);
-		ClientParam::instance->isInit = true;
+		} 
+		else 
+		{
+			time(&t);
+			fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: WSAStartup初始化成功!\n", asctime(localtime(&t)), reader->readerId);
+			fflush(ClientParam::instance->log);
+			ClientParam::instance->isInit = true;
+		}
 	}
 	struct sockaddr_in server;
-	struct hostent *hp;
-	unsigned int addr;
-
+	// 2012.3.15 不实用hostent, 不支持主机名解析功能, 直接使用ip
+//	struct hostent *hp;
+//	unsigned int addr;
+	time(&t);
+	fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: 服务器的配置为IP: %s, PORT: %d\n", 
+		asctime(localtime(&t)), reader->readerId, ClientParam::instance->serverIp, ClientParam::instance->serverPort);
+	fflush(ClientParam::instance->log);
 	// 设置server地址
-	if(inet_addr(ClientParam::instance->serverIp) == INADDR_NONE)
-	{
-		hp=gethostbyname(ClientParam::instance->serverIp);
-	}
-	else
-	{
-		addr=inet_addr(ClientParam::instance->serverIp);
-		hp=gethostbyaddr((char*)&addr,sizeof(addr),AF_INET);
-	}
-
-	server.sin_addr.s_addr=*((u_long FAR*)hp->h_addr);
+// 	if(inet_addr(ClientParam::instance->serverIp) == INADDR_NONE)
+// 	{
+// 		hp=gethostbyname(ClientParam::instance->serverIp);
+// 	}
+// 	else
+// 	{
+// 		addr=inet_addr(ClientParam::instance->serverIp);
+// 		hp=gethostbyaddr((char*)&addr,sizeof(addr),AF_INET);
+// 	}
+	
+	// 判断hostent是否获取成功
+// 	if (NULL == hp)
+// 	{
+// 		time(&t);
+// 		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: hp获取失败\n", 
+// 			asctime(localtime(&t)), reader->readerId, ClientParam::instance->serverIp, ClientParam::instance->serverPort);
+// 		fflush(ClientParam::instance->log);
+// 		return -6;
+// 	}
+	// 设置server的ip和port
+//	server.sin_addr.s_addr=*((u_long FAR*)hp->h_addr);
+	server.sin_addr.S_un.S_addr = inet_addr(ClientParam::instance->serverIp); // 不使用hostent, 直接赋值的方式
 	server.sin_family=AF_INET;
 	server.sin_port=htons(ClientParam::instance->serverPort);
 	
@@ -145,6 +169,7 @@ CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long c
 		return SETSOCKOPT_FAILED;
 	}
 
+	// socket连接服务器
 	if (connect(reader->s, (sockaddr*)&server, sizeof(server)))
 	{
 		time(&t);
@@ -197,14 +222,15 @@ CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long c
 	fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: 读卡器获取成功!\n", asctime(localtime(&t)), reader->readerId);
 //	ClientParam::instance->addClient();
 	fflush(ClientParam::instance->log);
+	return 0;
 	}
-	catch (...)
+	catch (...) // GetReader异常捕获
 	{
 		time(&t);
-		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: 获取读卡器出现异常!\n", asctime(localtime(&t)), reader->readerId);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: 获取读卡器出现异常! 错误码: %d\n", asctime(localtime(&t)), reader->readerId, WSAGetLastError());
 		fflush(ClientParam::instance->log);
+		return -5;
 	}
-	return 0;
 }
 
 CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
@@ -216,12 +242,12 @@ CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
 	if (-1 == ClientUtils::sendData(reader->s, "quit")) // 发出退出消息
 	{
 		// 关闭资源
-		shutdown(reader->s, SD_BOTH);
-		closesocket(reader->s);
-		reader->readerId = 0;
 		time(&t);
 		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ReleaseReader释放读卡器: socket发送数据失败!\n", asctime(localtime(&t)), reader->readerId);
 		fflush(ClientParam::instance->log);
+		shutdown(reader->s, SD_BOTH);
+		closesocket(reader->s);
+		reader->readerId = 0;
 		return SEND_ERROR;
 	}
 	ClientUtils::receiveData(reader->s, retCode);
@@ -234,25 +260,39 @@ CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
 	}
 	// 关闭资源
 	shutdown(reader->s, SD_BOTH);
-	closesocket(reader->s);
-	reader->readerId = 0;
+	if (0 == closesocket(reader->s))
+	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ReleaseReader释放读卡器: 读卡器释放成功!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
+	}
+	else
+	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ReleaseReader释放读卡器: 读卡器释放失败! 错误码:%d\n", 
+			asctime(localtime(&t)), reader->readerId, WSAGetLastError());
+		fflush(ClientParam::instance->log);
+		return -2;
+	}
+	
 //	ClientParam::instance->deleteClient();
-	time(&t);
-	fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ReleaseReader释放读卡器: 读卡器释放成功!\n", asctime(localtime(&t)), reader->readerId);
-	fflush(ClientParam::instance->log);
+	// 将reader初始化为0
+	reader->readerId = 0;
 	// 考虑不释放socket环境, 看是否还会出现问题
 // 	if (ClientParam::instance->isClientEmpty())
 // 	{
 // 		WSACleanup();
 // 	}
+	return retCode;
 	}
-	catch (...)
+	catch (...) // ReleaseReader异常捕获
 	{
 		time(&t);
-		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ReleaseReader释放读卡器: 释放读卡器异常!\n", asctime(localtime(&t)), reader->readerId);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ReleaseReader释放读卡器: 释放读卡器异常! 错误码: %d\n", 
+			asctime(localtime(&t)), reader->readerId, WSAGetLastError());
 		fflush(ClientParam::instance->log);
+		return -1;
 	}
-	return retCode;
 }
 
 CARDREADERCLIENTDLL_API int GetDevIDAndReaderId(Reader* reader, char* devID, int devIDBufLen, int& readerMacId)

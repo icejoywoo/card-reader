@@ -8,7 +8,7 @@
 
 #ifdef CARDREADERCLIENTDLL_EXPORTS
 #define CARDREADERCLIENTDLL_API __declspec(dllexport)
-#else
+#else;;;
 #define CARDREADERCLIENTDLL_API __declspec(dllimport)
 #endif
 
@@ -69,6 +69,8 @@ typedef struct _Reader
  *	-2	customTimeout设置失败
  *	-3	等待超时, 等待时间超过customTimeout
  *	-4	winsock环境初始化失败
+ *	-5	读卡器获取异常
+ *	-6	socket信息获取失败
  *	SETSOCKOPT_FAILED	设置socketTimeout失败
  *	CONNECT_FAILED		连接服务器失败
  *	SEND_ERROR			发送数据失败
@@ -82,6 +84,7 @@ CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout = 5000,
  * @return  
  *	 0	成功
  *	-1	失败
+ *	-2	socket关闭失败
  *	SEND_ERROR			发送数据失败
  */
 CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader);
