@@ -13,10 +13,7 @@
 #include <iostream>
 #include <string>
 #include <cassert>
-
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-#include <stdlib.h>
+#include <time.h>
 
 using namespace std;
 
@@ -83,11 +80,23 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 
 CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long customTimeout)
 {
-	if (ClientParam::instance->isClientEmpty())
+// 	if (ClientParam::instance->isClientEmpty())
+// 	{
+// 		WSADATA wsaData;
+// 		if (0 !=WSAStartup(0x101,&wsaData))
+// 			return -4;
+// 	}
+	// 只初始化一次
+	time_t t; // 当前时间
+	if (!ClientParam::instance->isInit)
 	{
 		WSADATA wsaData;
 		if (0 !=WSAStartup(0x101,&wsaData))
 			return -4;
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: WSAStartup初始化成功!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
+		ClientParam::instance->isInit = true;
 	}
 	struct sockaddr_in server;
 	struct hostent *hp;
@@ -107,75 +116,124 @@ CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long c
 	server.sin_addr.s_addr=*((u_long FAR*)hp->h_addr);
 	server.sin_family=AF_INET;
 	server.sin_port=htons(ClientParam::instance->serverPort);
+	
+	time(&t);
+	fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: 开始建立socket...\n", asctime(localtime(&t)), reader->readerId);
+	fflush(ClientParam::instance->log);
 
 	reader->s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (reader->s == INVALID_SOCKET)
+	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: socket建立失败!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
+	}
+	else
+	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: socket建立成功!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
+	}
 
 	// 设置socket延时
 	if(::setsockopt(reader->s, SOL_SOCKET, SO_SNDTIMEO, (char *)&socketTimeout,sizeof(socketTimeout)) == SOCKET_ERROR){
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: socket延时设置失败!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
 		return SETSOCKOPT_FAILED;
 	}
 
 	if (connect(reader->s, (sockaddr*)&server, sizeof(server)))
 	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: socket连接服务器失败!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
 		return CONNECT_FAILED;
 	}
-	char buf[512];
+	char buf[1024];
 	// 将读卡器id发送过去
 	if (-1 == ClientUtils::sendData(reader->s, reader->readerId))
 	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: socket发送数据失败!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
 		return SEND_ERROR;
 	}
 	// 看是否成功
-	ClientUtils::receiveData(reader->s, buf, 512);
+	ClientUtils::receiveData(reader->s, buf, 1024);
 	if (strcmp(buf, "id_ok") != 0)
 	{
+		shutdown(reader->s, SD_BOTH);
 		closesocket(reader->s); // 关闭socket资源
 		return -1; // 读卡器id错误
 	}
 	// 将客户定制延时发送到服务器
 	ClientUtils::sendData(reader->s, customTimeout);
-	ClientUtils::receiveData(reader->s, buf, 512);
+	ClientUtils::receiveData(reader->s, buf, 1024);
 	if (strcmp(buf, "timeout_ok") != 0)
 	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: socket延时设置失败!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
+		shutdown(reader->s, SD_BOTH);
 		closesocket(reader->s); // 关闭socket资源
 		return -2; // 延时设置错误
 	}
 
 	// 看是否Ready
-	ClientUtils::receiveData(reader->s, buf, 512);
+	ClientUtils::receiveData(reader->s, buf, 1024);
 	if (strcmp(buf, "Ready") != 0)
 	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: 读卡器获取失败! 等待超时!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
+		shutdown(reader->s, SD_BOTH);
 		closesocket(reader->s); // 关闭socket资源
 		return -3; // 等待失败
 	} 
-	ClientParam::instance->addClient();
+	time(&t);
+	fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: 读卡器获取成功!\n", asctime(localtime(&t)), reader->readerId);
+//	ClientParam::instance->addClient();
+	fflush(ClientParam::instance->log);
 	return 0;
 }
 
 CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
 {
+	time_t t;
 	int retCode;
 	if (-1 == ClientUtils::sendData(reader->s, "quit")) // 发出退出消息
 	{
 		// 关闭资源
+		shutdown(reader->s, SD_BOTH);
 		closesocket(reader->s);
 		reader->readerId = 0;
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ReleaseReader释放读卡器: socket发送数据失败!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
 		return SEND_ERROR;
 	}
 	ClientUtils::receiveData(reader->s, retCode);
 	if (retCode != 0)
 	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ReleaseReader释放读卡器: 读卡器释放失败!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
 		return -1;
 	}
 	// 关闭资源
+	shutdown(reader->s, SD_BOTH);
 	closesocket(reader->s);
 	reader->readerId = 0;
-	ClientParam::instance->deleteClient();
-	if (ClientParam::instance->isClientEmpty())
-	{
-		WSACleanup();
-	}
-	_CrtDumpMemoryLeaks();
+//	ClientParam::instance->deleteClient();
+	time(&t);
+	fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ReleaseReader释放读卡器: 读卡器释放成功!\n", asctime(localtime(&t)), reader->readerId);
+	fflush(ClientParam::instance->log);
+	// 考虑不释放socket环境, 看是否还会出现问题
+// 	if (ClientParam::instance->isClientEmpty())
+// 	{
+// 		WSACleanup();
+// 	}
 	return retCode;
 }
 
@@ -320,10 +378,14 @@ CARDREADERCLIENTDLL_API int IsCardReady(Reader* reader, int& cardA,int& cardB)
 
 CARDREADERCLIENTDLL_API int ResetCard(Reader* reader, SmartCom::string& retCode,int card)
 {
+	time_t t;
 	char cmd[512];
 	sprintf(cmd, "resetCard,%d", card);
 	if (ClientUtils::sendData(reader->s, cmd) == SOCKET_ERROR)
 	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ResetCard复位应答: 指令发送错误!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
 		return SEND_ERROR;
 	}
 	
@@ -331,6 +393,9 @@ CARDREADERCLIENTDLL_API int ResetCard(Reader* reader, SmartCom::string& retCode,
 	int size = ClientUtils::receiveData(reader->s, buf, 512);
 	if (size == -1)
 	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ResetCard复位应答: 数据接收错误!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
 		return RECV_ERROR;
 	}
 	retCode = buf;
@@ -338,17 +403,27 @@ CARDREADERCLIENTDLL_API int ResetCard(Reader* reader, SmartCom::string& retCode,
 	int ret;
 	if (ClientUtils::receiveData(reader->s, ret) == -1)
 	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ResetCard复位应答: 返回值接收错误!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
 		return RECV_ERROR;
 	}
+	time(&t);
+	fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ResetCard复位应答: 指令执行成功!\n", asctime(localtime(&t)), reader->readerId);
+	fflush(ClientParam::instance->log);
 	return ret;
 }
 
 CARDREADERCLIENTDLL_API int CardApdu(Reader* reader, char* apdu, SmartCom::string& retCode,int card)
 {
+	time_t t;
 	char cmd[512];
 	sprintf(cmd, "cardApdu,%s,%d", apdu, card);
 	if (ClientUtils::sendData(reader->s, cmd) == SOCKET_ERROR)
 	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]CardApdu执行指令: 指令发送错误!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
 		return SEND_ERROR;
 	}
 	
@@ -356,6 +431,9 @@ CARDREADERCLIENTDLL_API int CardApdu(Reader* reader, char* apdu, SmartCom::strin
 	int size = ClientUtils::receiveData(reader->s, buf, 512);
 	if (size == -1)
 	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]CardApdu执行指令: 数据接收错误!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
 		return RECV_ERROR;
 	}
 	retCode = buf;
@@ -363,23 +441,39 @@ CARDREADERCLIENTDLL_API int CardApdu(Reader* reader, char* apdu, SmartCom::strin
 	int ret;
 	if (ClientUtils::receiveData(reader->s, ret) == -1)
 	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]CardApdu执行指令: 结果接收错误!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
 		return RECV_ERROR;
 	}
+	time(&t);
+	fprintf(ClientParam::instance->log, "%s\t[读卡器%d]CardApdu执行指令: 执行指令成功!\n", asctime(localtime(&t)), reader->readerId);
+	fflush(ClientParam::instance->log);
 	return ret;
 }
 
 CARDREADERCLIENTDLL_API int ShutdownCard(Reader* reader)
 {
+	time_t t;
 	if (ClientUtils::sendData(reader->s, "shutdown") == SOCKET_ERROR)
 	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ShutdownCard卡片下电: 指令发送错误!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
 		return SEND_ERROR;
 	}
 	
 	int ret;
 	if (ClientUtils::receiveData(reader->s, ret) == -1)
 	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ShutdownCard卡片下电: 结果接收错误!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
 		return RECV_ERROR;
 	}
+	time(&t);
+	fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ShutdownCard卡片下电: 卡片下电成功!\n", asctime(localtime(&t)), reader->readerId);
+	fflush(ClientParam::instance->log);
 	return ret;
 }
 

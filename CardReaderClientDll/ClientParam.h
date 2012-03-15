@@ -8,6 +8,7 @@
 #define _CLIENT_PARAM_H_
 
 #include "StdAfx.h"
+#include <stdio.h>
 
 class ClientParam
 {
@@ -33,8 +34,12 @@ public:
 	HANDLE mutex;
 	// 客户端数量
 	unsigned int clientNum;
+	// 是否初始化socket环境
+	bool isInit;
 	// 单例
 	static ClientParam* instance;
+	// 日志文件
+	FILE* log;
 };
 
 #endif
