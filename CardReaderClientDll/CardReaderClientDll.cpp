@@ -88,6 +88,8 @@ CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long c
 // 	}
 	// 只初始化一次
 	time_t t; // 当前时间
+	try
+	{
 	if (!ClientParam::instance->isInit)
 	{
 		WSADATA wsaData;
@@ -195,6 +197,13 @@ CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long c
 	fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: 读卡器获取成功!\n", asctime(localtime(&t)), reader->readerId);
 //	ClientParam::instance->addClient();
 	fflush(ClientParam::instance->log);
+	}
+	catch (...)
+	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]GetReader获取读卡器: 获取读卡器出现异常!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
+	}
 	return 0;
 }
 
@@ -202,6 +211,8 @@ CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
 {
 	time_t t;
 	int retCode;
+	try
+	{
 	if (-1 == ClientUtils::sendData(reader->s, "quit")) // 发出退出消息
 	{
 		// 关闭资源
@@ -234,6 +245,13 @@ CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
 // 	{
 // 		WSACleanup();
 // 	}
+	}
+	catch (...)
+	{
+		time(&t);
+		fprintf(ClientParam::instance->log, "%s\t[读卡器%d]ReleaseReader释放读卡器: 释放读卡器异常!\n", asctime(localtime(&t)), reader->readerId);
+		fflush(ClientParam::instance->log);
+	}
 	return retCode;
 }
 
