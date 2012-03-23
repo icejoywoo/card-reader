@@ -6,13 +6,13 @@
 --------------------Configuration: CardReaderClientDll - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8191.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP642C.tmp" with contents
 [
 /nologo /MT /W3 /GX /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CARDREADERCLIENTDLL_EXPORTS" /D "SMARTCOMSTRING_EXPORTS_MACRO" /D "_WINDLL" /FR"Release/" /Fp"Release/CardReaderClientDll.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
-"F:\Ã÷É­\card-reader\CardReaderClientDll\CardReaderClientDll.cpp"
+"F:\Ã÷É­\card-reader\CardReaderClientDll\ClientUtils.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP8191.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP81A1.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP642C.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP642D.tmp" with contents
 [
 /nologo /dll /incremental:no /pdb:"Release/CardReaderClientDll.pdb" /machine:I386 /out:"Release/CardReaderClientDll.dll" /implib:"Release/CardReaderClientDll.lib" 
 ".\Release\CardReaderClientDll.obj"
@@ -22,10 +22,10 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP81A1.tmp" with 
 ".\Release\StdAfx.obj"
 ".\Release\CardReaderClientDll.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP81A1.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP642D.tmp"
 <h3>Output Window</h3>
 Compiling...
-CardReaderClientDll.cpp
+ClientUtils.cpp
 Linking...
    Creating library Release/CardReaderClientDll.lib and object Release/CardReaderClientDll.exp
 Creating command line "bscmake.exe /nologo /o"Release/CardReaderClientDll.bsc"  ".\Release\StdAfx.sbr" ".\Release\CardReaderClientDll.sbr" ".\Release\ClientParam.sbr" ".\Release\ClientUtils.sbr" ".\Release\SmartComString.sbr""

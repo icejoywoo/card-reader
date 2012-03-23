@@ -10,7 +10,9 @@
 #include "stdio.h"
 #include "ContactManager.h"
 #include "CustomConsts.h"
+#include "SmartComDefine.h"
 
+void on_init();
 BOOL APIENTRY DllMain( HANDLE hModule, 
                        DWORD  ul_reason_for_call, 
                        LPVOID lpReserved
@@ -19,12 +21,21 @@ BOOL APIENTRY DllMain( HANDLE hModule,
     switch (ul_reason_for_call)
 	{
 		case DLL_PROCESS_ATTACH:
+			on_init();
+			break;
 		case DLL_THREAD_ATTACH:
+			break;
 		case DLL_THREAD_DETACH:
+			break;
 		case DLL_PROCESS_DETACH:
 			break;
     }
     return TRUE;
+}
+
+void on_init()
+{
+	StartWinSocketEnv();
 }
 
 //处理通信
@@ -41,30 +52,19 @@ int InitUDPComm()
 	  return -1;
 }
 
+/**************************************************************************/
+/*初始化与卡片读写器的串口通信方式.                                       */
+/**************************************************************************/
+int InitCOMComm()
+{
+	return 0;
+}
+
 /************************************************************************/
 /* 关闭udp通信                                                                     */
 /************************************************************************/
 int CloseUDPComm()
 {
-	//先加锁再初始化,如果获取锁不成功一直等待。
-	WaitForSingleObject(Connections::hUDPInitMutex,INFINITE);
-	UdpConnection* con=Connections::udpConnHead;
-	UdpConnection* p=con;
-	for(;con;)
-	{
-		if(CloseUDPSocket(con->s)<0)
-		{
-			Connections::udpConnHead=con;
-			ReleaseMutex(Connections::hUDPInitMutex);
-			return -1;
-		}
-		con=con->next;
-		delete p;
-		p=con;
-	}
-	Connections::udpConnHead=0;
-	CloseWinSocketEnv();
-	ReleaseMutex(Connections::hUDPInitMutex);
 	return 0;
 }
 
@@ -73,23 +73,6 @@ int CloseUDPComm()
 /************************************************************************/
 SMARTCOM_API int CloseCOMComm()
 {
-	WaitForSingleObject(Connections::hCOMInitMutex,INFINITE);
-	ComConnection* p=Connections::comConnHead;
-	ComConnection* p2=p;
-    for(;p;)
-	{
-		if(CloseCom(p->comPort)<0)
-		{
-			Connections::comConnHead=p;
-			ReleaseMutex(Connections::hCOMInitMutex);
-			return -1;
-		}
-		p=p->next;
-		delete p2;
-        p2=p;
-	}
-	Connections::comConnHead=0;
-	ReleaseMutex(Connections::hCOMInitMutex);
 	return 0;
 }
 /************************************************************************/
@@ -100,51 +83,60 @@ int GetOneUDPCommunicator(Communicator& aCommunicator,const char* dstIP,int port
 {
 	//先加锁再初始化,如果获取锁不成功一直等待。
 	WaitForSingleObject(Connections::hUDPInitMutex,INFINITE);
-	UdpConnection* p=Connections::udpConnHead;
-	UdpConnection* prev=p;
-	for(;p;)
+	SCPrint(("%d:enter getcomm\r\n",GetCurrentThreadId()));
+	bool flag=false;//如果目的ip对应的udpcommmanger已经存在，则为true
+	int size=Connections::udpCommManagerVector.size();
+	for(int i=0;i<size;i++)
 	{
-		if(0==strcmp(dstIP,p->dstIP)&&port==p->dstPort)
+		if(strcmp(dstIP,Connections::udpCommManagerVector[i].dstIP)==0)
 		{
-			aCommunicator.udpConn=p;
-			aCommunicator.m_nCommtype=COMM_UDP;
-			ReleaseMutex(Connections::hUDPInitMutex);
-			return 0;
-		}
-		prev=p;
-		p=p->next;
-	}
-	SOCKET s;
-	//初始化通信器
-	int newPort=port;
-	while(TRUE)
-	{
-		int temp=GetOneLocalSocket(&s,newPort);
-		if(temp!=0)
-		{
-			newPort+=10;
-			if(newPort<port+100)
-				continue;
-			else
+			std::list<UdpConnection*>::iterator it;
+			std::list<UdpConnection*>::iterator end=Connections::udpCommManagerVector[i].udpCommList.end();
+			for(it=Connections::udpCommManagerVector[i].udpCommList.begin();it!=end;++it)
 			{
-				ReleaseMutex(Connections::hUDPInitMutex);
-			    return -1;
+				if(port==(*it)->dstPort)
+				{
+					(*it)->reference++;
+					aCommunicator.csIndex=i;
+					aCommunicator.udpConn=*it;
+					aCommunicator.m_nCommtype=COMM_UDP;
+					SCPrint(("%d:leave getcomm,reference=%d\r\n",GetCurrentThreadId(),(*it)->reference));
+					ReleaseMutex(Connections::hUDPInitMutex);
+			        return 0;
+				}
 			}
+			flag=true;
+			break;
 		}
-		break;
 	}
-
-	UdpConnection* con=new UdpConnection(newPort,(char*)dstIP,port,s,waitForSTX2Time,normalWaitTime,0);
-	if(NULL==Connections::udpConnHead)
+   //初始化通信
+	SOCKET s;
+	int newPort=port;
+	int temp=GetOneLocalSocket(&s,newPort);
+	if(temp!=0)
 	{
-		Connections::udpConnHead=con;
+		SCPrint(("%d:getone local socket error\r\n",GetCurrentThreadId()));
+		ReleaseMutex(Connections::hUDPInitMutex);
+	    return SCERR_OPERROR;
+	}  
+	UdpConnection* con=new UdpConnection(newPort,(char*)dstIP,port,s,waitForSTX2Time,normalWaitTime);
+	SCPrint(("%d:new udpconn:%08X\r\n",GetCurrentThreadId(),con));
+	UdpCommManager ucm(dstIP);
+    if(!flag)
+	{
+		ucm.udpCommList.push_back(con);
+		Connections::udpCommManagerVector.push_back(ucm);
+		
 	}
 	else
 	{
-		prev->next=con;
+		Connections::udpCommManagerVector[i].udpCommList.push_back(con);
 	}
+	con->reference++;
+	aCommunicator.csIndex=i;
 	aCommunicator.udpConn=con;
 	aCommunicator.m_nCommtype=COMM_UDP;
+	SCPrint(("%d:leave getcomm,reference=%d\r\n",GetCurrentThreadId(),con->reference));
 	ReleaseMutex(Connections::hUDPInitMutex);
 	return 0;
 }
@@ -154,45 +146,108 @@ int GetOneUDPCommunicator(Communicator& aCommunicator,const char* dstIP,int port
 /************************************************************************/
 SMARTCOM_API int GetOneCOMCommunicator(Communicator& aCommunicator,int comPort,int rate,int waitForSTX2Time,int normalWaitTime)
 {
-	WaitForSingleObject(Connections::hCOMInitMutex,INFINITE);
-	ComConnection* p=Connections::comConnHead;
-	ComConnection* prev=p;
-	for(;p;)
+	ComConnection* p=Connections::comConnArr;
+	if(comPort>CONNECTIONS_NUM-1)
+		return SCERR_OPERROR;
+	EnterCriticalSection(&p[comPort].cs_initilize);
+	if(p[comPort].reference>0) //已经初始化
 	{
-		if(comPort==p->comPort)
-		{
-			aCommunicator.m_nCommtype=COMM_COM;
-			aCommunicator.comConn=p;
-			ReleaseMutex(Connections::hCOMInitMutex);
-			return 0;
-		}
-		prev=p;
-		p=p->next;
+       p[comPort].reference++;
+	   aCommunicator.m_nCommtype=COMM_COM;
+	   aCommunicator.comConn=&p[comPort];
+	   LeaveCriticalSection(&p[comPort].cs_initilize);
+	   return 0;
 	}
-	//初始化串口
-	if(0!=IniCom(comPort,rate))
+	//未初始化,初始化串口
+	if(0!=IniCom(comPort,rate,waitForSTX2Time,normalWaitTime))
 	{
-		ReleaseMutex(Connections::hCOMInitMutex);
-		return -1;
+		LeaveCriticalSection(&p[comPort].cs_initilize);
+		return SCERR_OPERROR;
 	}
-    p=new ComConnection(comPort,rate,waitForSTX2Time,normalWaitTime,0);
-	if(NULL==Connections::comConnHead)
-		Connections::comConnHead=p;
-	else
-		prev->next=p;
+    p[comPort].reference++;
+	p[comPort].comPort=comPort;
+	p[comPort].waitSTX2Time=waitForSTX2Time;
+	p[comPort].normalWaitTime=normalWaitTime;
+	LeaveCriticalSection(&p[comPort].cs_initilize);
 	aCommunicator.m_nCommtype=COMM_COM;
-	aCommunicator.comConn=p;
-	ReleaseMutex(Connections::hCOMInitMutex);
+	aCommunicator.comConn=&p[comPort];
 	return 0;
 }
 
+/****************************************************************************
+*功能：释放com通信器
+****************************************************************************/
+int ReleaseCOMCommunicator(Communicator* p)
+{
+   if(p->m_nCommtype==COMM_COM)
+   {
+	   p->m_nCommtype=NOT_CONNECT;
+	   EnterCriticalSection(&p->comConn->cs_initilize);
+	   if(p->comConn->reference<=0)
+	   {
+		   p->comConn->reference=0;
+		   LeaveCriticalSection(&p->comConn->cs_initilize);
+		   return SCERR_INVALID_COMM;
+	   }
+	   p->comConn->reference--;
+	   if(p->comConn->reference==0)
+	   {
+		   if(0!=CloseCom(p->comConn->comPort))
+		   {
+		//	   TRACE("reference:%d\n",p->comConn->reference);
+			   LeaveCriticalSection(&p->comConn->cs_initilize);
+			   return SCERR_OPERROR;
+		   }
+	   }
+	   LeaveCriticalSection(&p->comConn->cs_initilize);
+	   delete p;
+	   return SC_SUCCESS;
+   }
+   return SCERR_INVALID_COMM;
+}
+
+/****************************************************************************
+*功能：释放UDP通信器
+****************************************************************************/
+int ReleaseUDPCommunicator(Communicator* p)
+{
+	WaitForSingleObject(Connections::hUDPInitMutex,INFINITE);
+	SCPrint(("%d:enter releasecomm\r\n",GetCurrentThreadId()));
+	if(p->m_nCommtype==COMM_UDP)
+	{
+		p->m_nCommtype=NOT_CONNECT;
+		if(p->udpConn->reference<=0)
+		{
+			p->udpConn->reference=0;
+			ReleaseMutex(Connections::hUDPInitMutex);
+			return SCERR_INVALID_COMM;
+		}
+		p->udpConn->reference--;
+		if(p->udpConn->reference==0)
+		{
+			CloseUDPSocket(p->udpConn->s);
+			Connections::udpCommManagerVector[p->csIndex].udpCommList.remove(p->udpConn);
+			delete p->udpConn;
+			SCPrint(("%d:delete udpconn:%08X\r\n",GetCurrentThreadId(),p->udpConn));
+		}	
+		
+		SCPrint(("%d:delete communicatror:%08X,reference:%d\r\n",GetCurrentThreadId(),p,p->udpConn->reference));
+		memset(p,0,sizeof(Communicator));
+		delete p;
+		ReleaseMutex(Connections::hUDPInitMutex);	
+		return 0;
+	}
+	SCPrint(("leave releasecomm\r\n"));
+	ReleaseMutex(Connections::hUDPInitMutex);
+	return SCERR_INVALID_COMM;
+}
 /************************************************************************/
 /* 读取终端设备ID号和机号                                                                   
 /************************************************************************/
 int GetDevIDAndMacNo(Communicator& comm,char* devID,int devIDLen,int& macNo)
 {
 	if(NOT_CONNECT==comm.m_nCommtype)
-		return -2;
+		return SCERR_INVALID_COMM;
 	int cmd=0xe1;
 	int dataLen=0;
 	BYTE tempBuffer[1];
@@ -203,7 +258,7 @@ int GetDevIDAndMacNo(Communicator& comm,char* devID,int devIDLen,int& macNo)
 	int retCode,recLen;
 	CommProcess(comm,SRBuffer,64,packetLen,retCode,recLen);
 	if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	char t[8];
 	int k=0;
 	devID[0]='\0';
@@ -222,7 +277,7 @@ int GetDevIDAndMacNo(Communicator& comm,char* devID,int devIDLen,int& macNo)
 	if(SRBuffer[2]==0)
 	      return 0;
 	else
-		return -3;
+		return SCERR_OPERROR;
 }
 
 //定义函数的smartcom string版本
@@ -230,7 +285,7 @@ int GetDevIDAndMacNo(Communicator& comm,char* devID,int devIDLen,int& macNo)
 int GetDevIDAndMacNo(Communicator& comm,SmartCom::string& devID,int& macNo)
 {
 	if(NOT_CONNECT==comm.m_nCommtype)
-		return -2;
+		return SCERR_INVALID_COMM;
 	int cmd=0xe1;
 	int dataLen=0;
 	BYTE tempBuffer[1];
@@ -241,7 +296,7 @@ int GetDevIDAndMacNo(Communicator& comm,SmartCom::string& devID,int& macNo)
 	int retCode,recLen;
 	CommProcess(comm,SRBuffer,64,packetLen,retCode,recLen);
 	if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	char t[8];
 	//将设备ID十六进制转换成字符串
 	devID="";
@@ -258,7 +313,7 @@ int GetDevIDAndMacNo(Communicator& comm,SmartCom::string& devID,int& macNo)
 	if(SRBuffer[2]==0)
 		return 0;
 	else
-		return -3;
+		return SCERR_OPERROR;
 }
 
 #endif
@@ -271,14 +326,14 @@ inline int RemBlankSpace(char* str,int len);
 int SetMacNoByDevID(Communicator& comm,const char* devID,int macNo)
 {
 	if(NOT_CONNECT==comm.m_nCommtype)
-		return -2;
+		return SCERR_INVALID_COMM;
 	if(macNo>255||macNo<1)
-		 return -3;
+		 return SCERR_MACNO_OUTRANGE;
 	//判断要设置的机号与原来机号是否一致
 	SmartCom::string str;
 	int tempMacNo=0;
     if(0!=GetDevIDAndMacNo(comm,str,tempMacNo))
-		return -1;
+		return SCERR_TIMEOUT;
 	if(tempMacNo==macNo)
 		return 0;
 	int cmd=0xe3;
@@ -299,11 +354,11 @@ int SetMacNoByDevID(Communicator& comm,const char* devID,int macNo)
 	int retCode,recLen;
 	CommProcess(comm,SRBuffer,64,packetLen,retCode,recLen);
 	if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	if(SRBuffer[2]==0)
-		return 0;
+		return SC_SUCCESS;
 	else
-		return -4;
+		return SCERR_OPERROR;
 }
 //去掉字符串中的所有空格,返回处理后的长度
  inline int RemBlankSpace(char* str,int len)
@@ -333,9 +388,9 @@ int GetAppVerAndDevType(Communicator& comm,char* appVersion,int Verlen,char* dev
 									 int MacNo)
  {
 	 if(NOT_CONNECT==comm.m_nCommtype)
-		 return -2;
+		 return SCERR_INVALID_COMM;
 	 if(MacNo>255||MacNo<1)
-		 return -3;
+		 return SCERR_MACNO_OUTRANGE;
 	 assert(Verlen>30);
 	 assert(typeLen>40);
 	 int cmd=0xe4;
@@ -347,7 +402,7 @@ int GetAppVerAndDevType(Communicator& comm,char* appVersion,int Verlen,char* dev
 	 int retCode,recLen;
 	 CommProcess(comm,SRBuffer,64,packetLen,retCode,recLen);
 	 if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
      char year[8],month[8],day[8],hour[8];
 	 int j=0;
 	 appVersion[0]='\0';
@@ -395,9 +450,9 @@ int GetAppVerAndDevType(Communicator& comm,char* appVersion,int Verlen,char* dev
 	 }
 
 	 if(SRBuffer[2]==0)
-		 return 0;
+		 return SC_SUCCESS;
 	 else
-		return -4;
+		return SCERR_OPERROR;
  }
 
  //定义函数的smartcom string版本
@@ -406,9 +461,9 @@ int GetAppVerAndDevType(Communicator& comm,SmartCom::string& appVersion,SmartCom
 									 int MacNo)
 {
 	if(NOT_CONNECT==comm.m_nCommtype)
-		return -2;
+		return SCERR_INVALID_COMM;
 	if(MacNo>255||MacNo<1)
-		return -3;
+		return SCERR_MACNO_OUTRANGE;
 	int cmd=0xe4;
 	int dataLen=0;
 	BYTE tempBuffer[16];
@@ -420,28 +475,27 @@ int GetAppVerAndDevType(Communicator& comm,SmartCom::string& appVersion,SmartCom
 	int retCode,recLen;
 	CommProcess(comm,SRBuffer,64,packetLen,retCode,recLen);
 	if(recLen<0)
-		return -1;
-	char year[8],month[8],day[8],hour[8];
-	sprintf(year,"%u",*(SRBuffer+4));
-	sprintf(month,"%u",*(SRBuffer+5));
-	sprintf(day,"%u",*(SRBuffer+6));
-	sprintf(hour,"%u",*(SRBuffer+7));
-	
-	appVersion+=year;
-	appVersion+="年";
-	appVersion+=month;
-	appVersion+="月";
-	appVersion+=day;
-	appVersion+="日";
-	appVersion+=hour;
-	appVersion+="时";
-	
+		return SCERR_TIMEOUT;
+	if(SRBuffer[2]!=0)
+		return SCERR_OPERROR;
+	char timestr[32];
+	int year,mon,day,hour;
+	year=*(SRBuffer+6)>>4;
+	year=year*10+(*(SRBuffer+6)&0xf);
+	mon=*(SRBuffer+7)>>4;
+	mon=mon*10+(*(SRBuffer+7)&0xf);
+	day=*(SRBuffer+8)>>4;
+	day=day*10+(*(SRBuffer+8)&0xf);
+	hour=*(SRBuffer+9)>>4;
+	hour=hour*10+(*(SRBuffer+9)&0xf);
+	sprintf(timestr,"%d年%d月%d日%d时",year,mon,day,hour);
+    appVersion=timestr;
 	char t[8];
-	sprintf(t,"%02X",*(SRBuffer+8));
+	sprintf(t,"%02X",*(SRBuffer+4));
 	devType+=t;
-	sprintf(t,"%02X",*(SRBuffer+9));
+	sprintf(t,"%02X",*(SRBuffer+5));
 	devType+=t;
-	switch(*(BYTE*)(SRBuffer+9))
+	switch(*(BYTE*)(SRBuffer+5))
 	{
 	case 1:
 	    devType+="(磁卡读写器)";
@@ -462,11 +516,8 @@ int GetAppVerAndDevType(Communicator& comm,SmartCom::string& appVersion,SmartCom
 		devType+="(双界面卡读写器)";
 		break;
 	}
-	
-	if(SRBuffer[2]==0)
-		return 0;
-	else
-		return -4;
+		
+	return 0;	
 }
 #endif
 
@@ -476,16 +527,16 @@ int GetAppVerAndDevType(Communicator& comm,SmartCom::string& appVersion,SmartCom
 int ResetDev(Communicator& comm,int macNo /*=255*/)
  {
 	 if(NOT_CONNECT==comm.m_nCommtype)
-		 return -2;
+		 return SCERR_INVALID_COMM;
 	 if(macNo>255||macNo<1)
-		 return -3;
+		 return SCERR_MACNO_OUTRANGE;
 	 int cmd=0xe8;
 	 int dataLen=0;
 	 BYTE tempBuffer[16];
 	 BYTE SRBuffer[64];
 	 int packetLen=PrepareBytes(macNo,cmd,tempBuffer,&dataLen,SRBuffer);
 	 //发送命令
-	 int retCode;
+	 int retCode=0;
 	// CommProcess(comm,SRBuffer,packetLen,retCode,SRBuffer,recLen);
 	 if(COMM_UDP==comm.m_nCommtype)
 		 retCode=SendUDPData(comm.udpConn->s,comm.udpConn->dstIP,comm.udpConn->dstPort, SRBuffer,packetLen);
@@ -505,9 +556,9 @@ int ResetDev(Communicator& comm,int macNo /*=255*/)
 int GetChipID(Communicator& comm,char* chipID,int len,int macNo/* =255 */)
  {
      if(NOT_CONNECT==comm.m_nCommtype)
-		 return -2;
+		 return SCERR_INVALID_COMM;
 	 if(macNo>255||macNo<1)
-		 return -3;
+		 return SCERR_MACNO_OUTRANGE;
 	 int cmd=0x01;
 	 int dataLen=0;
 	 BYTE tempBuffer[16];
@@ -517,7 +568,7 @@ int GetChipID(Communicator& comm,char* chipID,int len,int macNo/* =255 */)
 	 int retCode,recLen;
 	 CommProcess(comm,SRBuffer,64,packetLen,retCode,recLen);
 	 if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	 sprintf((char*)tempBuffer,"%02X",*(SRBuffer+4));
 	 tempBuffer[2]='\0';
 	 assert(len>2);
@@ -525,7 +576,7 @@ int GetChipID(Communicator& comm,char* chipID,int len,int macNo/* =255 */)
 	 if(SRBuffer[2]==0)
 		 return 0;
 	 else
-		return -4;
+		return SCERR_OPERROR;
  }
 
 //定义函数的smartcom string版本
@@ -533,9 +584,9 @@ int GetChipID(Communicator& comm,char* chipID,int len,int macNo/* =255 */)
 int GetChipID(Communicator& comm,SmartCom::string& chipID,int macNo)
  {
      if(NOT_CONNECT==comm.m_nCommtype)
-		 return -2;
+		 return SCERR_INVALID_COMM;
 	 if(macNo>255||macNo<1)
-		 return -3;
+		 return SCERR_MACNO_OUTRANGE;
 	 int cmd=0x01;
 	 int dataLen=0;
 	 BYTE tempBuffer[16];
@@ -545,14 +596,14 @@ int GetChipID(Communicator& comm,SmartCom::string& chipID,int macNo)
 	 int retCode,recLen;
 	 CommProcess(comm,SRBuffer,64,packetLen,retCode,recLen);
 	 if(recLen<0)
-		 return -1;
+		 return SCERR_TIMEOUT;
 	 sprintf((char*)tempBuffer,"%02X",*(SRBuffer+4));
 	 tempBuffer[2]='\0';
 	 chipID=(char*)tempBuffer;
 	 if(SRBuffer[2]==0)
 		 return 0;
 	 else
-		return -4;
+		return SCERR_OPERROR;
  }
 #endif
 
@@ -562,9 +613,9 @@ int GetChipID(Communicator& comm,SmartCom::string& chipID,int macNo)
 int IsCardReady(Communicator& comm,int& cardA,int& cardB,int macNo/* =255 */)
  {
      if(NOT_CONNECT==comm.m_nCommtype)
-		 return -2;
+		 return SCERR_INVALID_COMM;
 	 if(macNo>255||macNo<1)
-		 return -3;
+		 return SCERR_MACNO_OUTRANGE;
 	 int cmd=0x02;
 	 int dataLen=0;
 	 BYTE tempBuffer[16];
@@ -574,7 +625,7 @@ int IsCardReady(Communicator& comm,int& cardA,int& cardB,int macNo/* =255 */)
 	 int retCode,recLen;
 	 CommProcess(comm,SRBuffer,64,packetLen,retCode,recLen);
 	 if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	 if((SRBuffer[4]&(0x04))!=0)
 		 cardA=1;
 	 else
@@ -586,7 +637,7 @@ int IsCardReady(Communicator& comm,int& cardA,int& cardB,int macNo/* =255 */)
 	 if(SRBuffer[2]==0)
 		 return 0;
 	 else
-		return -4;
+		return SCERR_OPERROR;
  }
 
  /************************************************************************/
@@ -596,9 +647,9 @@ int ResetCard(Communicator& comm,SmartCom::string& retCode,int card /* =1 */,int
  {
 	 retCode="";
      if(NOT_CONNECT==comm.m_nCommtype)
-		 return -2;
+		 return SCERR_INVALID_COMM;
 	 if(macNo>255||macNo<1)
-		 return -3;
+		 return SCERR_MACNO_OUTRANGE;
 	 int cmd=0x03;
 	 if(2==card)
 		 cmd=0x05;
@@ -611,7 +662,7 @@ int ResetCard(Communicator& comm,SmartCom::string& retCode,int card /* =1 */,int
 	 int ret,recLen;
 	 CommProcess(comm,SRBuffer,64,packetLen,ret,recLen);
 	 if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	 for(int i=0;i<SRBuffer[3];i++)
 	 {
 		 sprintf((char*)tempBuffer,"%02X",SRBuffer[i+4]);
@@ -621,7 +672,7 @@ int ResetCard(Communicator& comm,SmartCom::string& retCode,int card /* =1 */,int
 	 if(0x3b==SRBuffer[4]||0x3f==SRBuffer[4])
 	    return 0;
 	 else
-		return -4;
+		return SCERR_OPERROR;
  }
 
  /************************************************************************/
@@ -632,11 +683,11 @@ int CardApdu(Communicator& comm,const char* apdu,SmartCom::string& retCode,int c
 	 retCode="";
      if(NOT_CONNECT==comm.m_nCommtype)
 	 {
-		 return -2;
+		 return SCERR_INVALID_COMM;
 	 }
 	 if(macNo>255||macNo<1)
 	 {
-		 return -3;
+		 return SCERR_MACNO_OUTRANGE;
 	 }
 	 int cmd=0x04;
 	 if(2==card)
@@ -660,7 +711,7 @@ int CardApdu(Communicator& comm,const char* apdu,SmartCom::string& retCode,int c
 	 int ret,recLen;
 	 CommProcess(comm,SRBuffer,1024,packetLen,ret,recLen);
 	 if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	 //填充retCode
 	 for(int i=0;i<SRBuffer[3];i++)
 	 {
@@ -677,9 +728,9 @@ int CardApdu(Communicator& comm,const char* apdu,SmartCom::string& retCode,int c
 int ShutdownCard(Communicator& comm,int macNo/* =255 */)
  {
      if(NOT_CONNECT==comm.m_nCommtype)
-		 return -2;
+		 return SCERR_INVALID_COMM;
 	 if(macNo>255||macNo<1)
-		 return -3;
+		 return SCERR_MACNO_OUTRANGE;
 	 int cmd=0x07;
 	 int dataLen=0;
 	 BYTE tempBuffer[4];
@@ -689,11 +740,11 @@ int ShutdownCard(Communicator& comm,int macNo/* =255 */)
 	 int retCode,recLen;
 	 CommProcess(comm,SRBuffer,32,packetLen,retCode,recLen);
 	 if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	 if(0==SRBuffer[2])
 		 return 0;
 	 else
-	     return -4;
+	     return SCERR_OPERROR;
  }
 
  /************************************************************************/
@@ -702,9 +753,9 @@ int ShutdownCard(Communicator& comm,int macNo/* =255 */)
 int ModifyCardBraudRate(Communicator& comm,int braudRate,int macNo/* =255 */)
  {
      if(NOT_CONNECT==comm.m_nCommtype)
-		 return -2;
+		 return SCERR_INVALID_COMM;
 	 if(macNo>255||macNo<1)
-		 return -3;
+		 return SCERR_MACNO_OUTRANGE;
 	 int cmd=0x08;
 	 int dataLen=1;
 	 BYTE tempBuffer[4];
@@ -740,7 +791,7 @@ int ModifyCardBraudRate(Communicator& comm,int braudRate,int macNo/* =255 */)
 		 index=12;
 		 break;
 	 default:
-		 return -4;
+		 return SCERR_INVALID_DATA;
 	 }
 	 tempBuffer[0]=index;
 	 int packetLen=PrepareBytes(macNo,cmd,tempBuffer,&dataLen,SRBuffer);
@@ -748,11 +799,11 @@ int ModifyCardBraudRate(Communicator& comm,int braudRate,int macNo/* =255 */)
 	 int retCode,recLen;
 	 CommProcess(comm,SRBuffer,32,packetLen,retCode,recLen);
 	 if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	 if(0==SRBuffer[2]&&index==SRBuffer[4])
 		 return 0;
 	 else
-		 return -4;
+		 return SCERR_OPERROR;
  }
 
  /************************************************************************/
@@ -761,9 +812,9 @@ int ModifyCardBraudRate(Communicator& comm,int braudRate,int macNo/* =255 */)
 int GetCardBraudRate(Communicator& comm,int& braudRate,int macNo/* =255 */)
  {
 	 if(NOT_CONNECT==comm.m_nCommtype)
-		 return -2;
+		 return SCERR_INVALID_COMM;
 	 if(macNo>255||macNo<1)
-		 return -3;
+		 return SCERR_MACNO_OUTRANGE;
 	 int cmd=0x09;
 	 int dataLen=0;
 	 BYTE tempBuffer[4];
@@ -773,7 +824,7 @@ int GetCardBraudRate(Communicator& comm,int& braudRate,int macNo/* =255 */)
 	 int retCode,recLen;
 	 CommProcess(comm,SRBuffer,32,packetLen,retCode,recLen);
 	 if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	 switch(*(BYTE*)(SRBuffer+4))
 	 {
 	 case 1:
@@ -804,7 +855,7 @@ int GetCardBraudRate(Communicator& comm,int& braudRate,int macNo/* =255 */)
 		 braudRate=9600;
 		 break;
 	 default:
-		 return -4;
+		 return SCERR_INVALID_DATA;
 	 }
 	 return 0;
  }
@@ -815,9 +866,9 @@ int GetCardBraudRate(Communicator& comm,int& braudRate,int macNo/* =255 */)
 int ModifyCardPower(Communicator& comm,int power,int card/* =1 */,int macNo/* =255 */)
 {
     if(NOT_CONNECT==comm.m_nCommtype)
-		return -2;
+		return SCERR_INVALID_COMM;
 	if(macNo>255||macNo<1)
-		return -3;
+		return SCERR_MACNO_OUTRANGE;
 	int cmd=0x0a;
 	if(2==card)
 		cmd=0x0b;
@@ -830,11 +881,11 @@ int ModifyCardPower(Communicator& comm,int power,int card/* =1 */,int macNo/* =2
 	int retCode,recLen;
 	CommProcess(comm,SRBuffer,32,packetLen,retCode,recLen);
 	if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	if(SRBuffer[4]==power-1)
 		return 0;
 	else
-		return -4;
+		return SCERR_OPERROR;
 }
 
 /************************************************************************/
@@ -843,9 +894,12 @@ int ModifyCardPower(Communicator& comm,int power,int card/* =1 */,int macNo/* =2
 int ExcuteMulAPDU(Communicator& comm,int cmdNum,int card/* =1 */,int macNo/* =255 */)
 {
     if(NOT_CONNECT==comm.m_nCommtype)
-		return -2;
+		return SCERR_INVALID_COMM;
 	if(macNo>255||macNo<1)
-		return -3;
+		return SCERR_MACNO_OUTRANGE;
+/*	int ret=DisableAutoAnswer(comm,macNo);
+	if(ret<0)
+		return ret;*/
 	int cmd=0x0c;
 	int dataLen=3;
     BYTE tempBuffer[4];
@@ -858,12 +912,68 @@ int ExcuteMulAPDU(Communicator& comm,int cmdNum,int card/* =1 */,int macNo/* =25
 	int retCode,recLen;
 	CommProcess(comm,SRBuffer,32,packetLen,retCode,recLen);
 	if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	if(0==SRBuffer[2])
 		return 0;
 	else 
-		return -4;
+		return SCERR_OPERROR;
 
+}
+
+/************************************************************************/
+/* 发送执行批处理APDU命令                                                                     */
+/************************************************************************/
+int ExcuteMulAPDUAsyn(Communicator& comm,int cmdNum,int card=1,int macNo=255);
+int ExcuteMulAPDUAsyn(Communicator& comm,int cmdNum,int card/* =1 */,int macNo/* =255 */)
+{
+    if(NOT_CONNECT==comm.m_nCommtype)
+		return SCERR_INVALID_COMM;
+	if(macNo>255||macNo<1)
+		return SCERR_MACNO_OUTRANGE;
+	int cmd=0x0c;
+	int dataLen=3;
+    BYTE tempBuffer[4];
+	BYTE SRBuffer[32];
+	tempBuffer[0]=card;
+	tempBuffer[1]=(cmdNum>>8);
+	tempBuffer[2]=(cmdNum&0x00ff);
+    int packetLen=PrepareBytes(macNo,cmd,tempBuffer,&dataLen,SRBuffer);
+	//发送命令
+	int retCode,recLen;
+	CommProcess(comm,SRBuffer,32,packetLen,retCode,recLen);
+	if(recLen<0)
+		return SCERR_TIMEOUT;
+	if(0==SRBuffer[2])
+		return 0;
+	else 
+		return SCERR_OPERROR;
+	
+}
+/*************************************************************************/
+/*发送批处理命令，等待批处理完成时返回                                   */
+/*************************************************************************/
+int ExcuteMulAPDUSyn(Communicator& comm,int cmdNum,int card/* =1 */,int macNo/* =255 */)
+{
+/*	int ret=EnableAutoAnswer(comm,macNo);
+	if(ret<0)
+		return ret;*/
+    int ret=ExcuteMulAPDUAsyn(comm,cmdNum,card,macNo);
+	if(ret<0)
+		return ret;
+	BYTE buf[64];
+	int recLen=0;
+	//等待批处理返回
+	if(comm.m_nCommtype==COMM_COM)
+	{
+        recLen=ReceiveBytes(comm.comConn->comPort,INFINITE/2,0 ,buf);
+	}
+	else if(comm.m_nCommtype==COMM_UDP)
+	{
+        recLen=RecvUDPData(comm.udpConn->s,INFINITE/2,0 ,buf,64);
+	}
+	else
+		return SCERR_INVALID_COMM;
+	return 0;
 }
 
 /************************************************************************/
@@ -872,9 +982,9 @@ int ExcuteMulAPDU(Communicator& comm,int cmdNum,int card/* =1 */,int macNo/* =25
 int GetScriptData(Communicator& comm,int offset,BYTE bytes,char* strData,int strDataLen,int macNo/* =255 */)
 {
 	if(NOT_CONNECT==comm.m_nCommtype)
-		return -2;
+		return SCERR_INVALID_COMM;
 	if(macNo>255||macNo<1)
-		return -3;
+		return SCERR_MACNO_OUTRANGE;
 	int cmd=0x0d;
 	int dataLen=5;
     BYTE tempBuffer[8];
@@ -889,7 +999,7 @@ int GetScriptData(Communicator& comm,int offset,BYTE bytes,char* strData,int str
 	int retCode,recLen;
 	CommProcess(comm,SRBuffer,300,packetLen,retCode,recLen);
 	if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	assert(strDataLen>SRBuffer[3]*3);
 	char t[4];
 	strData[0]='\0';
@@ -903,7 +1013,7 @@ int GetScriptData(Communicator& comm,int offset,BYTE bytes,char* strData,int str
 	if(SRBuffer[2]==0)
 		return 0;
 	else
-		return -4;
+		return SCERR_OPERROR;
 }
 
 //定义函数的smartcom string版本
@@ -911,9 +1021,9 @@ int GetScriptData(Communicator& comm,int offset,BYTE bytes,char* strData,int str
 int GetScriptData(Communicator& comm,int offset,unsigned char bytes,SmartCom::string& strData,int macNo)
 {
     if(NOT_CONNECT==comm.m_nCommtype)
-		return -2;
+		return SCERR_INVALID_COMM;
 	if(macNo>255||macNo<1)
-		return -3;
+		return SCERR_MACNO_OUTRANGE;
 	int cmd=0x0d;
 	int dataLen=5;
     BYTE tempBuffer[8];
@@ -928,7 +1038,7 @@ int GetScriptData(Communicator& comm,int offset,unsigned char bytes,SmartCom::st
 	int retCode,recLen;
 	CommProcess(comm,SRBuffer,300,packetLen,retCode,recLen);
 	if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	char t[4];
 	strData="";
 	for(int i=0;i<SRBuffer[3];i++)
@@ -941,14 +1051,162 @@ int GetScriptData(Communicator& comm,int offset,unsigned char bytes,SmartCom::st
 	if(SRBuffer[2]==0)
 	      return 0;
 	else
-		return -4;
+		return SCERR_OPERROR;
 }
 #endif
+
 
 /************************************************************************/
 /* 下载命令文件                                                                     */
 /************************************************************************/
 int DownloadFile(Communicator& comm,int flag,const char* fileName,int macNo/* =255 */)
+{
+    if(NOT_CONNECT==comm.m_nCommtype)
+		return SCERR_INVALID_COMM;
+	if(macNo>255||macNo<1)
+		return SCERR_MACNO_OUTRANGE;
+	int cmd=0x0e;
+	if(2==flag)
+		cmd=0x0f;
+	int dataLen=0;
+    BYTE tempBuffer[150];
+	BYTE SRBuffer[150];
+	//每次下载m字节
+	const int m=128;
+	//打开文件
+	//FILE* aFile=fopen(fileName,"rb");
+	HANDLE hFile=CreateFileA(fileName,GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,0,0);
+	//if(NULL==aFile)
+		//return -5;
+	if(INVALID_HANDLE_VALUE==hFile)
+		return SCERR_OPENFILE_FAIL;
+	unsigned long readNum=0;
+	UINT filePos=0;
+	BOOL bReturn=FALSE;
+	OVERLAPPED olp;
+	olp.Offset=0;
+	olp.OffsetHigh=0;
+	olp.hEvent=0;
+	//while((readNum=fread(tempBuffer+4,1,m,aFile))!=0)
+	while(true)
+	{
+		bReturn=ReadFile(hFile,tempBuffer+4,m,&readNum,&olp);
+		if(readNum==0)
+			break;
+		if(bReturn==FALSE)
+			return SCERR_OPERROR;
+		dataLen=4+readNum;
+		//填充下载命令的数据项
+		tempBuffer[0]=filePos>>24;//文件偏移地址的最高字节
+		tempBuffer[1]=(filePos>>16)&0x000000ff;//文件偏移地址的次高字节
+		tempBuffer[2]=(filePos>>8)&0x000000ff;//文件偏移地址的低字节
+		tempBuffer[3]=filePos&0x000000ff;//文件偏移地址的最低字节
+		int	packetLen=PrepareBytes(macNo,cmd,tempBuffer,&dataLen,SRBuffer);
+		//发送命令
+		int retCode,recLen;
+		CommProcess(comm,SRBuffer,150,packetLen,retCode,recLen);
+		if(recLen<0)
+		{
+			//fclose(aFile);
+			CloseHandle(hFile);
+            return SCERR_TIMEOUT;
+		}
+		
+		if(0!=SRBuffer[2])
+		{
+			//fclose(aFile);
+			CloseHandle(hFile);
+            return SCERR_OPERROR;
+		}
+		filePos+=readNum;
+		olp.Offset+=readNum;
+	}
+	
+	//fclose(aFile);
+	CloseHandle(hFile);
+	return 0;
+}
+
+/***********************************************************************
+* 下载文件，该函数效率比DownloadFile要高,但目前仅支持com通信方式
+***********************************************************************/
+#include <winioctl.h>
+#define IOCTL_WRITE CTL_CODE(FILE_DEVICE_UNKNOWN,0x800,METHOD_BUFFERED,FILE_ANY_ACCESS)
+
+extern HANDLE hCommDev[256];
+int DownloadFileK(Communicator& comm,int flag,const char* fileName,int macNo/* =255 */)
+{
+	if(NOT_CONNECT==comm.m_nCommtype)
+		return SCERR_INVALID_COMM;
+	if(macNo>255||macNo<1)
+		return SCERR_MACNO_OUTRANGE;
+	SmartCom::string str="\\\\.\\";
+	str+=DEVICE_NAME;
+	HANDLE hDevice=CreateFile(str.c_str(),GENERIC_READ|GENERIC_WRITE,
+		0,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,0);
+	if(hDevice==INVALID_HANDLE_VALUE)
+	{
+		return SCERR_DRIVER_NOTINSTALL;
+	}
+    HANDLE hFile=CreateFile(fileName,GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,0);
+	if(hFile==INVALID_HANDLE_VALUE)
+	{
+         return SCERR_OPENFILE_FAIL;
+	}
+	//将com句柄和下载文件句柄传递给驱动程序,数据结构为文件句柄，com句柄，标志，机号
+	ULONG len=0;
+	int retcode=0;
+	KIOCTRL kctrl;
+	kctrl.hFile=hFile;
+	kctrl.hDevice=hCommDev[comm.comConn->comPort];
+	kctrl.flag=flag;
+	kctrl.macNo=macNo;
+    kctrl.timeout=comm.comConn->normalWaitTime+comm.comConn->waitSTX2Time;
+	BOOL bRet=DeviceIoControl(hDevice,IOCTL_WRITE,&kctrl,sizeof(KIOCTRL),&retcode,sizeof(int),&len,0);
+	CloseHandle(hFile);
+	CloseHandle(hDevice);
+	return retcode;
+}   
+
+/***********************************************************************
+* 该函数可以一次执行多条apdu命令，该函数效率比cardapdu要高,但目前仅支持com通信方式
+***********************************************************************/  
+#define IOCTL_APDU  CTL_CODE(FILE_DEVICE_UNKNOWN,0X801,METHOD_NEITHER,FILE_ANY_ACCESS)
+ 
+int CardApduK(Communicator& comm,const char* apdu,SmartCom::string& retCode,int card/* =1 */,int macNo/* =255 */)
+{
+	if(NOT_CONNECT==comm.m_nCommtype)
+		return SCERR_INVALID_COMM;
+	if(macNo>255||macNo<1)
+		return SCERR_MACNO_OUTRANGE;
+	SmartCom::string str="\\\\.\\";
+	str+=DEVICE_NAME;
+	HANDLE hDevice=CreateFile(str.c_str(),GENERIC_READ|GENERIC_WRITE,
+		0,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,0);
+	if(hDevice==INVALID_HANDLE_VALUE)
+	{
+		return SCERR_DRIVER_NOTINSTALL;
+	}
+	KIOCTRL_APDU kioapdu;
+	kioapdu.apduStr=(BYTE*)apdu;
+	kioapdu.card=card;
+	kioapdu.kioctrl.hDevice=hCommDev[comm.comConn->comPort];;
+	kioapdu.kioctrl.macNo=macNo;
+	kioapdu.kioctrl.timeout=comm.comConn->normalWaitTime+comm.comConn->waitSTX2Time;
+	ULONG len=0;
+	int status;
+	char outbuf[10];
+    DeviceIoControl(hDevice,IOCTL_APDU,&kioapdu,sizeof(KIOCTRL_APDU),outbuf,10,&len,0);
+	CloseHandle(hDevice);
+	memcpy(&status,outbuf,sizeof(int));
+	retCode=(outbuf+sizeof(int));
+	return status;
+}                       
+
+/************************************************************************/
+/* 下载命令文件                                                                     */
+/************************************************************************/
+int DownloadBin(Communicator& comm,int flag,const char* bin,unsigned int len,int macNo)
 {
     if(NOT_CONNECT==comm.m_nCommtype)
 		return -2;
@@ -962,15 +1220,28 @@ int DownloadFile(Communicator& comm,int flag,const char* fileName,int macNo/* =2
 	BYTE SRBuffer[150];
 	//每次下载m字节
 	const int m=128;
-	//打开文件
-	FILE* aFile=fopen(fileName,"rb");
-	if(NULL==aFile)
-		return -5;
-	int readNum=0;
+	unsigned long readNum=0;
 	UINT filePos=0;
-	while((readNum=fread(tempBuffer+4,1,m,aFile))!=0)
+	unsigned int i=0;
+	bool loop=true;
+	while(loop)
 	{
-		 dataLen=4+readNum;
+		if(i+m<len)
+		{
+           memcpy(tempBuffer+4,bin+i,m);
+		   i+=m;
+		   readNum=m;
+		}
+		else
+		{
+			int left=len-i;
+			if(0==left)
+				break;
+			memcpy(tempBuffer+4,bin+i,left);
+			loop=false;
+			readNum=left;
+		}
+		dataLen=4+readNum;
 		//填充下载命令的数据项
 		tempBuffer[0]=filePos>>24;//文件偏移地址的最高字节
 		tempBuffer[1]=(filePos>>16)&0x000000ff;//文件偏移地址的次高字节
@@ -982,19 +1253,15 @@ int DownloadFile(Communicator& comm,int flag,const char* fileName,int macNo/* =2
 		CommProcess(comm,SRBuffer,150,packetLen,retCode,recLen);
 		if(recLen<0)
 		{
-			fclose(aFile);
             return -1;
 		}
 		
 		if(0!=SRBuffer[2])
 		{
-			fclose(aFile);
             return -4;
 		}
 		filePos+=readNum;
 	}
-	
-	fclose(aFile);
 	return 0;
 }
 
@@ -1005,9 +1272,9 @@ int CheckBatchResult(Communicator& comm,SmartCom::string& retCode,int macNo/* =2
 {
 	retCode="";
 	if(NOT_CONNECT==comm.m_nCommtype)
-		return -2;
+		return SCERR_INVALID_COMM;
 	if(macNo>255||macNo<1)
-		return -3;
+		return SCERR_MACNO_OUTRANGE;
 	int cmd=0x10;
 	int dataLen=0;
     BYTE tempBuffer[4];
@@ -1017,7 +1284,7 @@ int CheckBatchResult(Communicator& comm,SmartCom::string& retCode,int macNo/* =2
 	int ret,recLen;
 	CommProcess(comm,SRBuffer,64,packetLen,ret,recLen);
 	if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	if(SRBuffer[3]>=3)
 	{
 		for(int i=0;i<SRBuffer[3]-2;i++)
@@ -1046,9 +1313,9 @@ int CheckBatchResult(Communicator& comm,SmartCom::string& retCode,int macNo/* =2
 int ClearMem(Communicator& comm,int macNo/* =255 */)
 {
     if(NOT_CONNECT==comm.m_nCommtype)
-		return -2;
+		return SCERR_INVALID_COMM;
 	if(macNo>255||macNo<1)
-		return -3;
+		return SCERR_MACNO_OUTRANGE;
 	int cmd=0x11;
 	int dataLen=0;
     BYTE tempBuffer[4];
@@ -1058,11 +1325,11 @@ int ClearMem(Communicator& comm,int macNo/* =255 */)
 	int retCode,recLen;
 	CommProcess(comm,SRBuffer,32,packetLen,retCode,recLen);
 	if(recLen<0)
-		return -1;
+		return SCERR_TIMEOUT;
 	if(0==SRBuffer[2])
 		return 0;
 	else
-		return -4;
+		return SCERR_OPERROR;
 }
 
  //处理通信
@@ -1071,41 +1338,36 @@ int ClearMem(Communicator& comm,int macNo/* =255 */)
 	 int j=0;
 	 BYTE sendBuf[1024];
 	 memcpy(sendBuf,buf,nSendLen);
-	 if(comm.m_nCommtype==COMM_COM)
-	 {
-		 j=0;
-         do 
-         {
-			 j++;
-			 if(j>3)
-				 break;
-			 if(j>1)
-				 Sleep(10);
-			 sendRetCode=SendBytes(comm.comConn->comPort,sendBuf,nSendLen);
-		     recLen=ReceiveBytes(comm.comConn->comPort,comm.comConn->waitSTX2Time,comm.comConn->normalWaitTime ,buf);
-			 if(-2==recLen||-9==recLen)
-			 {
-				 int temp=0;
-				 do 
-				 {
-					 temp=ReceiveBytes(comm.comConn->comPort,100,100,buf);
-				 } while (temp!=-4&&temp!=-6);
-			 }
-         } while (recLen<0);
-
-	 }
-	 else if(comm.m_nCommtype==COMM_UDP)
+	 if(comm.m_nCommtype==COMM_UDP)
 	 {
 		 
-        j=0;//如果通信不成功，试3次
-	    do{
+		 j=0;//如果通信不成功，试3次
+		 int index=comm.csIndex;
+		 do{
 			 j++;
 			 if(j>3)
 				 break;
-			 if(j>1)
-				 Sleep(10);
+			 while(true)   //控制在同一时间向同一工作站发送数据的线程不大于8个
+			 {
+				 EnterCriticalSection(&Connections::udpCommManagerVector[index].cs_workstation);			 
+				 if(Connections::udpCommManagerVector[index].sendingThreadNum+1<=8)
+				 {		 
+					 Connections::udpCommManagerVector[index].sendingThreadNum++;
+					 LeaveCriticalSection(&Connections::udpCommManagerVector[index].cs_workstation);
+					 break;
+				 }
+				 LeaveCriticalSection(&Connections::udpCommManagerVector[index].cs_workstation);
+				 Sleep(5);
+			 }
+			 EnterCriticalSection(&comm.udpConn->cs_rw);
              sendRetCode=SendUDPData(comm.udpConn->s,comm.udpConn->dstIP,comm.udpConn->dstPort, sendBuf,nSendLen);
+			 Sleep(1);
 			 recLen=RecvUDPData(comm.udpConn->s,comm.udpConn->waitSTX2Time,comm.udpConn->normalWaitTime ,buf,bufLen);
+			 LeaveCriticalSection(&comm.udpConn->cs_rw);
+
+			 EnterCriticalSection(&Connections::udpCommManagerVector[index].cs_workstation);
+			 Connections::udpCommManagerVector[index].sendingThreadNum--;
+			 LeaveCriticalSection(&Connections::udpCommManagerVector[index].cs_workstation);
 			 //如果数据接收格式错误，清除接收缓冲
 			 if(recLen==-9||recLen==-10)
 			 {
@@ -1117,12 +1379,116 @@ int ClearMem(Communicator& comm,int macNo/* =255 */)
 		 }while(recLen<0);	 	 
 		 return;
 	 }
-	 else if(comm.m_nCommtype==COMM_TCPCLIENT||comm.m_nCommtype==COMM_TCPSERVER)
+     else if(comm.m_nCommtype==COMM_TCPCLIENT||comm.m_nCommtype==COMM_TCPSERVER)
 	 {
 		 //对socket加锁
 		 
 		 sendRetCode=SendData(comm.tcpClientConn->s,buf,nSendLen);
 		 recLen=ReceiveData(comm.tcpClientConn->s,comm.tcpClientConn->waitSTX2Time,comm.tcpClientConn->normalWaitTime ,buf);
 	 }
+	 else if(comm.m_nCommtype==COMM_COM)
+	 {
+		 j=0;
+         do 
+         {
+			 j++;
+			 if(j>3)
+				 break;
+			 EnterCriticalSection(&comm.comConn->cs_rw);
+			 sendRetCode=SendBytes(comm.comConn->comPort,sendBuf,nSendLen);
+			 Sleep(1);
+		     recLen=ReceiveBytes(comm.comConn->comPort,comm.comConn->waitSTX2Time,comm.comConn->normalWaitTime ,buf);
+			 if(-2==recLen||-9==recLen)
+			 {
+				 int temp=0;
+				 do 
+				 {
+					 temp=ReceiveBytes(comm.comConn->comPort,100,100,buf);
+				 } while (temp!=-4&&temp!=-6);
+			 }
+			 LeaveCriticalSection(&comm.comConn->cs_rw);
+
+         } while (recLen<0);
+
+	 }
+	 
+ }
+
+ //禁止多条APDU批处理完成后自动给回答
+ int DisableAutoAnswer(Communicator& comm,int macNo/*=255*/)
+ {
+	 if(NOT_CONNECT==comm.m_nCommtype)
+		 return SCERR_INVALID_COMM;
+	 if(macNo>255||macNo<1)
+		 return SCERR_MACNO_OUTRANGE;
+	 int cmd=0x13;
+	 int dataLen=0;
+	 BYTE tempBuffer[4];
+	 BYTE SRBuffer[32];
+	 int packetLen=PrepareBytes(macNo,cmd,tempBuffer,&dataLen,SRBuffer);
+	 //发送命令
+	 int retCode,recLen;
+	 CommProcess(comm,SRBuffer,32,packetLen,retCode,recLen);
+	 if(recLen<0)
+		 return SCERR_TIMEOUT;
+	 if(0==SRBuffer[2])
+		 return 0;
+	 else
+		 return SCERR_OPERROR;
+ }
+ 
+ 
+ //设置多条APDU批处理完成后自动给回答
+ int EnableAutoAnswer(Communicator& comm,int macNo /*=255*/)
+ {
+     if(NOT_CONNECT==comm.m_nCommtype)
+		 return SCERR_INVALID_COMM;
+	 if(macNo>255||macNo<1)
+		 return SCERR_MACNO_OUTRANGE;
+	 int cmd=0x12;
+	 int dataLen=0;
+	 BYTE tempBuffer[4];
+	 BYTE SRBuffer[32];
+	 int packetLen=PrepareBytes(macNo,cmd,tempBuffer,&dataLen,SRBuffer);
+	 //发送命令
+	 int retCode,recLen;
+	 CommProcess(comm,SRBuffer,32,packetLen,retCode,recLen);
+	 if(recLen<0)
+		 return SCERR_TIMEOUT;
+	 if(0==SRBuffer[2])
+		 return 0;
+	 else
+		 return SCERR_OPERROR;
+ }
+ 
+ //设置发送数据时间间隔
+ int SetSendInterval(Communicator& comm,BYTE interval,int macNo /*=255*/)
+ {
+     if(NOT_CONNECT==comm.m_nCommtype)
+		 return SCERR_INVALID_COMM;
+	 if(macNo>255||macNo<1)
+		 return SCERR_MACNO_OUTRANGE;
+	 int cmd=0xe8;
+	 int dataLen=1;
+	 BYTE tempBuffer[4];
+	 BYTE SRBuffer[32];
+	 tempBuffer[0]=interval;
+	 int packetLen=PrepareBytes(macNo,cmd,tempBuffer,&dataLen,SRBuffer);
+	 //发送命令
+	 int retCode,recLen;
+	 CommProcess(comm,SRBuffer,32,packetLen,retCode,recLen);
+	 if(recLen<0)
+		 return SCERR_TIMEOUT;
+	 if(0==SRBuffer[2]&&interval==SRBuffer[4])
+		 return 0;
+	 else
+		 return SCERR_OPERROR;
+ }
+
+ //////////或com句柄
+ extern HANDLE hCommDev[256];
+ HANDLE GetCOMHandle(int comport)
+ {
+	 return hCommDev[comport];
  }
 

@@ -13,6 +13,7 @@ struct ComConnection;
 //与连接相关参数
 struct Communicator{
 	  int m_nCommtype;     //当前选择通信的类型
+	  int csIndex;        //当前通信所使用的临界区的序号
 	  UdpConnection* udpConn;//指向udp通信使用的参数结构
 	  TcpClientConn* tcpClientConn;//
 	  ComConnection* comConn;

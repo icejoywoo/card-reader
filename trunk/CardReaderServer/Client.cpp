@@ -13,6 +13,7 @@ Client::Client(SOCKET s)
 	this->s = s;
 	this->timeoutStart = ::GetTickCount();
 	this->available = TRUE;
+	this->_quit = FALSE;
 }
 
 Client::~Client()
@@ -73,6 +74,7 @@ void Client::release()
 	shutdown(s, SD_BOTH);
 	closesocket(s);
 	this->available = FALSE;
+	this->_quit = TRUE;
 }
 
 int Client::sendData(const char* data)
@@ -108,7 +110,7 @@ int Client::receiveData(char* data, int len)
 	char log[512];
 	if (-1 == size || 0 == size)
 	{
-		sprintf(log, "[读卡器 %d]接收数据出错", readerId);
+		sprintf(log, "[读卡器 %d]接收数据出错, size: %d", readerId, size);
 		SimpleLog::error(log);
 		return size;
 	}
@@ -136,8 +138,15 @@ void Client::getName(char* name)
 
 BOOL Client::isAvailable()
 {
-//	throw std::exception("The method or operation is not implemented.");
 	return this->available;
 }
 
+BOOL Client::isQuit()
+{
+	return this->_quit;
+}
 
+void Client::quit()
+{
+	this->_quit = TRUE;
+}

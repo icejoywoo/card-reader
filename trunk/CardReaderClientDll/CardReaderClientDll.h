@@ -75,7 +75,7 @@ typedef struct _Reader
  *	CONNECT_FAILED		连接服务器失败
  *	SEND_ERROR			发送数据失败
  */
-CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout = 5000, long customTimeout = 60000);
+CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout = 5000, long customTimeout = 600000);
 
 /**
  * @brief 释放读卡器

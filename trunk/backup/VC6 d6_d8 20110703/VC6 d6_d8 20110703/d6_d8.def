@@ -1,0 +1,324 @@
+; d6_d8.def : Declares the module parameters for the DLL.
+
+LIBRARY      "d6_d8"
+DESCRIPTION  'd6_d8 Windows Dynamic Link Library'
+
+EXPORTS
+    ; Explicit exports can go here
+    ;基本函数
+    dc_init
+    dc_card
+    dc_request
+    dc_select
+    dc_anticoll
+    dc_load_key
+    dc_authentication
+    dc_authentication_2
+    dc_authentication_pass
+    dc_read
+    dc_write
+    dc_halt
+    dc_changeb3
+    dc_HL_authentication
+    dc_HL_read
+    dc_HL_write
+    dc_check_write
+    dc_exit
+    dc_des_hex
+    
+   ;带Hex函数
+   dc_card_hex
+   dc_load_key_hex
+   dc_authentication_pass_hex
+   dc_read_hex
+   dc_write_hex
+   dc_srd_eepromhex
+   dc_swr_eepromhex
+   dc_cpuapdu_hex
+   dc_cpureset_hex
+    
+    ;值操作
+    dc_initval
+    dc_readval
+    dc_increment
+    dc_decrement
+    dc_restore
+    dc_transfer
+    
+    ;设备函数
+    dc_beep
+    dc_getver
+    dc_srd_eeprom
+    dc_swr_eeprom
+    a_hex
+    hex_a
+    dc_reset
+    
+    ;RFMA专用
+    dc_gettime
+    dc_high_disp
+    dc_disp_mode
+    dc_setbright
+    dc_disp_str
+    dc_settime
+    
+    ;接触式界面CPU卡
+    dc_cpuapdu
+    dc_cpuapdusource
+    dc_cpureset
+    dc_setcpu
+    dc_setcpupara
+
+    ;New added for long instruction
+    dc_getcpupara
+    dc_cpuapdusourceEXT
+    dc_cpuapdusourceEXT_hex
+    dc_cpuapduEXT
+    dc_cpuapduEXT_hex
+    dc_pro_commandlinkEXT
+	dc_pro_reset
+	dc_pro_command
+
+	;added in 20110512
+	dc_pro_halt
+	dc_config
+
+	;added in 20110527
+	
+	 dc_card_double
+   	 dc_card_double_hex
+
+     ;added in 20110627
+	 dc_gettimehex
+	 dc_settimehex
+	 dc_readblock
+	 dc_readblock_hex
+	 dc_writeblock
+	 dc_writeblock_hex
+	 dc_cardAB
+
+	 ;added in 20110629
+	 dc_pro_commandsource
+	 dc_pro_commandsourcehex
+	 dc_cpudown
+
+
+	 
+;/***********************************自动生成代码***added by chch 20110703****************************/
+;/***********************************自动生成代码***added by chch 20110703****************************/
+dc_config
+dc_write_TS
+dc_initval_ml
+dc_readval_ml
+dc_authentication_2
+dc_anticoll2
+dc_select2
+dc_HL_writehex
+dc_HL_readhex
+dc_check_writehex
+dc_clr_control_bit
+dc_set_control_bit
+dc_swr_eeprom
+swr_alleeprom
+srd_alleeprom
+dc_ctl_mode
+dcdeshex
+dcdes
+dc_light
+dc_setcpu
+dc_cpuapdu
+dc_cpuapdusource_hex
+dc_cpuapdurespon
+dc_cpuapdurespon_hex
+dc_set_addr
+dc_init_485
+dc_changebaud_485
+dc_change_addr
+dc_pro_resethex
+dc_pro_commandhex
+dc_pro_halt
+dc_request_shc1102
+dc_auth_shc1102
+dc_read_shc1102
+dc_write_shc1102
+dc_halt_shc1102
+dc_config_card
+dc_request_b
+dc_slotmarker
+dc_attrib
+dc_open_door
+dc_open_timedoor
+dc_read_random
+dc_write_random
+dc_read_random_hex
+dc_write_random_hex
+dc_erase_random
+dc_mfdes_auth
+dc_disp_neg
+dc_pro_commandlink
+dc_pro_commandlink_hex
+dc_read_idcard
+dc_read_idcard_hex
+dc_authentication_pass_hex
+dc_setcpupara
+dc_command
+dc_command_hex
+dc_creat_mac
+dc_creat_mac_hex
+dc_HL_write_hex
+dc_HL_read_hex
+dc_check_write_hex
+dc_srd_eeprom_hex
+dc_swr_eeprom_hex
+dc_gettime_hex
+dc_settime_hex
+dc_des
+dc_pro_reset_hex
+dc_pro_command_hex
+dc_pro_commandsource_hex
+dc_switch_unix
+dc_authentication_passaddr
+dc_authentication_passaddr_hex
+dc_card_fm11rf005
+dc_setusbtimeout
+dc_mfdes_baud
+dc_tripledes
+dc_tripledes_hex
+dc_mfdes_auth_hex
+dc_pro_sendcommandsource
+dc_pro_receivecommandsource
+dc_inventory
+dc_inventory_hex
+dc_stay_quiet
+dc_stay_quiet_hex
+dc_select_uid
+dc_select_uid_hex
+dc_reset_to_ready
+dc_reset_to_ready_hex
+dc_lock_block
+dc_lock_block_hex
+dc_write_afi
+dc_write_afi_hex
+dc_lock_afi
+dc_lock_afi_hex
+dc_write_dsfid
+dc_write_dsfid_hex
+dc_lock_dsfid
+dc_lock_dsfid_hex
+dc_get_systeminfo
+dc_get_systeminfo_hex
+dc_get_securityinfo
+dc_get_securityinfo_hex
+dc_getsnr_fm11rf005
+dc_getsnr_fm11rf005_hex
+dc_write_fm11rf005
+dc_read_fm11rf005
+dc_read_fm11rf005_hex
+dc_write_fm11rf005_hex
+DCDEV_CommandMcu
+DCDEV_CommandMcu_Hex
+dc_displcd
+dc_getinputpass
+dc_readmagcard
+dc_testdevicecomm
+dc_dispmainmenu
+dc_setdevicetime
+dc_getdevicetime
+dc_dispinfo
+dc_dispmaininfo
+dc_posbeep
+dc_ctlbacklight
+dc_ctlled
+dc_lcdclrscrn
+dc_passin
+dc_passget
+dc_passcancel
+dc_getinputkey
+dc_displcd_ext
+dc_readmagcardall
+dc_readdevsnr
+dc_readreadersnr
+dc_resetdevice
+dc_read_4442
+dc_read_4442_hex
+dc_write_4442
+dc_write_4442_hex
+dc_verifypin_4442
+dc_verifypin_4442_hex
+dc_readpin_4442
+dc_readpin_4442_hex
+dc_readpincount_4442
+dc_changepin_4442
+dc_changepin_4442_hex
+dc_readwrotect_4442
+dc_readwrotect_4442_hex
+dc_writeprotect_4442
+dc_writeprotect_4442_hex
+dc_write_24c
+dc_write_24c_hex
+dc_write_24c64
+dc_write_24c64_hex
+dc_read_24c
+dc_read_24c_hex
+dc_read_24c64
+dc_read_24c64_hex
+dc_read_4428
+dc_read_4428_hex
+dc_write_4428
+dc_write_4428_hex
+dc_verifypin_4428
+dc_verifypin_4428_hex
+dc_readpin_4428
+dc_readpin_4428_hex
+dc_readpincount_4428
+dc_changepin_4428
+dc_changepin_4428_hex
+dc_Check_4442
+dc_Check_4428
+dc_Check_24C01
+dc_Check_24C02
+dc_Check_24C04
+dc_Check_24C08
+dc_Check_24C16
+dc_Check_24C64
+dc_Check_CPU
+dc_CheckCard
+dc_getrcinfo
+dc_getrcinfo_hex
+dc_getlongver
+dc_cardstr
+dc_card_b
+dc_card_b_hex
+dc_dispinfo_T8
+dc_dispinfo_pro_T8
+dc_clearlcd_T8
+dc_led_T8
+dc_MFPL0_writeperso
+dc_MFPL0_writeperso_hex
+dc_MFPL0_commitperso
+dc_MFPL1_authl1key
+dc_MFPL1_authl1key_hex
+dc_MFPL1_switchtol2
+dc_MFPL1_switchtol3
+dc_MFPL2_switchtol3
+dc_MFPL3_authl3key
+dc_MFPL3_authl3key_hex
+dc_MFPL3_authl3sectorkey
+dc_MFPL3_authl3sectorkey_hex
+dc_MFPL3_readinplain
+dc_MFPL3_readinplain_hex
+dc_MFPL3_readencrypted
+dc_MFPL3_readencrypted_hex
+dc_MFPL3_writeinplain
+dc_MFPL3_writeinplain_hex
+dc_MFPL3_writeencrypted
+dc_MFPL3_writeencrypted_hex
+dc_auth_ulc
+dc_auth_ulc_hex
+dc_changekey_ulc
+dc_changekey_ulc_hex
+dc_pro_commandlinkEXT_hex
+;/***********************************自动生成代码***added by chch 20110703****************************/
+;/***********************************自动生成代码***added by chch 20110703****************************/
+
+

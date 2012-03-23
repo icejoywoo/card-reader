@@ -92,7 +92,7 @@ STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION |
     WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "服务器"
-FONT 9, "宋体", 0, 0, 0x1
+FONT 9, "宋体"
 BEGIN
     EDITTEXT        IDC_EDIT_LOG,156,15,323,266,ES_MULTILINE | 
                     ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | 
@@ -102,7 +102,7 @@ BEGIN
     PUSHBUTTON      "重启",IDC_BUTTON_RESTART,495,152,50,14
     PUSHBUTTON      "清空",IDC_BUTTON_CLEAR,495,173,50,14
     PUSHBUTTON      "日志",IDC_BUTTON_LOG,496,194,50,14
-    PUSHBUTTON      "设置",IDC_BUTTON_SETTING,496,215,50,14
+    PUSHBUTTON      "设置",IDC_BUTTON_SETTING,496,215,50,14,NOT WS_VISIBLE
     CONTROL         "Tree1",IDC_TREE_CLIENTS,"SysTreeView32",WS_BORDER | 
                     WS_TABSTOP,17,15,130,266
     LTEXT           "错误",IDC_STATIC,487,40,17,8
@@ -144,8 +144,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION 1,0,0,3
+ PRODUCTVERSION 1,0,0,3
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -158,17 +158,20 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "080404B0"
+        BLOCK "080404b0"
         BEGIN
+            VALUE "Comments", "\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "CardReaderServer Microsoft 基础类应用程序\0"
-            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "FileVersion", "1, 0, 0, 3\0"
             VALUE "InternalName", "CardReaderServer\0"
             VALUE "LegalCopyright", "版权所有 (C) 2011\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "CardReaderServer.EXE\0"
+            VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "CardReaderServer 应用程序\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "ProductVersion", "1, 0, 0, 3\0"
+            VALUE "SpecialBuild", "\0"
         END
     END
     BLOCK "VarFileInfo"

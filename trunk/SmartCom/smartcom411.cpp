@@ -263,7 +263,7 @@ void  SVC_HEX_2_DSP(unsigned char *hex,unsigned char *dsp,int count)
 /* return:                                 */
 /*   0——成功   -7 ---- 不成功            */ 		
 ////////////////////////////////////////////
-int  IniCom(int ComPort,int BaudRate)
+int  IniCom(int ComPort,int BaudRate,int waitForSTX2Time,int normalWaitTime)
 {
 	int		baud;
 	DCB		dcb;
@@ -314,7 +314,7 @@ int  IniCom(int ComPort,int BaudRate)
 		  NULL,  //lpSecurityAttributes
 		  OPEN_EXISTING,	//如COM口已存在,则为OPEN_EXISTING//dwCreationDistribution	  
 		  //0,   //dwFlagsAndAttributes
-		  FILE_ATTRIBUTE_NORMAL,//dwFlagsAndAttributes
+		  FILE_ATTRIBUTE_NORMAL,//dwFlagsAndAttributes,async i/o
 		  NULL  //必须为NULL
 	    );
 		
@@ -516,88 +516,41 @@ RecBuffer：读出的数据
 -9：数据校验错误
 *****************************************************/
 
-int	 ReceiveBytes (int ComPort,int waitforstx2,int _WaitTime,unsigned char *RecBuffer)
+int	 ReceiveBytes (int ComPort,unsigned int waitforstx2,unsigned int _WaitTime,unsigned char *RecBuffer)
 {	
 	DWORD	StartTime;
-	DWORD	EndTime;
-	int	    WaitTime;
 	unsigned char *buffer;
 	unsigned short crc16;
 	unsigned char Crc1,Crc2;
-	// modified
-	int     WaitForSTX2Time;	
-	WaitForSTX2Time=waitforstx2;    
-	int		pack_len,PacketLen;
-	DWORD	BytesRead=0,nToRead=0;
+	int		PacketLen=10000;
+	DWORD	BytesRead=0;
 	BOOL	bReturn;
-    //  receive text 
+	int   totalRead=0;
+    // 
+	DWORD totalWait=waitforstx2+_WaitTime;
 	StartTime = GetTickCount();
 	buffer = RecBuffer;
-    buffer++;
-	//OVERLAPPED ov;
-    //wait for start of text flag -- STX 
-	do{
-		*RecBuffer = (char)NULL;
-		bReturn = ReadFile(hCommDev[ComPort],RecBuffer,1,&BytesRead,NULL);
-		if (bReturn == FALSE)
-		{			
-			return (-2);
+    //接收字节
+	while(true)
+	{
+        bReturn = ReadFile(hCommDev[ComPort],buffer,100,&BytesRead,NULL);
+		buffer+=BytesRead;
+		totalRead+=BytesRead;
+		if(totalRead>=4)
+			PacketLen=RecBuffer[3]+7;
+		if(totalRead>=PacketLen)
+		{
+			break;
 		}
-		EndTime=GetTickCount();
-		WaitTime = EndTime - StartTime;
-		if(WaitTime > WaitForSTX2Time) 
-		{	
-			return (-6);
+		else
+		{
+			if(GetTickCount()-StartTime>totalWait)
+				return -6;
+			Sleep(1);
+			continue;
 		}
-	}while(*RecBuffer!=STX2);   	
-		
-	StartTime = GetTickCount();
-	pack_len = 3;		
-    while (pack_len>0){
-		  bReturn = ReadFile(hCommDev[ComPort],buffer,1,&BytesRead,NULL);
-		  if(bReturn == FALSE)
-		  {		
-			return (-2);
-		  }
-   		  buffer += BytesRead;
-    	  pack_len -= BytesRead;
-  		  EndTime=GetTickCount();
-		  WaitTime = EndTime - StartTime;
-		  if(WaitTime > _WaitTime) 
-		  {			
-				return (-4);
-		  }
 	}
-	buffer--;
-    pack_len = *buffer;	
-    buffer ++;
-        
-    pack_len += 3;
-	StartTime = GetTickCount();
-    while (pack_len>0) {
-     	    bReturn = ReadFile(hCommDev[ComPort],buffer,1,&BytesRead,NULL);
-			if(bReturn == FALSE)
-			{
-					return (-2);
-			}
-			buffer += BytesRead;
-	        pack_len -= BytesRead;
-		    EndTime=GetTickCount();
-		    WaitTime = EndTime - StartTime;
-		    if(WaitTime > _WaitTime) 
-			{	
-			  return (-4);
-			}
-	}
-    *buffer-- = (char)NULL;
-    
-	if (*buffer!=ETX2) {		
-			return(-2);
-	}
-	
-	buffer++;   
-	PacketLen = buffer-RecBuffer;
-	
+	//校验数据
 	crc16=calc_crc16(PacketLen-3,RecBuffer);
     
 	Crc1=(unsigned char)(crc16>>8);	
@@ -608,7 +561,6 @@ int	 ReceiveBytes (int ComPort,int waitforstx2,int _WaitTime,unsigned char *RecB
     {
 		return(-9);    //数据校验CRC错误
 	}
-
 	return(PacketLen);
 }
 /*****************************************************
@@ -1042,7 +994,7 @@ int  ReceiveData(unsigned int Sock,int WaitForSTX2Time,int NormalWaitTime,unsign
 int  DirectReceiveData(unsigned int nCommPort,unsigned char *PacketBuffer,int nCommType)
 {	
 	unsigned char	*buffer;
-    int		PacketLen;
+    int		PacketLen=0;
 	int		BytesRead=0;
 	int		RetCode;	
 	switch(nCommType) {
@@ -1204,7 +1156,7 @@ int  SendUDPData(unsigned int Sock,const char* IP_Address,int IP_Port,unsigned c
 	-4		SMART_RECEIVE_DATA_TIMEOUT，接收数据超时。
 	-10		SMART_RECEIVE_DATA_PACKET_ERROR，接收数据数据包格式错。
 */
-int  RecvUDPData(unsigned int Sock,int WaitForSTX2Time,int NormalWaitTime,unsigned char *PacketBuffer,int bufLen)
+int  RecvUDPData(unsigned int Sock,unsigned int WaitForSTX2Time,unsigned int NormalWaitTime,unsigned char *PacketBuffer,int bufLen)
 {
 
 	unsigned short crc16;
@@ -1213,63 +1165,48 @@ int  RecvUDPData(unsigned int Sock,int WaitForSTX2Time,int NormalWaitTime,unsign
 	int len = sizeof(SOCKADDR);
 
     //	设置超时
-	int rcvtimeo = WaitForSTX2Time+NormalWaitTime ; 
-
-	if( setsockopt( Sock , SOL_SOCKET , SO_RCVTIMEO , (const char *)&rcvtimeo , sizeof(rcvtimeo) ) == SOCKET_ERROR)
+	unsigned int rcvtimeo = WaitForSTX2Time+NormalWaitTime ; 
+	int retval=0;
+	unsigned char *buffer=PacketBuffer;
+	int totalRead=0,onceRead=0;
+	int packetLen=10000;
+	DWORD startTime=GetTickCount();
+	while(true)
 	{
-		return SMART_RECEIVE_DATA_TIMEOUT;
-	}
-
-	int retval=recvfrom(Sock,(char*)PacketBuffer,bufLen,0,(SOCKADDR*)&addrFrom,&len);
-	if(retval>0)
-	{
-        if(PacketBuffer[0]!=STX2)
-			return(SMART_RECEIVE_DATA_PACKET_ERROR);  //数据格式错误
-	}
-	int totalLen=retval;
-	int packetLen=100000;	 
-	//判断接收数据是否完整，不完整继续接收
-	while(retval>0)
-	{
-        if(totalLen>=4)
-		{
-			packetLen=*(BYTE*)(PacketBuffer+3)+7;  	   
-		}
-	   if(totalLen>=packetLen)
+       retval=recvfrom(Sock,(char*)buffer,bufLen-totalRead,0,(SOCKADDR*)&addrFrom,&len);
+	   if(retval<=0)
+	   {
+		   if(GetTickCount()-startTime>rcvtimeo)
+			   return SMART_RECEIVE_DATA_TIMEOUT;
+		   Sleep(1);
+		   continue;
+	   }
+	   totalRead+=retval;
+	   buffer+=retval;
+	   if(totalRead>=4)
+		   packetLen=PacketBuffer[3]+7;
+       if(totalRead>=packetLen)
 		   break;
-	   retval=recvfrom(Sock,(char*)(PacketBuffer+totalLen),bufLen-totalLen,0,(SOCKADDR*)&addrFrom,&len);
-	   if(retval>0)
-	        totalLen+=retval;
+	   else
+	   {
+		   if(GetTickCount()-startTime>rcvtimeo)
+			   return SMART_RECEIVE_DATA_TIMEOUT;
+		   Sleep(1);
+		   continue;
+	   }
 	}
 
-	if(SOCKET_ERROR==retval||0==retval)
-    {
-		//	TRACE("WSAGetLastError=%d\n",WSAGetLastError());
-        return SMART_RECEIVE_DATA_TIMEOUT;  //接收数据超时
+	//CRC校验
+	crc16=calc_crc16(packetLen-3,PacketBuffer);
 		
-    }
-    else //数据接收成功
+	Crc1=(unsigned char)(crc16>>8);	
+	Crc2=(unsigned char)crc16;	
+		
+	if((Crc1!=PacketBuffer[packetLen-3]) ||(Crc2!=PacketBuffer[packetLen-2])) 
 	{
-		if(PacketBuffer[0]!=STX2 || PacketBuffer[totalLen-1]!=ETX2)
-		{
-			return(SMART_RECEIVE_DATA_PACKET_ERROR);  //数据格式错误
-		}
-
-		//CRC校验
-		crc16=calc_crc16(totalLen-3,PacketBuffer);
-		
-		Crc1=(unsigned char)(crc16>>8);	
-		Crc2=(unsigned char)crc16;	
-		
-		if((Crc1!=PacketBuffer[totalLen-3]) ||(Crc2!=PacketBuffer[totalLen-2])) 
-		{
-			return(-9);    //数据校验CRC错误
-		}
-		
-		return(totalLen);
-		
-	}
-
+		return(-9);    //数据校验CRC错误
+	}		
+	return(packetLen);
 }
 
 
@@ -1368,9 +1305,15 @@ int GetOneLocalSocket(unsigned int * socket,int srcPort)
 	{
 			 socket=0;
 			 return -2;  //绑定失败
-	 }
-	 
-	 return 0;
+	}
+	//	设置超时
+	unsigned int rcvtimeo =1 ; 
+	if( setsockopt( *socket , SOL_SOCKET , SO_RCVTIMEO , (const char *)&rcvtimeo , sizeof(rcvtimeo) ) == SOCKET_ERROR)
+	{
+		socket=0;
+		return -2;
+	}
 
 
+	return 0;
 }
