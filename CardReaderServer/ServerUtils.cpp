@@ -169,6 +169,7 @@ int parseCommand(Client* client, int readerId, char* command, string& operationN
 		// 退出直接返回没什么好说的
 		sprintf(log, "[读卡器 %d]操作完毕", readerId);
 		SimpleLog::info(log);
+		client->quit();
 		functionReturn = 0;
 	} else {
 		functionReturn = COMMAND_NOT_FOUND; // 命令找不到

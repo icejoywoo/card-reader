@@ -33,4 +33,33 @@
 #define COMM_LOAD_PROGRAM  1
 #define COMM_MANUAL_REV    2 
 
+//应用层与内核驱动通信结构
+struct KIOCTRL{
+	HANDLE hFile;
+	HANDLE hDevice;
+	UCHAR flag;
+	UCHAR macNo;
+	ULONG timeout;
+};
+
+struct KIOCTRL_APDU{
+	KIOCTRL kioctrl;
+    UCHAR* apduStr;
+	UCHAR card;
+};
+
+struct KIOCTRLEX{
+	KIOCTRL kioctrl;
+	ULONG   timeout_count;//线程需要等待的时间单位计数（每单位10毫秒）
+	LARGE_INTEGER sleep_time;//线程每次睡眠时间
+};
+
+#define  DEVICE_NAME  "SmartComProxyDevice"
+
+#ifdef _DEBUG
+   #define  SCPrint(_x_)  printf _x_ 
+#else
+   #define  SCPrint(_x_)  
 #endif
+
+#endif//_CustomConsts_ end

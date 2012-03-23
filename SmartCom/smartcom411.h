@@ -34,7 +34,7 @@ extern void  SVC_DSP_2_HEX(unsigned char *dsp,unsigned char *hex,int count);
 
 extern void  SVC_HEX_2_DSP(unsigned char *hex,unsigned char *dsp,int count);
 
-extern int  IniCom(int ComPort,int BaudRate);
+extern int  IniCom(int ComPort,int BaudRate,int waitForSTX2Time,int normalWaitTime);
 
 extern int  CloseCom(int ComPort);
 
@@ -46,7 +46,7 @@ extern int  ModemDial(int ComPort,unsigned char* DialString,int length);
 
 extern int  CheckModemLink(int ComPort,int MaxWaitTime);
 
-extern int	 ReceiveBytes (int ComPort,int waitforstx2,int _WaitTime,unsigned char *RecBuffer);
+extern int	 ReceiveBytes (int ComPort,unsigned int waitforstx2,unsigned int _WaitTime,unsigned char *RecBuffer);
 
 extern int	 CheckBytes (unsigned char *SourceBuffer);
 
@@ -70,7 +70,7 @@ extern int  GetOneLocalSocket(unsigned int * socket,int srcPort);  //»ñµÃÒ»¸ö±¾µ
 
 extern int  SendUDPData(unsigned int Sock,const char* IP_Address,int IP_Port,unsigned char *PacketBuffer,int PacketLen);
 
-extern int  RecvUDPData(unsigned int Sock,int WaitForSTX2Time,int NormalWaitTime,unsigned char *PacketBuffer,int len);
+extern int  RecvUDPData(unsigned int Sock,unsigned int WaitForSTX2Time,unsigned int NormalWaitTime,unsigned char *PacketBuffer,int len);
 
 extern int  CloseUDPSocketEnv(unsigned int sock);
 

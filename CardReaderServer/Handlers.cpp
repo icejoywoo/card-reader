@@ -13,7 +13,7 @@
 
 using namespace std;
 
-// GUI上控制日志显示的线程, 大概没0.5s更新一次日志显示
+// GUI上控制日志显示的线程, 大概每0.1s更新一次日志显示
 UINT logHandler (LPVOID pParam)
 {
 	while (Server::getInstance()->status == TRUE)
@@ -43,6 +43,7 @@ UINT defaultServerHandler(LPVOID pParam)
 // 		SimpleLog::error("与卡片读写器的通信初始化失败");
 // 		return INIT_FAILED; // 与卡片读写器的通信初始化失败
 // 	}
+	CloseCOMComm(); // 关闭当前所有的串口通信
 	
 	// 对读卡器的访问控制, 在服务器启动的时候进行初始化设置
 	for (map<int, int>::iterator iter = ServerParam::instance->readers.begin(); 
@@ -63,8 +64,9 @@ UINT defaultServerHandler(LPVOID pParam)
 
 	CWinThread* waitListThread = AfxBeginThread(serv->waitListHandler, NULL); // 启动等待队列线程, 处理等待队列的
 	waitListThread->m_bAutoDelete = TRUE;
-	CWinThread* timeoutListThread = AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
-	waitListThread->m_bAutoDelete = TRUE;
+	// TODO 注释了延时线程
+// 	CWinThread* timeoutListThread = AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
+// 	timeoutListThread->m_bAutoDelete = TRUE;
 
 	while (Server::getInstance()->status == TRUE)
 	{
@@ -173,7 +175,7 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 		for (list<Client*>::iterator iter = Server::getInstance()->clients.begin();
 			iter != Server::getInstance()->clients.end(); ++iter)
 		{
-			if((*iter)->isOvertime())
+			if((*iter)->isOvertime() || (*iter)->isQuit()) // 删除已经退出的客户端
 			{
 				char name[50];
 				(*iter)->getName(name);
@@ -185,7 +187,7 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 			}
 		}
 		LeaveCriticalSection(&(Server::getInstance()->clients_cs));	
-		Sleep(10); // 休眠100ms, 根据情况适当修改
+		Sleep(100); // 休眠100ms, 根据情况适当修改
 	}
 	
 	return 0;
@@ -213,8 +215,25 @@ UINT defaultClientHandler (LPVOID pParam)
 
 	string operationName;
 	int resultCode;
-	while(operationName.compare("quit") != 0)
+	// 首先处理读卡器, 使其下电复位一次
+// 	Communicator communicator; // 与读卡器通信的通信
+// 	if (GetOneCOMCommunicator(communicator, ServerParam::instance->readers[readerId]) != 0) // 获取通信器, 第二个参数与
+// 	{
+// 		sprintf(log, "[读卡器 %d]通信器初始化失败", readerId);
+// 		SimpleLog::error(log);
+// 		return GET_COMMUNICATOR_FAILED;
+// 	}
+// 	ShutdownCard(communicator);
+// 	SmartCom::string retcode;
+// 	ResetCard(communicator, retcode);
+
+	bool clientIsQuit = false;
+	while(!clientIsQuit)
 	{
+		if (operationName.compare("quit") == 0)
+		{
+			clientIsQuit = true;
+		}
 		// 接收客户端的请求
 		if (!client->isAvailable() || client->receiveData(buff, 512) == -1) // 接收数据错误即刻关闭
 		{

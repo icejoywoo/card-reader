@@ -44,7 +44,6 @@ RSC=rc.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CARDREADERCLIENTDLL_EXPORTS" /Yu"stdafx.h" /FD /c
 # ADD CPP /nologo /MT /W3 /GX /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "CARDREADERCLIENTDLL_EXPORTS" /D "SMARTCOMSTRING_EXPORTS_MACRO" /D "_WINDLL" /FR /Yu"stdafx.h" /FD /c
-# SUBTRACT CPP /O<none>
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x804 /d "NDEBUG"
@@ -132,6 +131,10 @@ SOURCE=.\ClientParam.h
 # Begin Source File
 
 SOURCE=.\ClientUtils.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CustomConsts.h
 # End Source File
 # Begin Source File
 
