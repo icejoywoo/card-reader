@@ -30,7 +30,7 @@ Server::Server()
 Server::~Server()
 {
 	WSACleanup(); // clean up winsock
-//	delete this->instance;
+	delete this->instance;
 }
 
 int Server::start()
@@ -73,14 +73,15 @@ int Server::stop()
 // 	{
 // 		return -1;
 // 	}
-	if (closesocket(this->server) != 0)
-	{
-		SimpleLog::error("关闭失败");
-		return -2;
-	}
+// 	if (closesocket(this->server) != 0)
+// 	{
+// 		SimpleLog::error("关闭失败");
+// 		return -2;
+// 	}
+	shutdownAndCloseSocket(this->server);
 	for (list<Client*>::iterator iter = clients.begin(); iter != clients.end(); ++iter)
 	{
-		closesocket((*iter)->getSocket());
+		shutdownAndCloseSocket((*iter)->getSocket());
 	}
 
 
@@ -89,6 +90,9 @@ int Server::stop()
 	// 恢复服务器的原始状态
 	readerUsage.clear();
 	waitList.clear(); // 重启的时候不删除等待队列可以保证等待队列继续处理
+	EnterCriticalSection(&(Server::getInstance()->clients_cs));
+	ServerParam::instance->readers.clear();
+	LeaveCriticalSection(&(Server::getInstance()->clients_cs));	
 	this->status = FALSE;
 
 	return 0;

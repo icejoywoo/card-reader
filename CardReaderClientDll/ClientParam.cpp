@@ -28,8 +28,11 @@ ClientParam::ClientParam()
 	tm * current_tm = localtime(&t);
 	sprintf(logfile, "CardReaderClientDll-log-%04d-%02d-%02d-%d.txt", current_tm->tm_year + 1900, current_tm->tm_mon + 1, current_tm->tm_mday, t);
 	this->log = fopen(logfile, "w");
+	sprintf(logfile, "CardReaderClientDll-errlog-%04d-%02d-%02d-%d.txt", current_tm->tm_year + 1900, current_tm->tm_mon + 1, current_tm->tm_mday, t);
+	this->errLog = fopen(logfile, "w");
+
 	time(&t);
-	fprintf(this->log, "%s\tClientParam: Client初始化...\n", asctime(localtime(&t)));
+	fprintf(this->log, "%s\tClientParam: Client正在初始化...\n", asctime(localtime(&t)));
 	fflush(this->log);
 
 	// 读取配置文件, 目前读取有问题

@@ -19,6 +19,14 @@ using namespace std;
 #define MAX_OPERATION_DURATION (6000000) // 读卡器所有操作的最长时间
 
 /**
+ * @brief 关闭socket
+ * @param 
+ * SOCKET s
+ * @return None
+ */
+void shutdownAndCloseSocket(SOCKET s);
+
+/**
  * @brief 将int转换为CString
  * @param 
  * in a 需要转换的整型

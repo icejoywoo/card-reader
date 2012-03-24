@@ -105,6 +105,12 @@ public:
 	static UINT getConfigInt(LPCTSTR lpAppName,  // section name
 		LPCTSTR lpKeyName  // key name
 		);
+
+	static void shutdownAndCloseSocket(SOCKET s);
+
+	static void error(char* errMsg, int readerId, char* operationName);
+
+	static void info(char* infoMsg, int readerId, char* operationName);
 };
 
 #endif

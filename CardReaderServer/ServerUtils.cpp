@@ -6,6 +6,14 @@
 //////////////////////////////////////////////////////////////////////////
 #include "ServerUtils.h"
 
+void shutdownAndCloseSocket(SOCKET s)
+{
+	Sleep(10);
+	shutdown(s, SD_SEND);
+	Sleep(10);
+	closesocket(s);
+}
+
 CString i2str(int a)
 {
 	CString str;
@@ -15,7 +23,7 @@ CString i2str(int a)
 
 int parseCommand(Client* client, int readerId, char* command, string& operationName)
 {
-	char log[512];
+	char log[1024];
 	vector<string> requestParam; // operationName, cardId, params
 	requestParam = splitString(command);
 	operationName.assign(requestParam[0]); // 操作名称
@@ -194,7 +202,7 @@ int sendData(SOCKET s, const char* data)
 	char buff[512];
 	sprintf(buff, data);
 	int size = send(s, buff, strlen(buff), 0);
-	char log[512];
+	char log[1024];
 	if (-1 == size) {
 		sprintf(log, "发送数据错误, 数据: [%s]", buff);
 		SimpleLog::error(log);
@@ -219,7 +227,7 @@ int sendData(SOCKET s, SmartCom::string data)
 int receiveData(SOCKET s, char* data, int len)
 {
 	int size = recv(s, data, len, 0);
-	char log[512];
+	char log[1024];
 	if (-1 == size || 0 == size)
 	{
 		SimpleLog::error("接收数据出错");
@@ -235,7 +243,14 @@ int receiveData(SOCKET s, int& data)
 {
 	char str[512];
 	int size = receiveData(s, str, 512);
-	data = atoi(str);
+	if (-1 == size)
+	{
+		data = -2;
+	} 
+	else
+	{
+		data = atoi(str);
+	}
 	return size;
 }
 

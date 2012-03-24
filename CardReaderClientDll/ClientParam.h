@@ -40,6 +40,8 @@ public:
 	static ClientParam* instance;
 	// 日志文件
 	FILE* log;
+
+	FILE* errLog;
 };
 
 #endif

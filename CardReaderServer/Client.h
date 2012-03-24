@@ -11,6 +11,8 @@
 #include <WINSOCK2.H> // win socket
 #include "SmartComString.h"
 
+#define DEFAULT_TIMEOUT_ADDITION (200000)
+
 /**
  * @brief 向服务器请求的客户端, 保存了客户端的状态　
  */
