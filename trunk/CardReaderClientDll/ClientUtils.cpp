@@ -7,7 +7,9 @@
 //////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "ClientUtils.h"
+#include "ClientParam.h"
 #include <string>
+#include <time.h>
 
 using namespace std;
 
@@ -56,7 +58,15 @@ int ClientUtils::receiveData(SOCKET s, int &data)
 {
 	char str[512];
 	int size = receiveData(s, str, 512);
-	data = atoi(str);
+	// 当接收数据出错时
+	if (-1 == size)
+	{
+		data = -1;
+	}
+	else
+	{
+		data = atoi(str);
+	}
 	return size;
 }
 
@@ -99,4 +109,34 @@ UINT ClientUtils::getConfigInt(LPCTSTR lpAppName,  // section name
 				  )
 {
 	return ::GetPrivateProfileInt(lpAppName, lpKeyName, 0, CONFIG_PATH);
+}
+
+void ClientUtils::shutdownAndCloseSocket(SOCKET s)
+{
+	Sleep(10);
+	shutdown(s, SD_SEND);
+	Sleep(10);
+	closesocket(s);
+}
+
+void ClientUtils::error(char* errMsg, int readerId, char* operationName)
+{
+	time_t t;
+	time(&t);
+	tm * current_tm = localtime(&t);
+	fprintf(ClientParam::instance->errLog, "%04d.%02d.%02d %02d:%02d:%02d| [读卡器%d] [%s] Error: %s 错误码: %d\n", 
+		current_tm->tm_year + 1900, current_tm->tm_mon + 1, current_tm->tm_mday, current_tm->tm_hour, current_tm->tm_min, current_tm->tm_sec,
+		readerId, operationName, errMsg, WSAGetLastError());
+	fflush(ClientParam::instance->errLog);
+}
+
+void ClientUtils::info(char* infoMsg, int readerId, char* operationName)
+{
+	time_t t;
+	time(&t);
+	tm * current_tm = localtime(&t);
+	fprintf(ClientParam::instance->log, "%04d.%02d.%02d %02d:%02d:%02d| [读卡器%d] [%s]: %s\n", 
+		current_tm->tm_year + 1900, current_tm->tm_mon + 1, current_tm->tm_mday, current_tm->tm_hour, current_tm->tm_min, current_tm->tm_sec,
+		readerId, operationName, infoMsg);
+	fflush(ClientParam::instance->log);
 }

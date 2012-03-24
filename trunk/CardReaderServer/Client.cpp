@@ -18,7 +18,7 @@ Client::Client(SOCKET s)
 
 Client::~Client()
 {
-	closesocket(s);
+	shutdownAndCloseSocket(s);
 }
 
 Client& Client::setReaderId(int readerId)
@@ -27,9 +27,11 @@ Client& Client::setReaderId(int readerId)
 	return *this;
 }
 
+// 延时中增加一个特殊的增幅, 根据不同的情况进行调整
 Client& Client::setTimeout(ULONG timeout)
 {
-	this->timeout = timeout;
+	this->timeoutStart = ::GetTickCount();
+	this->timeout = timeout + DEFAULT_TIMEOUT_ADDITION;
 	return *this;
 }
 
@@ -71,8 +73,7 @@ BOOL Client::isOvertime()
 
 void Client::release()
 {
-	shutdown(s, SD_BOTH);
-	closesocket(s);
+	shutdownAndCloseSocket(s);
 	this->available = FALSE;
 	this->_quit = TRUE;
 }
@@ -82,7 +83,7 @@ int Client::sendData(const char* data)
 	char buff[512];
 	sprintf(buff, data);
 	int size = send(s, buff, strlen(buff), 0);
-	char log[512];
+	char log[1024]; // 存放日志的临时字符串
 	if (-1 == size) {
 		sprintf(log, "[读卡器 %d]发送数据错误, 数据: [%s]", readerId, buff);
 		SimpleLog::error(log);
@@ -107,7 +108,7 @@ int Client::sendData(SmartCom::string data)
 int Client::receiveData(char* data, int len)
 {
 	int size = recv(s, data, len, 0);
-	char log[512];
+	char log[1024];
 	if (-1 == size || 0 == size)
 	{
 		sprintf(log, "[读卡器 %d]接收数据出错, size: %d", readerId, size);
@@ -124,7 +125,14 @@ int Client::receiveData(int& data)
 {
 	char str[512];
 	int size = receiveData(str, 512);
-	data = atoi(str);
+	if (-1 == size)
+	{
+		data = -2;
+	}
+	else
+	{
+		data = atoi(str);
+	}
 	return size;
 }
 

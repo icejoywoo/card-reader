@@ -35,14 +35,10 @@ UINT logHandler (LPVOID pParam)
 // TODO: 修改handler
 UINT defaultServerHandler(LPVOID pParam)
 {
+	char log[1024]; // 存放日志的临时字符串
+
 	Server* serv = (Server*) pParam;
 
-	// TODO: 初始化读卡器(用udp测试的时候使用, 应该使用com串口方式访问)
-// 	if (InitUDPComm() == -1) {
-// 		AfxMessageBox("与卡片读写器的通信初始化失败");
-// 		SimpleLog::error("与卡片读写器的通信初始化失败");
-// 		return INIT_FAILED; // 与卡片读写器的通信初始化失败
-// 	}
 	CloseCOMComm(); // 关闭当前所有的串口通信
 	
 	// 对读卡器的访问控制, 在服务器启动的时候进行初始化设置
@@ -50,6 +46,17 @@ UINT defaultServerHandler(LPVOID pParam)
 			iter != ServerParam::instance->readers.end(); ++iter) // 遍历当前读卡器id的集合
 	{
 		serv->readerUsage[iter->first] = 0; // 初始化控制列表, 都未使用
+		// 复位所有读卡器
+		Communicator communicator; // 与读卡器通信的通信
+		
+		// readerId的含义, 表示读卡器相应的com号
+// 		if (GetOneCOMCommunicator(communicator, ServerParam::instance->readers[iter->first]) != 0) // 获取通信器, 第二个参数与
+// 		{
+// 			sprintf(log, "[读卡器 %d]通信器初始化失败", iter->first);
+// 			SimpleLog::error(log);
+// 		}
+// 		SmartCom::string retCode;
+// 		ResetCard(communicator, retCode);
 	}
 
 	SOCKET clientSocket;
@@ -57,16 +64,14 @@ UINT defaultServerHandler(LPVOID pParam)
 	memset(&from, 0, sizeof(from));
 	int fromlen = sizeof(from);
 
-	char log[512]; // 存放日志的临时字符串
-
 	sprintf(log, "服务器启动成功, 端口: %d", serv->getPort());
 	SimpleLog::info(log);
 
 	CWinThread* waitListThread = AfxBeginThread(serv->waitListHandler, NULL); // 启动等待队列线程, 处理等待队列的
 	waitListThread->m_bAutoDelete = TRUE;
 	// TODO 注释了延时线程
-// 	CWinThread* timeoutListThread = AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
-// 	timeoutListThread->m_bAutoDelete = TRUE;
+	CWinThread* timeoutListThread = AfxBeginThread(serv->timeoutListHandler, NULL); // 启动延时处理线程, 手动调试的时候可以关闭
+	timeoutListThread->m_bAutoDelete = TRUE;
 
 	while (Server::getInstance()->status == TRUE)
 	{
@@ -97,7 +102,7 @@ UINT defaultServerHandler(LPVOID pParam)
 			SimpleLog::error(log);		
 			
 			sendData(clientSocket, "id_wrong");
-			closesocket(clientSocket);
+			shutdownAndCloseSocket(clientSocket);
 			continue;
 		}
 		
@@ -147,7 +152,7 @@ UINT defaultWaitListHandler (LPVOID pParam )
 
 UINT defaultTimeoutListHandler (LPVOID pParam )
 {
-	char log[512];
+	char log[1024];
 	while (Server::getInstance()->status == TRUE) // 读卡器的延时队列只针对当前访问读卡器的客户端
 	{
 		// 遍历所有客户端
@@ -175,7 +180,7 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 		for (list<Client*>::iterator iter = Server::getInstance()->clients.begin();
 			iter != Server::getInstance()->clients.end(); ++iter)
 		{
-			if((*iter)->isOvertime() || (*iter)->isQuit()) // 删除已经退出的客户端
+			if((*iter)->isOvertime() || (*iter)->isQuit() || (*iter)->getSocket() == INVALID_SOCKET) // 删除已经退出的客户端
 			{
 				char name[50];
 				(*iter)->getName(name);
@@ -200,7 +205,7 @@ UINT defaultClientHandler (LPVOID pParam)
 	Client* client = Server::getInstance()->getClientByReaderId(readerId); // 取出相应读卡器队列中的socket
 
 	char buff[512]; // buffer
-	char log[512];
+	char log[1024];
 
 	if (client->isAvailable()) // 如果客户端有效就发送
 	{
@@ -215,17 +220,6 @@ UINT defaultClientHandler (LPVOID pParam)
 
 	string operationName;
 	int resultCode;
-	// 首先处理读卡器, 使其下电复位一次
-// 	Communicator communicator; // 与读卡器通信的通信
-// 	if (GetOneCOMCommunicator(communicator, ServerParam::instance->readers[readerId]) != 0) // 获取通信器, 第二个参数与
-// 	{
-// 		sprintf(log, "[读卡器 %d]通信器初始化失败", readerId);
-// 		SimpleLog::error(log);
-// 		return GET_COMMUNICATOR_FAILED;
-// 	}
-// 	ShutdownCard(communicator);
-// 	SmartCom::string retcode;
-// 	ResetCard(communicator, retcode);
 
 	bool clientIsQuit = false;
 	while(!clientIsQuit)

@@ -134,10 +134,6 @@ SOURCE=.\ClientUtils.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CustomConsts.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\CustomErrorCode.h
 # End Source File
 # Begin Source File

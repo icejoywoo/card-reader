@@ -15,17 +15,6 @@
 #include <WINSOCK2.H> // win socket
 #include "SmartComString.h"
 
-// This class is exported from the CardReaderClientDll.dll
-// class CARDREADERCLIENTDLL_API CCardReaderClientDll {
-// public:
-// 	CCardReaderClientDll(void);
-// 	// TODO: add your methods here.
-// };
-// 
-// extern CARDREADERCLIENTDLL_API int nCardReaderClientDll;
-// 
-// CARDREADERCLIENTDLL_API int fnCardReaderClientDll(void);
-
 /**
  * @brief 保存读卡器id和与服务器连接的socket
  *
@@ -37,6 +26,7 @@ typedef struct _Reader
 	int readerId;
 } Reader;
 
+//////////////////////////////////////////////////////////////////////////
 // /**
 //  * @brief 初始化客户端的服务器全局配置, Reader依赖这些配置建立与服务器的通信
 //  * @param
@@ -56,6 +46,7 @@ typedef struct _Reader
 //  *	-1	失败
 //  */
 // CARDREADERCLIENTDLL_API int CleanUpClient();
+//////////////////////////////////////////////////////////////////////////
 
 /**
  * @brief 获取读卡器
