@@ -122,7 +122,8 @@ UINT defaultServerHandler(LPVOID pParam)
 		Server::getInstance()->addToWaitList(client);
 		LeaveCriticalSection(&(Server::getInstance()->readerUsage_cs));
 
-		sprintf(log, "将请求添加到[读卡器 %d]的等待队列中...", readerId);
+		if(client->isAvailable())
+			sprintf(log, "将请求添加到[读卡器 %d]的等待队列中...", readerId);
 		SimpleLog::info(log);
 	}
 	return 0;
@@ -180,7 +181,7 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 		for (list<Client*>::iterator iter = Server::getInstance()->clients.begin();
 			iter != Server::getInstance()->clients.end(); ++iter)
 		{
-			if((*iter)->isOvertime() || (*iter)->isQuit() || (*iter)->getSocket() == INVALID_SOCKET) // 删除已经退出的客户端
+			if((*iter)->isOvertime() || (*iter)->isQuit() || (*iter)->getSocket() == INVALID_SOCKET || !(*iter)->isAvailable()) // 删除已经退出的客户端
 			{
 				char name[50];
 				(*iter)->getName(name);

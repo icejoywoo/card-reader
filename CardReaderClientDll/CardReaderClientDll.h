@@ -8,7 +8,7 @@
 
 #ifdef CARDREADERCLIENTDLL_EXPORTS
 #define CARDREADERCLIENTDLL_API __declspec(dllexport)
-#else;;;
+#else
 #define CARDREADERCLIENTDLL_API __declspec(dllimport)
 #endif
 
