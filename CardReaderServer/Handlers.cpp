@@ -230,10 +230,12 @@ UINT defaultClientHandler (LPVOID pParam)
 			clientIsQuit = true;
 		}
 		// 接收客户端的请求
-		if (!client->isAvailable() || client->receiveData(buff, 512) == -1 || client->receiveData(buff, 512) == 0) // 接收数据错误即刻关闭
+		int ret = -2;
+		if (!client->isAvailable() || (ret = client->receiveData(buff, 512)) == -1 || ret == 0)// 接收数据错误即刻关闭
 		{
 			break;
 		}
+
 		client->updateTimeout();
 		if ((resultCode= parseCommand(client, readerId, buff, operationName)) >= 0)
 		{
