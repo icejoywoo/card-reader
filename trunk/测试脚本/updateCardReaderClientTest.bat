@@ -1,2 +1,2 @@
-copy /Y ..\CardReaderClientDllTest\Debug\CardReaderClientDll.dll .
-copy /Y ..\CardReaderClientDllTest\Debug\CardReaderClientDllTest.exe .
+copy /Y ..\CardReaderClientDllTest\Release\CardReaderClientDll.dll .
+copy /Y ..\CardReaderClientDllTest\Release\CardReaderClientDllTest.exe .

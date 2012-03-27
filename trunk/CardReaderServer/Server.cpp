@@ -55,7 +55,7 @@ int Server::start()
 		return -2;
 	}
 	
-	if (listen(this->server, 64) != 0)
+	if (listen(this->server, 128) != 0)
 	{
 		SimpleLog::error("·şÎñÆ÷¼àÌı¶Ë¿ÚÊ§°Ü");
 		return -3;
