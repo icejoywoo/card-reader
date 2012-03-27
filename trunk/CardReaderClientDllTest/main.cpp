@@ -33,11 +33,11 @@ int main(int argc, char* args[])
 DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 {
 	UNREFERENCED_PARAMETER(lpParam); // 未使用的参量
-	
+	srand(time(NULL));
 	// 配置读卡器
 	Reader* reader = new Reader();
-//	reader->readerId = floor(rand() % (readerNum) + 1); // 随机读卡器id
-	reader->readerId = 1;
+	reader->readerId = floor(rand() % (readerNum) + 1); // 随机读卡器id
+//	reader->readerId = 1;
 	char log[512];
 	sprintf(log, "读卡器id %d\n", reader->readerId);
 	OutputDebugString(log);
@@ -68,47 +68,47 @@ DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 // 	}
 	
 	// 获取读卡器id
-	{
-		char devID[512] = {0};
-		int readerId = 0;
-		if (0 != GetDevIDAndReaderId(reader, devID, 512, readerId))
-		{
-			printf("GetDevIDAndReaderId Failed.");
-		}
- 		cout << devID << ", " << readerId << endl;
-	}
+// 	{
+// 		char devID[512] = {0};
+// 		int readerId = 0;
+// 		if (0 != GetDevIDAndReaderId(reader, devID, 512, readerId))
+// 		{
+// 			printf("GetDevIDAndReaderId Failed.");
+// 		}
+//  		cout << devID << ", " << readerId << endl;
+// 	}
 
 	// 读取程序版本和终端类型
-	{
-		char appVer[512] = {0};
-		char devType[512] = {0};
-		if (0 != GetAppVerAndDevType(reader, appVer, 512, devType, 512))
-		{
-			printf("GetAppVerAndDevType Failed.");
-		}
-		cout << appVer << ", " << devType << endl;
-	}
+// 	{
+// 		char appVer[512] = {0};
+// 		char devType[512] = {0};
+// 		if (0 != GetAppVerAndDevType(reader, appVer, 512, devType, 512))
+// 		{
+// 			printf("GetAppVerAndDevType Failed.");
+// 		}
+// 		cout << appVer << ", " << devType << endl;
+// 	}
 
 	// 获取芯片id(调用复位之后调用这个, 会出错)
-	{
-		char chipID[512] = {0};
-		if (0 != GetChipID(reader, chipID, 512))
-		{
-			printf("GetChipID failed.");
-		}
-		cout << chipID << endl;
-	}
+// 	{
+// 		char chipID[512] = {0};
+// 		if (0 != GetChipID(reader, chipID, 512))
+// 		{
+// 			printf("GetChipID failed.");
+// 		}
+// 		cout << chipID << endl;
+// 	}
 
 	// 检测A卡和B卡座是否有卡
-	{
-		int cardA = -1;
-		int cardB = -1;
-		if (0 != IsCardReady(reader, cardA, cardB))
-		{
-			printf("IsCardReady failed.");
-		}
-		cout << cardA << ", " << cardB << endl;
-	}
+// 	{
+// 		int cardA = -1;
+// 		int cardB = -1;
+// 		if (0 != IsCardReady(reader, cardA, cardB))
+// 		{
+// 			printf("IsCardReady failed.");
+// 		}
+// 		cout << cardA << ", " << cardB << endl;
+// 	}
 	
 	// 复位应答
 	{
@@ -140,14 +140,14 @@ DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 // 	}
 
 	// 查看波特率
-	{
-		int braudRate = 0;
-		if (0 != GetCardBraudRate(reader, braudRate))
-		{
-			printf("ModifyCardBraudRate failed.");
-		}
-		cout << braudRate << endl;
-	}
+// 	{
+// 		int braudRate = 0;
+// 		if (0 != GetCardBraudRate(reader, braudRate))
+// 		{
+// 			printf("ModifyCardBraudRate failed.");
+// 		}
+// 		cout << braudRate << endl;
+// 	}
 
 	// 修改电源
 // 	{
@@ -178,34 +178,34 @@ DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 // 	}
 	
 	// 获取脚本数据(需要先下载文件)
-	{
-		SmartCom::string strData = "empty";
-		if (0 != GetScriptData(reader, 0, 128, strData))
-		{
-			printf("GetScriptData失败\n");
-		}
-		cout << strData.c_str() << endl;
-	}
+// 	{
+// 		SmartCom::string strData = "empty";
+// 		if (0 != GetScriptData(reader, 0, 128, strData))
+// 		{
+// 			printf("GetScriptData失败\n");
+// 		}
+// 		cout << strData.c_str() << endl;
+// 	}
 
 	// 执行多条apdu(需要先下载文件)
-	{
-		int ret = ExcuteMulAPDU(reader, 5);
-		if (0 != ret) // 下载头文件
-		{
-			printf("ExcuteMulAPDU失败\n");
-		}
-	}
+// 	{
+// 		int ret = ExcuteMulAPDU(reader, 5);
+// 		if (0 != ret) // 下载头文件
+// 		{
+// 			printf("ExcuteMulAPDU失败\n");
+// 		}
+// 	}
 
 	// CheckBatchResult
-	{
-		SmartCom::string retCode = "empty"; // 状态返回码
-		int result = -1000; // 已执行的条数
-		if ((result = CheckBatchResult(reader, retCode)) < 0)
-		{
-			printf("CheckBatchResult失败\n");
-		}
-		cout << result << "执行," <<retCode.c_str() << endl;
-	}
+// 	{
+// 		SmartCom::string retCode = "empty"; // 状态返回码
+// 		int result = -1000; // 已执行的条数
+// 		if ((result = CheckBatchResult(reader, retCode)) < 0)
+// 		{
+// 			printf("CheckBatchResult失败\n");
+// 		}
+// 		cout << result << "执行," <<retCode.c_str() << endl;
+// 	}
 
 	// 卡片下电
 	{

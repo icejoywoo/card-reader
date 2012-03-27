@@ -2,9 +2,9 @@
 #define __SmartComString_H__
 
 #ifdef SMARTCOMSTRING_EXPORTS_MACRO
-#define SMARTCOMSTRING_API __declspec(dllexport)
+#define SMARTCOMSTRING_API  __declspec(dllexport)
 #else
-#define SMARTCOMSTRING_API __declspec(dllimport)
+#define SMARTCOMSTRING_API  __declspec(dllimport)
 #endif
 
 namespace SmartCom{

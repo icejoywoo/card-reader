@@ -7,7 +7,7 @@
 int main(void)
 {
 	Communicator communicator;
-	if (0 != GetOneCOMCommunicator(communicator, 5))
+	if (0 != GetOneCOMCommunicator(communicator, 2))
 	{
 		cout << "GetOneCOMCommunicatorÊ§°Ü" << endl;
 		return -1;
@@ -23,6 +23,9 @@ int main(void)
 		}
 		cout << devID << ", " << readerId << endl;
 	}
+	SmartCom::string retCode;
+	int ret = ResetCard(communicator, retCode);
+	cout << retCode.c_str() << ", " << ret << endl;
 
 	return 0;
 }
