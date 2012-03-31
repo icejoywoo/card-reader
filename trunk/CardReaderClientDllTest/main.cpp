@@ -11,9 +11,13 @@ using namespace std;
 #pragma comment(lib, "CardReaderClientDll.lib")
 
 #define readerNum (2)
-#define ThreadNum (1)
+#define ThreadNum (32)
+
+int errors = 0;
+int oks = 0;
 
 DWORD WINAPI ReaderTestThread(LPVOID lpParam);
+int operateReader(int readerId);
 
 int main(int argc, char* args[])
 {
@@ -22,30 +26,37 @@ int main(int argc, char* args[])
 	{
 		DWORD threadId;
 		threads[i] = CreateThread(NULL, 0, ReaderTestThread, 0, 0, &threadId);
-		//cout << floor(rand() % (readerNum) + 1) << endl;
 	}
 
 	WaitForMultipleObjects(ThreadNum, threads, TRUE, INFINITE);
-	
+	cout << "Errors: " << errors << endl;
 	return 0;
 }
 
 DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 {
 	UNREFERENCED_PARAMETER(lpParam); // 未使用的参量
-	srand(time(NULL));
+	for (int i = 0; i < 10000; ++i)
+	{
+		for (int j = 1; j <= readerNum; ++j)
+		{
+			operateReader(j);
+		}
+	}
+	return 0;
+}
+
+int operateReader(int readerId)
+{
 	// 配置读卡器
 	Reader* reader = new Reader();
-	reader->readerId = floor(rand() % (readerNum) + 1); // 随机读卡器id
-//	reader->readerId = 1;
-	char log[512];
-	sprintf(log, "读卡器id %d\n", reader->readerId);
-	OutputDebugString(log);
+	reader->readerId = readerId;
 
 	// 获取读卡器
 	if (0 != GetReader(reader, 10000, 10000))
 	{
-		printf("getReader Failed.");
+		printf("ERROR: GetReader Failed, reader -> %d.\n", readerId);
+		++errors;
 		return -1;
 	}
 
@@ -115,9 +126,10 @@ DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 		SmartCom::string retCode = "empty";
 		if (0 != ResetCard(reader, retCode))
 		{
-			printf("ResetCard failed.");
+			printf("ResetCard failed, reader -> %d.\n", readerId);
+			++errors;
 		}
-		cout << "复位应答:" << retCode.c_str() << endl;
+		cout << "Reader -> " << readerId <<", 复位应答 -> " << retCode.c_str() << endl;
 	}
 
 	// 执行单条命令(执行前需要先复位应答)
@@ -126,9 +138,50 @@ DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 		char* apdu = "00820000083132333435363738";
 		if (0 != CardApdu(reader, apdu, retCode, 1))
 		{
-			printf("CardApdu failed.");
+			printf("CardApdu failed, reader -> %d.\n", readerId);
+			++errors;
 		}
-		cout << retCode.c_str() << endl;
+		cout << "Reader -> " << readerId << ", apdu -> " << apdu << ", ret -> " << retCode.c_str() << endl;
+	}
+	{
+		SmartCom::string retCode = "empty";
+		char* apdu = "00A4000002EF05";
+		if (0 != CardApdu(reader, apdu, retCode, 1))
+		{
+			printf("CardApdu failed, reader -> %d.\n", readerId);
+			++errors;
+		}
+		cout << "Reader -> " << readerId << ", apdu -> " << apdu << ", ret -> " << retCode.c_str() << endl;
+	}
+	{
+		SmartCom::string retCode = "empty";
+		char* apdu = "00A4000002DDF1";
+		if (0 != CardApdu(reader, apdu, retCode, 1))
+		{
+			printf("CardApdu failed, reader -> %d.\n", readerId);
+			++errors;
+		}
+		cout << "Reader -> " << readerId << ", apdu -> " << apdu << ", ret -> " << retCode.c_str() << endl;
+	}
+	{
+		SmartCom::string retCode = "empty";
+		char* apdu = "00B2020420";
+		if (0 != CardApdu(reader, apdu, retCode, 1))
+		{
+			printf("CardApdu failed, reader -> %d.\n", readerId);
+			++errors;
+		}
+		cout << "Reader -> " << readerId << ", apdu -> " << apdu << ", ret -> " << retCode.c_str() << endl;
+	}
+	{
+		SmartCom::string retCode = "empty";
+		char* apdu = "0084000008";
+		if (0 != CardApdu(reader, apdu, retCode, 1))
+		{
+			printf("CardApdu failed, reader -> %d.\n", readerId);
+			++errors;
+		}
+		cout << "Reader -> " << readerId << ", apdu -> " << apdu << ", ret -> " << retCode.c_str() << endl;
 	}
 
 	// 修改波特率
@@ -211,18 +264,18 @@ DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 	{
 		if (0 != ShutdownCard(reader))
 		{
-			printf("ShutdownCard failed.");
+			printf("ShutdownCard failed, reader -> %d.\n", readerId);
+			++errors;
 		}
 	}
 
 	// 释放读卡器
 	if (0 != ReleaseReader(reader))
 	{
-		printf("ReleaseReader Failed.");
+		printf("ReleaseReader Failed, reader -> %d.\n", readerId);
+		++errors;
 	}
 	
-//	CleanUpClient();
 	delete reader; // 释放内存
-
 	return 0;
 }

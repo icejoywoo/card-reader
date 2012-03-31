@@ -2,13 +2,13 @@
 // FileName:	CardReaderClientDll.h
 // Creator:		icejoywoo
 // Date:		2011.12.03
-// $Revision: 159 $
+// $Revision: 160 $
 // Comment: 客户端操作读卡器的接口定义
 //////////////////////////////////////////////////////////////////////////
 
 #ifdef CARDREADERCLIENTDLL_EXPORTS
 #define CARDREADERCLIENTDLL_API __declspec(dllexport)
-#else;;;
+#else
 #define CARDREADERCLIENTDLL_API __declspec(dllimport)
 #endif
 

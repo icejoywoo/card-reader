@@ -351,7 +351,7 @@ void DataTransfer::ClearRules()
 	rules.clear();
 }
 
-void DataTransfer::HandleFile(const char* filename, const char* dirname /* = NULL*/)
+void DataTransfer::HandleFile(const char* filename, int splitSize, const char* dirname /* = NULL*/)
 {
 	try
 	{
@@ -383,7 +383,7 @@ void DataTransfer::HandleFile(const char* filename, const char* dirname /* = NUL
 		while (file.ReadString(line))
 		{
 			++lineNo;
-			if (lineNo > 10000) // 文本超过10000行, 文件名+fileNo
+			if (lineNo > splitSize) // 文本超过10000行, 文件名+fileNo
 			{
 				++fileNo;
 				outFile->Close();
@@ -418,7 +418,7 @@ void DataTransfer::HandleFile(const char* filename, const char* dirname /* = NUL
 	}
 }
 
-void DataTransfer::HandleDir(const char* dirname, const char* outputDir /*= NULL*/)
+void DataTransfer::HandleDir(const char* dirname, int splitSize, const char* outputDir /*= NULL*/)
 {
 	try
 	{
@@ -454,7 +454,7 @@ void DataTransfer::HandleDir(const char* dirname, const char* outputDir /*= NULL
 			if (!finder.IsDirectory()) // 处理文件
 			{
 				targetFile.Format("%s\\%s", dirname, finder.GetFileName());
-				HandleFile(targetFile, outDir);
+				HandleFile(targetFile, splitSize, outDir);
 			}
 		}
 
@@ -466,7 +466,7 @@ void DataTransfer::HandleDir(const char* dirname, const char* outputDir /*= NULL
 	}
 }
 
-void DataTransfer::Handle(const char* filename, const char* outputDir /*= NULL*/)
+void DataTransfer::Handle(const char* filename, int splitSize, const char* outputDir /*= NULL*/)
 {
 	CFileFind finder;
 	BOOL working = finder.FindFile(filename);
@@ -475,11 +475,11 @@ void DataTransfer::Handle(const char* filename, const char* outputDir /*= NULL*/
 		working = finder.FindNextFile();
 		if (finder.IsDirectory())
 		{
-			HandleDir(filename, outputDir);
+			HandleDir(filename, splitSize, outputDir);
 		}
 		else
 		{
-			HandleFile(filename, outputDir);
+			HandleFile(filename, splitSize, outputDir);
 		}
 	}
 	else

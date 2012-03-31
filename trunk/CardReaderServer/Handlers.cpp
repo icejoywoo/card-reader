@@ -10,6 +10,7 @@
 #include "CustomMessage.h"
 #include <vector>
 #include <algorithm>
+#include "SmartCom.h"
 
 using namespace std;
 
@@ -39,7 +40,8 @@ UINT defaultServerHandler(LPVOID pParam)
 
 	Server* serv = (Server*) pParam;
 
-	CloseCOMComm(); // 关闭当前所有的串口通信
+	InitCOMComm();
+//	CloseCOMComm(); // 关闭当前所有的串口通信
 	
 	// 对读卡器的访问控制, 在服务器启动的时候进行初始化设置
 	for (map<int, int>::iterator iter = ServerParam::instance->readers.begin(); 
@@ -47,7 +49,7 @@ UINT defaultServerHandler(LPVOID pParam)
 	{
 		serv->readerUsage[iter->first] = 0; // 初始化控制列表, 都未使用
 		// 复位所有读卡器
-		Communicator communicator; // 与读卡器通信的通信
+//		Communicator communicator; // 与读卡器通信的通信
 		
 		// readerId的含义, 表示读卡器相应的com号
 // 		if (GetOneCOMCommunicator(communicator, ServerParam::instance->readers[iter->first]) != 0) // 获取通信器, 第二个参数与
@@ -122,8 +124,7 @@ UINT defaultServerHandler(LPVOID pParam)
 		Server::getInstance()->addToWaitList(client);
 		LeaveCriticalSection(&(Server::getInstance()->readerUsage_cs));
 
-		if(client->isAvailable())
-			sprintf(log, "将请求添加到[读卡器 %d]的等待队列中...", readerId);
+		if(client->isAvailable()) sprintf(log, "将请求添加到[读卡器 %d]的等待队列中...", readerId);
 		SimpleLog::info(log);
 	}
 	return 0;
@@ -157,31 +158,13 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 	while (Server::getInstance()->status == TRUE) // 读卡器的延时队列只针对当前访问读卡器的客户端
 	{
 		// 遍历所有客户端
-// outter:
-// 		for (map<int, list<Client*> >::iterator miter = Server::getInstance()->waitList.begin();
-// 			miter != Server::getInstance()->waitList.end() ; ++miter)
-// 		{
-// 			list<Client*> l = miter->second;
-// 
-// 			for (list<Client*>::iterator liter = l.begin(); liter != l.begin(); ++liter)
-// 			{
-// 				if ((*liter)->isOvertime()) // 客户端如果超时, 就直接关闭其socket
-// 				{
-// 					(*liter)->release();
-// 					Server::getInstance()->waitList[miter->first].remove((*liter)); // 删除等待列表中的超时的客户端, 在这里添加后可能会内存泄漏
-// 					delete (*liter); // 删除内存
-// 					sprintf(log, "[读卡器 %d]的客户端[%d]超时, 从等待队列中删除", (*liter)->getReaderId(), (*liter)->getSocket());
-// 					SimpleLog::error(log);
-// 					goto outter;// 删除元素后, 跳出所有循环, iterator需要更新
-// 				}
-// 			}
-// 		}
 		EnterCriticalSection(&(Server::getInstance()->clients_cs));
 	
 		for (list<Client*>::iterator iter = Server::getInstance()->clients.begin();
 			iter != Server::getInstance()->clients.end(); ++iter)
 		{
-			if((*iter)->isOvertime() || (*iter)->isQuit() || (*iter)->getSocket() == INVALID_SOCKET || !(*iter)->isAvailable()) // 删除已经退出的客户端
+			//if((*iter)->isOvertime() || (*iter)->isQuit() || (*iter)->getSocket() == INVALID_SOCKET || !(*iter)->isAvailable()) // 删除已经退出的客户端
+			if((*iter)->isQuit() || (*iter)->getSocket() == INVALID_SOCKET || !(*iter)->isAvailable()) // 删除已经退出的客户端
 			{
 				char name[50];
 				(*iter)->getName(name);
@@ -225,17 +208,16 @@ UINT defaultClientHandler (LPVOID pParam)
 	bool clientIsQuit = false;
 	while(!clientIsQuit)
 	{
-		if (operationName.compare("quit") == 0)
-		{
-			clientIsQuit = true;
-		}
 		// 接收客户端的请求
-		int ret = -2;
-		if (!client->isAvailable() || (ret = client->receiveData(buff, 512)) == -1 || ret == 0)// 接收数据错误即刻关闭
+		if (!client->isAvailable()) 
 		{
 			break;
 		}
-
+		int ret = -2;
+		if ((ret = client->receiveData(buff, 512)) == -1 || ret == 0)// 接收数据错误即刻关闭
+		{
+			break;
+		}
 		client->updateTimeout();
 		if ((resultCode= parseCommand(client, readerId, buff, operationName)) >= 0)
 		{
@@ -253,6 +235,14 @@ UINT defaultClientHandler (LPVOID pParam)
 		if (!client->isAvailable() || client->sendData(resultCode) == -1) // 发送数据出错即刻关闭
 		{
 			break;
+		}
+		if (operationName.compare("quit") == 0)
+		{
+			clientIsQuit = true;
+		}
+		if (operationName.compare("") == 0)
+		{
+			continue;
 		}
 	}
 

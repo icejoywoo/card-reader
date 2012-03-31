@@ -6,13 +6,28 @@
 --------------------Configuration: CardReaderServer - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPEACD.tmp" with contents
+Creating command line "rc.exe /l 0x804 /fo"Release/CardReaderServer.res" /d "NDEBUG" /d "_AFXDLL" "F:\明森\card-reader\CardReaderServer\CardReaderServer.rc"" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB6D8.tmp" with contents
 [
 /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Release/" /Fo"Release/" /Fd"Release/" /FD /c 
+"F:\明森\card-reader\CardReaderServer\CardReaderServer.cpp"
+"F:\明森\card-reader\CardReaderServer\CardReaderServerDlg.cpp"
+"F:\明森\card-reader\CardReaderServer\Client.cpp"
 "F:\明森\card-reader\CardReaderServer\Handlers.cpp"
+"F:\明森\card-reader\CardReaderServer\Server.cpp"
+"F:\明森\card-reader\CardReaderServer\ServerParam.cpp"
+"F:\明森\card-reader\CardReaderServer\ServerSetting.cpp"
+"F:\明森\card-reader\CardReaderServer\ServerUtils.cpp"
+"F:\明森\card-reader\CardReaderServer\SimpleLog.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPEACD.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPEACE.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB6D8.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB6F8.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Release/" /Fp"Release/CardReaderServer.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"F:\明森\card-reader\CardReaderServer\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB6F8.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB6F9.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:no /pdb:"Release/CardReaderServer.pdb" /machine:I386 /out:"Release/CardReaderServer.exe" 
 ".\Release\CardReaderServer.obj"
@@ -27,12 +42,24 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPEACE.tmp" with 
 ".\Release\StdAfx.obj"
 ".\Release\CardReaderServer.res"
 ]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPEACE.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPB6F9.tmp"
 <h3>Output Window</h3>
+Compiling resources...
 Compiling...
+StdAfx.cpp
+Compiling...
+CardReaderServer.cpp
+CardReaderServerDlg.cpp
+Client.cpp
 Handlers.cpp
+Server.cpp
+ServerParam.cpp
+ServerSetting.cpp
+ServerUtils.cpp
+SimpleLog.cpp
+Generating Code...
 Linking...
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPEE96.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPE3B5.tmp" with contents
 [
 /nologo /o"Release/CardReaderServer.bsc" 
 ".\Release\StdAfx.sbr"
@@ -45,7 +72,7 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPEE96.tmp" with 
 ".\Release\ServerSetting.sbr"
 ".\Release\ServerUtils.sbr"
 ".\Release\SimpleLog.sbr"]
-Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPEE96.tmp"
+Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPE3B5.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
 
