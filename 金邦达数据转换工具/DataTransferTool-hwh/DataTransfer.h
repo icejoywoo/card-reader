@@ -76,7 +76,7 @@ public:
 	DataTransfer(CString dbfile);
 	virtual ~DataTransfer();
 	// 处理文件或文件夹的数据, filename是路径(推荐使用)
-	void Handle(const char* filename, const char* outputDir = NULL);
+	void Handle(const char* filename, int splitSize, const char* outputDir = NULL);
 	// 添加处理规则
 	void AddRule(TransferRule& rule); 
 	void AddRule(TransferRule& rule, vector<TransferRule>::iterator loc); 
@@ -104,9 +104,9 @@ public:
 	CString outputPath; // 输出路径
 private:
 	// 处理文件数据
-	void HandleFile(const char* filename, const char* dirname = NULL);	
+	void HandleFile(const char* filename, int splitSize, const char* dirname = NULL);	
 	// 处理文件夹数据
-	void HandleDir(const char* filename, const char* outputDir = NULL);
+	void HandleDir(const char* filename, int splitSize, const char* outputDir = NULL);
 	// 转换规则
 	vector<TransferRule> rules;
 	// 操作sqlite3数据库

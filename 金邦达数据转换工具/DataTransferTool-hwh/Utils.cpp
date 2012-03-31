@@ -23,11 +23,11 @@ UINT DataTransferThread(LPVOID pParam)
 	transfer.load(mainFrame->m_CurrentTemplate);
 	if (mainFrame->m_TargetFile.IsEmpty())
 	{
-		transfer.Handle(mainFrame->m_InputFile);
+		transfer.Handle(mainFrame->m_InputFile, mainFrame->m_SplitSize);
 	}
 	else
 	{
-		transfer.Handle(mainFrame->m_InputFile, mainFrame->m_TargetFile);
+		transfer.Handle(mainFrame->m_InputFile, mainFrame->m_SplitSize, mainFrame->m_TargetFile);
 	}
 	
 	return 0;

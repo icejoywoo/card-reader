@@ -138,6 +138,18 @@ CARDREADERCLIENTDLL_API int GetReader(Reader* reader, long socketTimeout, long c
 		ClientUtils::error("socket延时设置失败!", reader->readerId, "GetReader");
 		return SETSOCKOPT_FAILED;
 	}
+	// closesocket（一般不会立即关闭而经历TIME_WAIT的过程）后想继续重用该socket
+	BOOL bReuseaddr=TRUE;
+	::setsockopt(reader->s,SOL_SOCKET ,SO_REUSEADDR,(const char*)&bReuseaddr,sizeof(BOOL));
+	// 处于连接状态的soket在调用closesocket后强制关闭，不经历TIME_WAIT的过程
+// 	BOOL bDontLinger = FALSE;
+// 	setsockopt(reader->s,SOL_SOCKET,SO_DONTLINGER,(const char*)&bDontLinger,sizeof(BOOL));
+
+	int nNetTimeout=1000;//1秒
+	//发送时限
+	setsockopt(reader->s,SOL_SOCKET,SO_SNDTIMEO,(char *)&nNetTimeout,sizeof(int));
+	//接收时限
+	setsockopt(reader->s,SOL_SOCKET,SO_RCVTIMEO,(char *)&nNetTimeout,sizeof(int));
 
 	// socket连接服务器
 	if (connect(reader->s, (sockaddr*)&server, sizeof(server)))

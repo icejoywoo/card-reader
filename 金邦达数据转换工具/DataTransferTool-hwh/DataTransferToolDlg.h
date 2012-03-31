@@ -33,6 +33,7 @@ public:
 	CString	m_InputFile;
 	CString	m_TargetFile;
 	CString	m_TemplateComment;
+	int		m_SplitSize;
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides

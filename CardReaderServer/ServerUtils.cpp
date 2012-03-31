@@ -5,6 +5,7 @@
 // Comment: 一些服务器的工具方法, 实现
 //////////////////////////////////////////////////////////////////////////
 #include "ServerUtils.h"
+#include <stdio.h>
 
 void shutdownAndCloseSocket(SOCKET s)
 {

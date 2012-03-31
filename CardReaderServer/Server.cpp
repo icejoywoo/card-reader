@@ -30,7 +30,7 @@ Server::Server()
 Server::~Server()
 {
 	WSACleanup(); // clean up winsock
-	delete this->instance;
+//	delete this->instance;
 }
 
 int Server::start()
@@ -55,7 +55,7 @@ int Server::start()
 		return -2;
 	}
 	
-	if (listen(this->server, 128) != 0)
+	if (listen(this->server, 512) != 0)
 	{
 		SimpleLog::error("·şÎñÆ÷¼àÌı¶Ë¿ÚÊ§°Ü");
 		return -3;

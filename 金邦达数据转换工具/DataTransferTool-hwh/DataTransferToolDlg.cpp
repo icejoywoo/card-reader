@@ -72,6 +72,7 @@ CDataTransferToolDlg::CDataTransferToolDlg(CWnd* pParent /*=NULL*/)
 	m_InputFile = _T("");
 	m_TargetFile = _T("");
 	m_TemplateComment = _T("");
+	m_SplitSize = 10000;
 	//}}AFX_DATA_INIT
 	// Note that LoadIcon does not require a subsequent DestroyIcon in Win32
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -88,6 +89,7 @@ void CDataTransferToolDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_INPUT_FILE, m_InputFile);
 	DDX_Text(pDX, IDC_EDIT_TARGET_FILE, m_TargetFile);
 	DDX_Text(pDX, IDC_EDIT_TEMPLATE_COMMENT, m_TemplateComment);
+	DDX_Text(pDX, IDC_EDIT_SPLIT_SIZE, m_SplitSize);
 	//}}AFX_DATA_MAP
 }
 

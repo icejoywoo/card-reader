@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CFieldConfigDialog
+LastClass=CDataTransferToolDlg
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "DataTransferTool.h"
@@ -19,8 +19,8 @@ Resource2=IDD_DATATRANSFERTOOL_DIALOG
 Class5=CTemplateNameDialog
 Resource3=IDD_DIALOG_FIELD_CONFIG
 Class6=CFieldConfigDialog
-Resource4=IDD_DIALOG_TEMPLATE_NAME
-Resource5=IDD_ABOUTBOX
+Resource4=IDD_ABOUTBOX
+Resource5=IDD_DIALOG_TEMPLATE_NAME
 Class7=CTransferingDialog
 Resource6=IDD_DIALOG_TRANSFERING
 
@@ -48,7 +48,7 @@ Filter=D
 [DLG:IDD_DATATRANSFERTOOL_DIALOG]
 Type=1
 Class=CDataTransferToolDlg
-ControlCount=28
+ControlCount=30
 Control1=IDC_LIST_TEMPLATES,SysListView32,1350631433
 Control2=IDC_STATIC,button,1342178055
 Control3=IDC_STATIC,button,1342178055
@@ -77,6 +77,8 @@ Control25=IDC_BUTTON_CHOOSE_TARGETDIR,button,1342242816
 Control26=IDC_STATIC,static,1342308352
 Control27=IDC_EDIT_TEMPLATE_COMMENT,edit,1350631552
 Control28=IDC_BUTTON_RENAME_TEMPLATE,button,1342242816
+Control29=IDC_EDIT_SPLIT_SIZE,edit,1350631552
+Control30=IDC_STATIC,static,1342308352
 
 [CLS:TargetFileChooseDialog]
 Type=0

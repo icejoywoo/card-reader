@@ -322,6 +322,7 @@ LRESULT CCardReaderServerDlg::UpdateLog(WPARAM wparam,LPARAM lparam)
 	{
 		char name[512];
 		(*iter)->getName(name);
+		// TODO：引起崩溃的一个地方，getReaderId函数
 		m_Tree.InsertItem(name, readersTree[(*iter)->getReaderId()]);
 	}
 	LeaveCriticalSection(&(Server::getInstance()->clients_cs));	
@@ -366,16 +367,16 @@ void CCardReaderServerDlg::ToTray()
     nid.cbSize=(DWORD)sizeof(NOTIFYICONDATA); 
     nid.hWnd=this->m_hWnd; 
     nid.uID=IDR_MAINFRAME; 
-    nid.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP|NIF_INFO; 
+    nid.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP; 
     nid.uCallbackMessage=WM_SHOWTASK;//自定义的消息名称 
     nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
-    strcpy(nid.szTip, "密钥保安站");    //信息提示条
+ //   strcpy(nid.szTip, "密钥保安站");    //信息提示条
     Shell_NotifyIcon(NIM_ADD,&nid);    //在托盘区添加图标 
 
-	nid.uTimeout = 1000;
-	nid.uVersion=NOTIFYICON_VERSION;
-	strcpy(nid.szInfoTitle,_T("密钥保安站"));
-	strcpy(nid.szInfo,_T("密钥保安站最小化到托盘了!"));
+//	nid.uTimeout = 1000;
+//	nid.uVersion=NOTIFYICON_VERSION;
+//	strcpy(nid.szInfoTitle,_T("密钥保安站"));
+//	strcpy(nid.szInfo,_T("密钥保安站最小化到托盘了!"));
 	Shell_NotifyIcon(NIM_MODIFY,&nid);
 
     ShowWindow(SW_HIDE);    //隐藏主窗口

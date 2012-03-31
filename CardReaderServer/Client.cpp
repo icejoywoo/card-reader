@@ -11,6 +11,18 @@
 Client::Client(SOCKET s)
 {
 	this->s = s;
+	// closesocket（一般不会立即关闭而经历TIME_WAIT的过程）后想继续重用该socket
+	BOOL bReuseaddr=TRUE;
+	::setsockopt(this->s,SOL_SOCKET ,SO_REUSEADDR,(const char*)&bReuseaddr,sizeof(BOOL));
+	// 处于连接状态的soket在调用closesocket后强制关闭，不经历TIME_WAIT的过程
+	// 	BOOL bDontLinger = FALSE;
+	// 	setsockopt(reader->s,SOL_SOCKET,SO_DONTLINGER,(const char*)&bDontLinger,sizeof(BOOL));
+	
+	int nNetTimeout=1000;//1秒
+	//发送时限
+	setsockopt(this->s,SOL_SOCKET,SO_SNDTIMEO,(char *)&nNetTimeout,sizeof(int));
+	//接收时限
+	setsockopt(this->s,SOL_SOCKET,SO_RCVTIMEO,(char *)&nNetTimeout,sizeof(int));
 	this->timeoutStart = ::GetTickCount();
 	this->available = TRUE;
 	this->_quit = FALSE;
@@ -30,7 +42,7 @@ Client& Client::setReaderId(int readerId)
 // 延时中增加一个特殊的增幅, 根据不同的情况进行调整
 Client& Client::setTimeout(ULONG timeout)
 {
-	this->timeoutStart = ::GetTickCount();
+//	this->timeoutStart = ::GetTickCount();
 	this->timeout = timeout + DEFAULT_TIMEOUT_ADDITION;
 	return *this;
 }
@@ -74,6 +86,7 @@ BOOL Client::isOvertime()
 void Client::release()
 {
 	shutdownAndCloseSocket(s);
+//	closesocket(s);
 	this->available = FALSE;
 	this->_quit = TRUE;
 }
