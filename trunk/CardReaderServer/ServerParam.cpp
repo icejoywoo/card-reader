@@ -16,6 +16,32 @@ using namespace std;
 ServerParam* ServerParam::instance = new ServerParam();
 ServerParam::ServerParam()
 {
+	//设置CPU亲和力//////////////////////////////////////////////////////////////////////////
+    CString strPath = ".\\SystemConfig\\SystemConfig.ini";
+	CString temstr;
+	int CpuId;
+    char buf[128];
+	memset(buf,0,128);
+	GetPrivateProfileString("CPUTYPE","IsEnableSingleCpu","",buf,MAX_PATH,strPath);
+	temstr = buf;
+	temstr.ReleaseBuffer();
+	if ("1" == temstr)
+	{
+		memset(buf,0,128);
+		GetPrivateProfileString("CPUTYPE","CpuId","",buf,MAX_PATH,strPath);
+		temstr = buf;
+		temstr.ReleaseBuffer();
+		if ("" == temstr)
+		{
+			CpuId  = 1;
+		}
+		else
+		{
+			CpuId = atoi(temstr);
+		}
+		int p=SetProcessAffinityMask(GetCurrentProcess(),CpuId);    //设置CPU的亲和力将CpuId的值分别设置为1，2
+	}
+ //设置CPU亲和力//////////////////////////////////////////////////////////////////////////End
 	serverPort = getConfigInt("Server", "port");
 	if (serverPort == 0) // 没有配置端口号, 使用默认端口号60000
 	{

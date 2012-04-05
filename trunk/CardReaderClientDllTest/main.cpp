@@ -14,7 +14,8 @@ using namespace std;
 #define ThreadNum (32)
 
 int errors = 0;
-int oks = 0;
+int okNumber = 0;
+int errorNumber = 0;
 
 DWORD WINAPI ReaderTestThread(LPVOID lpParam);
 int operateReader(int readerId);
@@ -30,17 +31,21 @@ int main(int argc, char* args[])
 
 	WaitForMultipleObjects(ThreadNum, threads, TRUE, INFINITE);
 	cout << "Errors: " << errors << endl;
+	cout << "OK: " << okNumber << ", ERROR: " << errorNumber << endl;
 	return 0;
 }
 
 DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 {
 	UNREFERENCED_PARAMETER(lpParam); // 未使用的参量
-	for (int i = 0; i < 10000; ++i)
+	for (int i = 0; i < 100; ++i)
 	{
 		for (int j = 1; j <= readerNum; ++j)
 		{
-			operateReader(j);
+			if (0 == operateReader(j) )
+				++okNumber;
+			else 
+				++errorNumber;
 		}
 	}
 	return 0;
@@ -140,6 +145,7 @@ int operateReader(int readerId)
 		{
 			printf("CardApdu failed, reader -> %d.\n", readerId);
 			++errors;
+			return -1;
 		}
 		cout << "Reader -> " << readerId << ", apdu -> " << apdu << ", ret -> " << retCode.c_str() << endl;
 	}
@@ -150,6 +156,7 @@ int operateReader(int readerId)
 		{
 			printf("CardApdu failed, reader -> %d.\n", readerId);
 			++errors;
+			return -1;
 		}
 		cout << "Reader -> " << readerId << ", apdu -> " << apdu << ", ret -> " << retCode.c_str() << endl;
 	}
@@ -160,6 +167,7 @@ int operateReader(int readerId)
 		{
 			printf("CardApdu failed, reader -> %d.\n", readerId);
 			++errors;
+			return -1;
 		}
 		cout << "Reader -> " << readerId << ", apdu -> " << apdu << ", ret -> " << retCode.c_str() << endl;
 	}
@@ -170,6 +178,7 @@ int operateReader(int readerId)
 		{
 			printf("CardApdu failed, reader -> %d.\n", readerId);
 			++errors;
+			return -1;
 		}
 		cout << "Reader -> " << readerId << ", apdu -> " << apdu << ", ret -> " << retCode.c_str() << endl;
 	}
@@ -180,6 +189,7 @@ int operateReader(int readerId)
 		{
 			printf("CardApdu failed, reader -> %d.\n", readerId);
 			++errors;
+			return -1;
 		}
 		cout << "Reader -> " << readerId << ", apdu -> " << apdu << ", ret -> " << retCode.c_str() << endl;
 	}
@@ -266,6 +276,7 @@ int operateReader(int readerId)
 		{
 			printf("ShutdownCard failed, reader -> %d.\n", readerId);
 			++errors;
+			return -1;
 		}
 	}
 
@@ -274,6 +285,7 @@ int operateReader(int readerId)
 	{
 		printf("ReleaseReader Failed, reader -> %d.\n", readerId);
 		++errors;
+		return -1;
 	}
 	
 	delete reader; // 释放内存
