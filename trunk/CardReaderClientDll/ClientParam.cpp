@@ -26,6 +26,11 @@ ClientParam::ClientParam()
 	time_t t;
 	time(&t);
 	tm * current_tm = localtime(&t);
+	// ´´½¨Ä¿Â¼
+	system("md .\\CardReaderClientDll-log");
+	system("md .\\CardReaderClientDll-log\\error_log");
+
+
 	sprintf(logfile, ".\\CardReaderClientDll-log\\CardReaderClientDll-log-%04d-%02d-%02d-%d.txt", current_tm->tm_year + 1900, current_tm->tm_mon + 1, current_tm->tm_mday, t);
 	this->log = fopen(logfile, "w");
 	sprintf(logfile, ".\\CardReaderClientDll-log\\error_log\\CardReaderClientDll-errlog-%04d-%02d-%02d-%d.txt", current_tm->tm_year + 1900, current_tm->tm_mon + 1, current_tm->tm_mday, t);

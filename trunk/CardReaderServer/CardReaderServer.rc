@@ -92,7 +92,7 @@ STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION |
     WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "服务器"
-FONT 9, "宋体"
+FONT 9, "宋体", 0, 0, 0x1
 BEGIN
     EDITTEXT        IDC_EDIT_LOG,156,15,323,266,ES_MULTILINE | 
                     ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | 
@@ -144,8 +144,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,4
- PRODUCTVERSION 1,0,0,4
+ FILEVERSION 1,0,0,5
+ PRODUCTVERSION 1,0,0,5
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -163,14 +163,14 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "CardReaderServer Microsoft 基础类应用程序\0"
-            VALUE "FileVersion", "1, 0, 0, 4\0"
+            VALUE "FileVersion", "1, 0, 0, 5\0"
             VALUE "InternalName", "CardReaderServer\0"
             VALUE "LegalCopyright", "版权所有 (C) 2011\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "CardReaderServer.EXE\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "CardReaderServer 应用程序\0"
-            VALUE "ProductVersion", "1, 0, 0, 4\0"
+            VALUE "ProductVersion", "1, 0, 0, 5\0"
             VALUE "SpecialBuild", "\0"
         END
     END

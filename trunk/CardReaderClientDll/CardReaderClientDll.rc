@@ -28,8 +28,8 @@ LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,1,7
- PRODUCTVERSION 1,0,1,7
+ FILEVERSION 1,0,1,9
+ PRODUCTVERSION 1,0,1,9
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -47,14 +47,14 @@ BEGIN
             VALUE "Comments", "Author: icejoywoo Date: 2012-03-14\0"
             VALUE "CompanyName", "明森机电设备有限公司\0"
             VALUE "FileDescription", "CardReaderClientDll\0"
-            VALUE "FileVersion", "1, 0, 1, 7\0"
+            VALUE "FileVersion", "1, 0, 1, 9\0"
             VALUE "InternalName", "CardReaderClientDll\0"
             VALUE "LegalCopyright", "版权所有(C) 2012\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "CardReaderClientDll.dll\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "明森 CardReaderClientDll\0"
-            VALUE "ProductVersion", "1, 0, 1, 7\0"
+            VALUE "ProductVersion", "1, 0, 1, 9\0"
             VALUE "SpecialBuild", "\0"
         END
     END
