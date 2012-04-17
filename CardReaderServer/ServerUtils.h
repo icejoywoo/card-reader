@@ -121,4 +121,7 @@ UINT getConfigInt(LPCTSTR lpAppName,  // section name
 				  LPCTSTR lpKeyName  // key name
 				  );
 
+// true是断开, false是有效
+BOOL HasConnectionDropped(int sdin);
+
 #endif

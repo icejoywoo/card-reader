@@ -38,7 +38,7 @@ int main(int argc, char* args[])
 DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 {
 	UNREFERENCED_PARAMETER(lpParam); // 未使用的参量
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 100; ++i)
 	{
 		for (int j = 1; j <= readerNum; ++j)
 		{
