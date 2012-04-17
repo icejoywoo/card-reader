@@ -163,8 +163,9 @@ UINT defaultTimeoutListHandler (LPVOID pParam )
 		for (list<Client*>::iterator iter = Server::getInstance()->clients.begin();
 			iter != Server::getInstance()->clients.end(); ++iter)
 		{
-			//if((*iter)->isOvertime() || (*iter)->isQuit() || (*iter)->getSocket() == INVALID_SOCKET || !(*iter)->isAvailable()) // 删除已经退出的客户端
-			if((*iter)->isQuit() || (*iter)->getSocket() == INVALID_SOCKET || !(*iter)->isAvailable()) // 删除已经退出的客户端
+			// if((*iter)->isOvertime() || (*iter)->isQuit() || (*iter)->getSocket() == INVALID_SOCKET || !(*iter)->isAvailable()) // 删除已经退出的客户端
+			// HasConnectionDropped 使用select来判断是否打开
+			if((*iter)->isQuit() || HasConnectionDropped((*iter)->getSocket()) || !(*iter)->isAvailable()) // 删除已经退出的客户端
 			{
 				char name[50];
 				(*iter)->getName(name);
@@ -197,7 +198,6 @@ UINT defaultClientHandler (LPVOID pParam)
 		sprintf(log, "[读卡器 %d]开始处理请求...", client->getReaderId());
 		SimpleLog::info(log);
 	} else {
-
 	}
 	
 	client->updateTimeout();
@@ -214,7 +214,7 @@ UINT defaultClientHandler (LPVOID pParam)
 			break;
 		}
 		int ret = -2;
-		if ((ret = client->receiveData(buff, 512)) == -1 || ret == 0)// 接收数据错误即刻关闭
+		if ((ret = client->receiveData(buff, 512)) == -1)// 接收数据错误即刻关闭
 		{
 			break;
 		}

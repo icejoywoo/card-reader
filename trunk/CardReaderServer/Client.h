@@ -13,6 +13,16 @@
 
 #define DEFAULT_TIMEOUT_ADDITION (200000)
 
+//定义结构及宏
+struct TCP_KEEPALIVE {
+	u_long onoff;
+	u_long keepalivetime;
+	u_long keepaliveinterval;
+};
+
+#define SIO_KEEPALIVE_VALS _WSAIOW(IOC_VENDOR,4)
+
+
 /**
  * @brief 向服务器请求的客户端, 保存了客户端的状态　
  */

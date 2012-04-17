@@ -178,6 +178,7 @@ int parseCommand(Client* client, int readerId, char* command, string& operationN
 		// 退出直接返回没什么好说的
 		sprintf(log, "[读卡器 %d]操作完毕", readerId);
 		SimpleLog::info(log);
+		Sleep(100);
 		client->quit();
 		functionReturn = 0;
 	} else {
@@ -302,4 +303,46 @@ UINT getConfigInt(LPCTSTR lpAppName,  // section name
 				  )
 {
 	return ::GetPrivateProfileInt(lpAppName, lpKeyName, 0, CONFIG_PATH);
+}
+
+
+BOOL HasConnectionDropped(int sdin)
+{
+	BOOL bConnDropped = FALSE;
+	INT iRet = 0;
+	BOOL bOK = TRUE;
+	
+	if (sdin == INVALID_SOCKET)
+		return TRUE;
+	
+	struct timeval timeout = { 0, 0 };
+	fd_set readSocketSet;
+	
+	FD_ZERO(&readSocketSet);
+	FD_SET(sdin, &readSocketSet);
+	
+	iRet = ::select(0, &readSocketSet, NULL, NULL, &timeout);
+	bOK = (iRet > 0);
+	
+	if(bOK)
+	{
+		bOK = FD_ISSET(sdin, &readSocketSet);
+	}
+	
+	if(bOK)
+	{
+		CHAR szBuffer[1] = "";
+		iRet = ::recv(sdin, szBuffer, 1, MSG_PEEK);
+		bOK = (iRet > 0);
+		if(!bOK)
+		{
+			INT iError = ::WSAGetLastError();
+			bConnDropped = (( iError == WSAENETRESET) ||
+				(iError == WSAECONNABORTED) ||
+				(iError == WSAECONNRESET) ||
+				(iError == WSAEINVAL) ||
+				(iRet == 0));
+		}
+	}
+	return(bConnDropped);
 }
