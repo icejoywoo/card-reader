@@ -10,8 +10,8 @@ using namespace std;
 
 #pragma comment(lib, "CardReaderClientDll.lib")
 
-#define readerNum (2)
-#define ThreadNum (32)
+#define readerNum (1)
+#define ThreadNum (64)
 
 int errors = 0;
 int okNumber = 0;
@@ -38,7 +38,7 @@ int main(int argc, char* args[])
 DWORD WINAPI ReaderTestThread(LPVOID lpParam)
 {
 	UNREFERENCED_PARAMETER(lpParam); // 未使用的参量
-	for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 10; ++i)
 	{
 		for (int j = 1; j <= readerNum; ++j)
 		{

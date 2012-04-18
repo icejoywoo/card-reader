@@ -18,11 +18,11 @@ Client::Client(SOCKET s)
 	BOOL bDontLinger = FALSE;
 	setsockopt(this->s,SOL_SOCKET,SO_DONTLINGER,(const char*)&bDontLinger,sizeof(BOOL));
 	
-// 	int nNetTimeout=10000;//10秒
-// 	//发送时限
-// 	setsockopt(this->s,SOL_SOCKET,SO_SNDTIMEO,(char *)&nNetTimeout,sizeof(int));
-// 	//接收时限
-// 	setsockopt(this->s,SOL_SOCKET,SO_RCVTIMEO,(char *)&nNetTimeout,sizeof(int));
+	int nNetTimeout=10000;//10秒
+	//发送时限
+	setsockopt(this->s,SOL_SOCKET,SO_SNDTIMEO,(char *)&nNetTimeout,sizeof(int));
+	//接收时限
+	setsockopt(this->s,SOL_SOCKET,SO_RCVTIMEO,(char *)&nNetTimeout,sizeof(int));
 
 	//KeepAlive实现
 	TCP_KEEPALIVE inKeepAlive = {0}; //输入参数

@@ -21,7 +21,11 @@ int ClientUtils::sendData(SOCKET server, const char* data)
 	char buff[512];
 	sprintf(buff, data);
 	int size = send(server, data, strlen(buff), 0);
-	return size;
+	if (size == -1 || size == 0)
+	{
+		return SOCKET_ERROR;
+	}
+	return 0;
 }
 
 int ClientUtils::sendData(SOCKET server, const string data)
