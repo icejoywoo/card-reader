@@ -83,7 +83,7 @@ UINT defaultServerHandler(LPVOID pParam)
 			sprintf(log, "接收客户端请求失败, 来自: %s", inet_ntoa(from.sin_addr));
 			SimpleLog::warn(log);
 
-			break;
+			continue;
 		}
 
 		sprintf(log, "接收客户端请求, 来自: %s:%d", inet_ntoa(from.sin_addr), ntohs(from.sin_port));
