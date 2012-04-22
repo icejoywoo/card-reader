@@ -6,6 +6,8 @@
 --------------------Configuration: CardReaderServer - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
+<<<<<<< .mine
+=======
 Creating command line "rc.exe /l 0x804 /fo"Debug/CardReaderServer.res" /d "_DEBUG" /d "_AFXDLL" "F:\Ã÷É­\card-reader\CardReaderServer\CardReaderServer.rc"" 
 Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP71D7.tmp" with contents
 [
@@ -80,6 +82,7 @@ Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPEE4.tmp" with c
 Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPEE4.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
+>>>>>>> .r168
 
 
 
