@@ -144,8 +144,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,1,0
- PRODUCTVERSION 1,0,1,0
+ FILEVERSION 1,0,1,1
+ PRODUCTVERSION 1,0,1,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -163,14 +163,14 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "CardReaderServer Microsoft 基础类应用程序\0"
-            VALUE "FileVersion", "1, 0, 1, 0\0"
+            VALUE "FileVersion", "1, 0, 1, 1\0"
             VALUE "InternalName", "CardReaderServer\0"
             VALUE "LegalCopyright", "版权所有 (C) 2011\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "CardReaderServer.EXE\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "CardReaderServer 应用程序\0"
-            VALUE "ProductVersion", "1, 0, 1, 0\0"
+            VALUE "ProductVersion", "1, 0, 1, 1\0"
             VALUE "SpecialBuild", "\0"
         END
     END

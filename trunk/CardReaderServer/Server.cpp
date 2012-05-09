@@ -128,14 +128,17 @@ void Server::addToWaitList(Client* client)
 
 Client* Server::getClientByReaderId(int readerId)
 {
-	return this->waitList[readerId].front();
+	Client* c = this->waitList[readerId].front();
+	this->waitList[readerId].pop_front();
+	return c;
 }
 
 void Server::releaseReader(int readerId) {
 	// 将读卡器设置为可用
 	EnterCriticalSection(&(Server::getInstance()->readerUsage_cs));
-	this->clients.remove(this->waitList[readerId].front());
-	this->waitList[readerId].erase(this->waitList[readerId].begin());
+ 	Client* c = this->waitList[readerId].front();
+ 	this->clients.remove(c);
+// 	this->waitList[readerId].pop_front();
 	this->readerUsage[readerId] = 0;  // 操作完成后, 设置为空闲状态
 	LeaveCriticalSection(&(Server::getInstance()->readerUsage_cs));
 }

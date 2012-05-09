@@ -24,6 +24,7 @@ CString i2str(int a)
 
 int parseCommand(Client* client, int readerId, char* command, string& operationName)
 {
+	char retMsg[1024];
 	char log[1024];
 	vector<string> requestParam; // operationName, cardId, params
 	requestParam = splitString(command);
@@ -62,75 +63,218 @@ int parseCommand(Client* client, int readerId, char* command, string& operationN
 	int functionReturn = -1; // 函数执行返回值
 
 	// refer to SmartCom.h
+// 	if (operationName.compare("reset") == 0) { // 复位操作
+// 		functionReturn = ResetDev(communicator);
+// 
+// 	} else if (operationName.compare("shutdown") == 0) { // 卡片下电
+// 		functionReturn = ShutdownCard(communicator);
+// 
+// 	} else if (operationName.compare("clearMemory") == 0) { // 对SST25VF016B存储器进行整片擦除
+// 		functionReturn = ClearMem(communicator);
+// 
+// 	} else if (operationName.compare("modifyBraudRate") == 0) { // 修改比特率
+// 		int braudRate = atoi(requestParam[1].c_str());
+// 		functionReturn = ModifyCardBraudRate(communicator, braudRate);
+// 
+// 	} else if (operationName.compare("getBraudRate") == 0) { // 获得比特率
+// 		int braudRate;
+// 		int resultCode = GetCardBraudRate(communicator, braudRate);
+// 		client->sendData(braudRate);
+// 		functionReturn = resultCode;
+// 
+// 	} else if (operationName.compare("downloadFile") == 0) { // 下载文件
+// 		int flag = atoi(requestParam[1].c_str()); // 1 下载命令体文件, 2 下载命令头文件
+// 		const char* fileName = requestParam[2].c_str(); // 文件名
+// 		functionReturn = DownloadFile(communicator, flag, fileName);
+// 
+// 	} else if (operationName.compare("cardApdu") == 0) { // 卡片操作-执行APDU命令
+// 		const char* apdu = requestParam[1].c_str(); // apdu命令
+// 		int card = atoi(requestParam[2].c_str()); // 1 为A卡, 2 为B卡
+// 		SmartCom::string retCode; // 输出参数, 执行apdu指令的返回值
+// 		int resultCode = CardApdu(communicator, apdu, retCode, card);
+// 		client->sendData(retCode);
+// 		functionReturn = resultCode;
+// 
+// 	} else if (operationName.compare("executeMulApdu") == 0) { // 卡片操作-执行批处理APDU命令
+// 		int cmdNum = atoi(requestParam[1].c_str());
+// 		int card = atoi(requestParam[2].c_str()); // 1 为A卡, 2 为B卡
+// 		functionReturn = ExcuteMulAPDU(communicator, cmdNum, card);
+// 
+// 	} else if (operationName.compare("getScript") == 0) { // 读批处理二进制脚本文件
+// 		int offset = atoi(requestParam[1].c_str()); // 读取数据的文件偏移地址
+// 		char bytes = (char) atoi(requestParam[2].c_str()); // 要读取的字节数
+// 		SmartCom::string strData; // 输出参数 读取的转换成十六进制字符串的数据
+// 		int resultCode = GetScriptData(communicator, offset, bytes, strData);
+// 		if (resultCode == 0) {
+// 			client->sendData(strData);
+// 		} else {
+// 			client->sendData("getScript_wrong");
+// 		}
+// 		functionReturn = resultCode;
+// 
+// 	} else if (operationName.compare("checkBatchResult") == 0) { // 查询执行批处理APDU结果
+// 		SmartCom::string retCode; // 输出参数, 最后一条指令的返回值
+// 		int resultCode = CheckBatchResult(communicator, retCode);
+// 		if (resultCode >= 0) {
+// 			client->sendData(retCode);
+// 		} else {
+// 			client->sendData("checkBatchResult_wrong");
+// 		}
+// 		functionReturn = resultCode;
+// 
+// 	} else if (operationName.compare("modifyCardPower") == 0) { // 修改卡片电源
+// 		int power = atoi(requestParam[1].c_str()); // 
+// 		int card = atoi(requestParam[2].c_str());
+// 		functionReturn = ModifyCardPower(communicator, power, card);
+// 
+// 	} else if (operationName.compare("getDevIdAndReaderId") == 0) { // 读取终端设备id号和机号
+// 		SmartCom::string devID; // out, 存放7字节id号
+// 		int macNo; // out, 1字节机号
+// 		int retCode = GetDevIDAndMacNo(communicator, devID, macNo);
+// 		client->sendData(devID + "," + i2str(macNo));
+// 		functionReturn = retCode;
+// 
+// 	} else if (operationName.compare("setReaderIdByDevID") == 0) { // 设置终端设备id号和机号
+// 		const char* devID = requestParam[1].c_str(); 
+// 		int _readerId = atoi(requestParam[2].c_str());
+// 		int ret = SetMacNoByDevID(communicator, devID, _readerId);
+// 		if (0 == ret) {
+// 			readerId = _readerId;
+// 		}
+// 		functionReturn = ret;
+// 
+// 	} else if (operationName.compare("getAppVerAndDevType") == 0) { // 读取程序版本和终端类型
+// 		SmartCom::string appVersion; // 程序版本
+// 		SmartCom::string devType; // 终端类型
+// 		int resultCode = GetAppVerAndDevType(communicator, appVersion, devType);
+// 		client->sendData(appVersion + "," + devType);
+// 		functionReturn = resultCode;
+// 
+// 	} else if (operationName.compare("getChipID") == 0) { // 获取读卡接口芯片ID号
+// 		SmartCom::string chipID;
+// 		int resultCode = GetChipID(communicator, chipID);
+// 		client->sendData(chipID);
+// 		functionReturn = resultCode;
+// 
+// 	} else if (operationName.compare("isCardReady") == 0) { // 检测A卡和B卡座是否有卡
+// 		int cardA = -1; // out, 1,A卡座有卡；0，A卡座无卡
+// 		int cardB = -1; // out, 1,B卡座有卡；0，B卡座无卡
+// 		int resultCode = IsCardReady(communicator, cardA, cardB);
+// 		client->sendData(SmartCom::string(i2str(cardA)) + "," + i2str(cardB));
+// 		functionReturn = resultCode;
+// 
+// 	} else if (operationName.compare("resetCard") == 0) { // 卡片复位应答
+// 		SmartCom::string retCode; // out 复位命令的返回值, "F9"：卡座无卡, "FD"：不可识别卡
+// 		int card = atoi(requestParam[1].c_str()); // 1 A卡, 2 B卡
+// 		int resultCode = ResetCard(communicator, retCode, card);
+// 		if (resultCode != 0)
+// 		{
+// 			client->sendData("ResetCard_wrong");
+// 		} else {
+// 			client->sendData(retCode);
+// 		}
+// 		functionReturn = resultCode;
+// 
+// 	} else if (operationName.compare("quit") == 0) { // 退出
+// 		// 退出直接返回没什么好说的
+// 		sprintf(log, "[读卡器 %d]操作完毕", readerId);
+// 		SimpleLog::info(log);
+// 		Sleep(100);
+// 		client->quit();
+// 		functionReturn = 0;
+// 	} else if (operationName.compare("stillOK") == 0) { // 测试socket的连通性
+// 		sprintf(log, "[读卡器 %d]测试连通性", readerId);
+// 		SimpleLog::info(log);
+// 		if (-1 == client->sendData("connected")) 
+// 		{
+// 			sprintf(log, "[读卡器 %d]socket已断开连接", readerId);
+// 			SimpleLog::info(log);
+// 			functionReturn = -1;
+// 		}
+// 		else
+// 		{
+// 			sprintf(log, "[读卡器 %d]socket连接正常", readerId);
+// 			SimpleLog::info(log);
+// 			functionReturn = 0;
+// 		}
+// 	} else {
+// 		functionReturn = COMMAND_NOT_FOUND; // 命令找不到
+// 	}
+
+	// refer to SmartCom.h
 	if (operationName.compare("reset") == 0) { // 复位操作
 		functionReturn = ResetDev(communicator);
-
+		client->sendData(functionReturn);
 	} else if (operationName.compare("shutdown") == 0) { // 卡片下电
 		functionReturn = ShutdownCard(communicator);
-
+		client->sendData(functionReturn);
 	} else if (operationName.compare("clearMemory") == 0) { // 对SST25VF016B存储器进行整片擦除
 		functionReturn = ClearMem(communicator);
-
+		client->sendData(functionReturn);
 	} else if (operationName.compare("modifyBraudRate") == 0) { // 修改比特率
 		int braudRate = atoi(requestParam[1].c_str());
 		functionReturn = ModifyCardBraudRate(communicator, braudRate);
-
+		client->sendData(functionReturn);
 	} else if (operationName.compare("getBraudRate") == 0) { // 获得比特率
 		int braudRate;
 		int resultCode = GetCardBraudRate(communicator, braudRate);
-		client->sendData(braudRate);
+		sprintf(retMsg, "%d,%d", resultCode, braudRate);
+		client->sendData(retMsg);
 		functionReturn = resultCode;
 
 	} else if (operationName.compare("downloadFile") == 0) { // 下载文件
 		int flag = atoi(requestParam[1].c_str()); // 1 下载命令体文件, 2 下载命令头文件
 		const char* fileName = requestParam[2].c_str(); // 文件名
 		functionReturn = DownloadFile(communicator, flag, fileName);
-
+		client->sendData(functionReturn);
 	} else if (operationName.compare("cardApdu") == 0) { // 卡片操作-执行APDU命令
 		const char* apdu = requestParam[1].c_str(); // apdu命令
 		int card = atoi(requestParam[2].c_str()); // 1 为A卡, 2 为B卡
 		SmartCom::string retCode; // 输出参数, 执行apdu指令的返回值
 		int resultCode = CardApdu(communicator, apdu, retCode, card);
-		client->sendData(retCode);
+		sprintf(retMsg, "%d,%s", resultCode, retCode.c_str());
+		client->sendData(retMsg);
 		functionReturn = resultCode;
 
 	} else if (operationName.compare("executeMulApdu") == 0) { // 卡片操作-执行批处理APDU命令
 		int cmdNum = atoi(requestParam[1].c_str());
 		int card = atoi(requestParam[2].c_str()); // 1 为A卡, 2 为B卡
 		functionReturn = ExcuteMulAPDU(communicator, cmdNum, card);
-
+		client->sendData(functionReturn);
 	} else if (operationName.compare("getScript") == 0) { // 读批处理二进制脚本文件
 		int offset = atoi(requestParam[1].c_str()); // 读取数据的文件偏移地址
 		char bytes = (char) atoi(requestParam[2].c_str()); // 要读取的字节数
 		SmartCom::string strData; // 输出参数 读取的转换成十六进制字符串的数据
 		int resultCode = GetScriptData(communicator, offset, bytes, strData);
 		if (resultCode == 0) {
-			client->sendData(strData);
+			sprintf(retMsg, "%d,%s", resultCode, strData);
 		} else {
-			client->sendData("getScript_wrong");
+			sprintf(retMsg, "%d,getScript_wrong", resultCode);
 		}
+		client->sendData(retMsg);
 		functionReturn = resultCode;
 
 	} else if (operationName.compare("checkBatchResult") == 0) { // 查询执行批处理APDU结果
 		SmartCom::string retCode; // 输出参数, 最后一条指令的返回值
 		int resultCode = CheckBatchResult(communicator, retCode);
 		if (resultCode >= 0) {
-			client->sendData(retCode);
+			sprintf(retMsg, "%d,%s", resultCode, retCode.c_str());
 		} else {
-			client->sendData("checkBatchResult_wrong");
+			sprintf(retMsg, "%d,checkBatchResult_wrong", resultCode);
 		}
+		client->sendData(retMsg);
 		functionReturn = resultCode;
 
 	} else if (operationName.compare("modifyCardPower") == 0) { // 修改卡片电源
 		int power = atoi(requestParam[1].c_str()); // 
 		int card = atoi(requestParam[2].c_str());
 		functionReturn = ModifyCardPower(communicator, power, card);
-
+		client->sendData(functionReturn);
 	} else if (operationName.compare("getDevIdAndReaderId") == 0) { // 读取终端设备id号和机号
 		SmartCom::string devID; // out, 存放7字节id号
 		int macNo; // out, 1字节机号
 		int retCode = GetDevIDAndMacNo(communicator, devID, macNo);
-		client->sendData(devID + "," + i2str(macNo));
+		sprintf(retMsg, "%d,%s,%d", retCode, devID.c_str(), macNo);
 		functionReturn = retCode;
 
 	} else if (operationName.compare("setReaderIdByDevID") == 0) { // 设置终端设备id号和机号
@@ -140,26 +284,27 @@ int parseCommand(Client* client, int readerId, char* command, string& operationN
 		if (0 == ret) {
 			readerId = _readerId;
 		}
+		client->sendData(ret);
 		functionReturn = ret;
 
 	} else if (operationName.compare("getAppVerAndDevType") == 0) { // 读取程序版本和终端类型
 		SmartCom::string appVersion; // 程序版本
 		SmartCom::string devType; // 终端类型
 		int resultCode = GetAppVerAndDevType(communicator, appVersion, devType);
-		client->sendData(appVersion + "," + devType);
+		sprintf(retMsg, "%d,%s,%s", resultCode, appVersion.c_str(), devType.c_str());
 		functionReturn = resultCode;
 
 	} else if (operationName.compare("getChipID") == 0) { // 获取读卡接口芯片ID号
 		SmartCom::string chipID;
 		int resultCode = GetChipID(communicator, chipID);
-		client->sendData(chipID);
+		sprintf(retMsg, "%d,%s", resultCode, chipID.c_str());
 		functionReturn = resultCode;
 
 	} else if (operationName.compare("isCardReady") == 0) { // 检测A卡和B卡座是否有卡
 		int cardA = -1; // out, 1,A卡座有卡；0，A卡座无卡
 		int cardB = -1; // out, 1,B卡座有卡；0，B卡座无卡
 		int resultCode = IsCardReady(communicator, cardA, cardB);
-		client->sendData(SmartCom::string(i2str(cardA)) + "," + i2str(cardB));
+		sprintf(retMsg, "%d,%d,%d", resultCode, cardA, cardB);
 		functionReturn = resultCode;
 
 	} else if (operationName.compare("resetCard") == 0) { // 卡片复位应答
@@ -168,10 +313,11 @@ int parseCommand(Client* client, int readerId, char* command, string& operationN
 		int resultCode = ResetCard(communicator, retCode, card);
 		if (resultCode != 0)
 		{
-			client->sendData("ResetCard_wrong");
+			sprintf(retMsg, "%d,ResetCard_wrong", resultCode);
 		} else {
-			client->sendData(retCode);
+			sprintf(retMsg, "%d,%s", resultCode, retCode.c_str());
 		}
+		client->sendData(retMsg);
 		functionReturn = resultCode;
 
 	} else if (operationName.compare("quit") == 0) { // 退出
@@ -181,8 +327,26 @@ int parseCommand(Client* client, int readerId, char* command, string& operationN
 		Sleep(100);
 		client->quit();
 		functionReturn = 0;
+		client->sendData(functionReturn);
+	} else if (operationName.compare("stillOK") == 0) { // 测试socket的连通性
+		sprintf(log, "[读卡器 %d]测试连通性", readerId);
+		SimpleLog::info(log);
+		if (-1 == client->sendData("connected")) 
+		{
+			sprintf(log, "[读卡器 %d]socket已断开连接", readerId);
+			SimpleLog::info(log);
+			client->quit();
+			functionReturn = -1;
+		}
+		else
+		{
+			sprintf(log, "[读卡器 %d]socket连接正常", readerId);
+			SimpleLog::info(log);
+			functionReturn = 0;
+		}
 	} else {
 		functionReturn = COMMAND_NOT_FOUND; // 命令找不到
+		client->sendData(functionReturn);
 	}
 
 // 	if (CloseUDPComm() == -1)

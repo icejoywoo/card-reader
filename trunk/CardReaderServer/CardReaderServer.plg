@@ -3,86 +3,51 @@
 <pre>
 <h1>Build Log</h1>
 <h3>
---------------------Configuration: CardReaderServer - Win32 Debug--------------------
+--------------------Configuration: CardReaderServer - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-<<<<<<< .mine
-=======
-Creating command line "rc.exe /l 0x804 /fo"Debug/CardReaderServer.res" /d "_DEBUG" /d "_AFXDLL" "F:\明森\card-reader\CardReaderServer\CardReaderServer.rc"" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP71D7.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP78B1.tmp" with contents
 [
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"F:\明森\card-reader\CardReaderServer\CardReaderServer.cpp"
-"F:\明森\card-reader\CardReaderServer\CardReaderServerDlg.cpp"
-"F:\明森\card-reader\CardReaderServer\Client.cpp"
-"F:\明森\card-reader\CardReaderServer\Handlers.cpp"
-"F:\明森\card-reader\CardReaderServer\Server.cpp"
-"F:\明森\card-reader\CardReaderServer\ServerParam.cpp"
-"F:\明森\card-reader\CardReaderServer\ServerSetting.cpp"
+/nologo /MD /W3 /GX /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Release/" /Fo"Release/" /Fd"Release/" /FD /c 
 "F:\明森\card-reader\CardReaderServer\ServerUtils.cpp"
-"F:\明森\card-reader\CardReaderServer\SimpleLog.cpp"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP71D7.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7235.tmp" with contents
+Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP78B1.tmp" 
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP78B2.tmp" with contents
 [
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/CardReaderServer.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"F:\明森\card-reader\CardReaderServer\StdAfx.cpp"
+/nologo /subsystem:windows /incremental:no /pdb:"Release/CardReaderServer.pdb" /machine:I386 /out:"Release/CardReaderServer.exe" 
+".\Release\CardReaderServer.obj"
+".\Release\CardReaderServerDlg.obj"
+".\Release\Client.obj"
+".\Release\Handlers.obj"
+".\Release\Server.obj"
+".\Release\ServerParam.obj"
+".\Release\ServerSetting.obj"
+".\Release\ServerUtils.obj"
+".\Release\SimpleLog.obj"
+".\Release\StdAfx.obj"
+".\Release\CardReaderServer.res"
 ]
-Creating command line "cl.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7235.tmp" 
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7246.tmp" with contents
-[
-/nologo /subsystem:windows /incremental:yes /pdb:"Debug/CardReaderServer.pdb" /debug /machine:I386 /out:"Debug/CardReaderServer.exe" /pdbtype:sept 
-".\Debug\CardReaderServer.obj"
-".\Debug\CardReaderServerDlg.obj"
-".\Debug\Client.obj"
-".\Debug\Handlers.obj"
-".\Debug\Server.obj"
-".\Debug\ServerParam.obj"
-".\Debug\ServerSetting.obj"
-".\Debug\ServerUtils.obj"
-".\Debug\SimpleLog.obj"
-".\Debug\StdAfx.obj"
-".\Debug\CardReaderServer.res"
-]
-Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7246.tmp"
+Creating command line "link.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP78B2.tmp"
 <h3>Output Window</h3>
-Compiling resources...
 Compiling...
-StdAfx.cpp
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::list<Client *,std::allocator<Client *> > >,std::map<int,std::list<Client *,std::allocator<Client *> >,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Kfn,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >' : identifier was truncated to '255' characters in the debug information
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::list<Client *,std::allocator<Client *> > >,std::map<int,std::list<Client *,std::allocator<Client *> >,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Kfn,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::const_iterator' : identifier was truncated to '255' characters in the debug information
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::list<Client *,std::allocator<Client *> > >,std::map<int,std::list<Client *,std::allocator<Client *> >,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Kfn,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::iterator' : identifier was truncated to '255' characters in the debug information
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::list<Client *,std::allocator<Client *> > >,std::map<int,std::list<Client *,std::allocator<Client *> >,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Kfn,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Node' : identifier was truncated to '255' characters in the debug information
-warning C4786: 'std::_Tree<int,std::pair<int const ,std::list<Client *,std::allocator<Client *> > >,std::map<int,std::list<Client *,std::allocator<Client *> >,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Kfn,std::less<int>,std::allocator<std::list<Client *,std::allocator<Client *> > > >::_Redbl' : identifier was truncated to '255' characters in the debug information
-Compiling...
-CardReaderServer.cpp
-CardReaderServerDlg.cpp
-Client.cpp
-Handlers.cpp
-Server.cpp
-ServerParam.cpp
-ServerSetting.cpp
 ServerUtils.cpp
-SimpleLog.cpp
-Generating Code...
 Linking...
-Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSPEE4.tmp" with contents
+Creating temporary file "C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7F19.tmp" with contents
 [
-/nologo /o"Debug/CardReaderServer.bsc" 
-".\Debug\StdAfx.sbr"
-".\Debug\CardReaderServer.sbr"
-".\Debug\CardReaderServerDlg.sbr"
-".\Debug\Client.sbr"
-".\Debug\Handlers.sbr"
-".\Debug\Server.sbr"
-".\Debug\ServerParam.sbr"
-".\Debug\ServerSetting.sbr"
-".\Debug\ServerUtils.sbr"
-".\Debug\SimpleLog.sbr"]
-Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSPEE4.tmp"
+/nologo /o"Release/CardReaderServer.bsc" 
+".\Release\StdAfx.sbr"
+".\Release\CardReaderServer.sbr"
+".\Release\CardReaderServerDlg.sbr"
+".\Release\Client.sbr"
+".\Release\Handlers.sbr"
+".\Release\Server.sbr"
+".\Release\ServerParam.sbr"
+".\Release\ServerSetting.sbr"
+".\Release\ServerUtils.sbr"
+".\Release\SimpleLog.sbr"]
+Creating command line "bscmake.exe @C:\Users\ICEJOY~1\AppData\Local\Temp\RSP7F19.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
->>>>>>> .r168
 
 
 

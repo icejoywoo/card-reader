@@ -209,6 +209,30 @@ CARDREADERCLIENTDLL_API int ReleaseReader(Reader* reader)
 	int retCode;
 	try
 	{
+		////////////////////////////////// Test connection ////////////////////////////////////////
+		if (ClientUtils::sendData(reader->s, "stillOK") == SOCKET_ERROR)
+		{
+			ClientUtils::error("测试数据发送失败!", reader->readerId, "ReleaseReader");
+			return SEND_ERROR;
+		}
+		
+		char msg[512];
+		memset(msg, 0, sizeof(msg));
+		if (ClientUtils::receiveData(reader->s, msg, 512) == -1)
+		{
+			ClientUtils::error("socket已断开连接!", reader->readerId, "ReleaseReader");
+			return RECV_ERROR;
+		} else {
+			ClientUtils::info("socket连接正常!", reader->readerId, "ReleaseReader");
+		}
+
+		int ret1;
+		if (ClientUtils::receiveData(reader->s, ret1) == -1)
+		{
+			return RECV_ERROR;
+		}
+		////////////////////////////////////////////////////////////////////////// 
+
 	if (-1 == ClientUtils::sendData(reader->s, "quit")) // 发出退出消息
 	{
 		// 关闭资源
@@ -412,6 +436,29 @@ CARDREADERCLIENTDLL_API int ResetCard(Reader* reader, SmartCom::string& retCode,
 {
 	try
 	{
+		////////////////////////////////// Test connection ////////////////////////////////////////
+		if (ClientUtils::sendData(reader->s, "stillOK") == SOCKET_ERROR)
+		{
+			ClientUtils::error("测试数据发送失败!", reader->readerId, "ResetCard");
+			return SEND_ERROR;
+		}
+		
+		char msg[512];
+		memset(msg, 0, sizeof(msg));
+		if (ClientUtils::receiveData(reader->s, msg, 512) == -1)
+		{
+			ClientUtils::error("socket已断开连接!", reader->readerId, "ResetCard");
+			return RECV_ERROR;
+		} else {
+			ClientUtils::info("socket连接正常!", reader->readerId, "ResetCard");
+		}
+
+		int ret1;
+		if (ClientUtils::receiveData(reader->s, ret1) == -1)
+		{
+			return RECV_ERROR;
+		}
+		////////////////////////////////////////////////////////////////////////// 
 	char cmd[512];
 	sprintf(cmd, "resetCard,%d", card);
 	if (ClientUtils::sendData(reader->s, cmd) == SOCKET_ERROR)
@@ -451,6 +498,29 @@ CARDREADERCLIENTDLL_API int CardApdu(Reader* reader, char* apdu, SmartCom::strin
 {
 	try
 	{
+		////////////////////////////////// Test connection ////////////////////////////////////////
+		if (ClientUtils::sendData(reader->s, "stillOK") == SOCKET_ERROR)
+		{
+			ClientUtils::error("测试数据发送失败!", reader->readerId, "CardApdu");
+			return SEND_ERROR;
+		}
+		
+		char msg[512];
+		memset(msg, 0, sizeof(msg));
+		if (ClientUtils::receiveData(reader->s, msg, 512) == -1)
+		{
+			ClientUtils::error("socket已断开连接!", reader->readerId, "CardApdu");
+			return RECV_ERROR;
+		} else {
+			ClientUtils::info("socket连接正常!", reader->readerId, "CardApdu");
+		}
+
+		int ret1;
+		if (ClientUtils::receiveData(reader->s, ret1) == -1)
+		{
+			return RECV_ERROR;
+		}
+		////////////////////////////////////////////////////////////////////////// 
 		char cmd[512];
 		sprintf(cmd, "cardApdu,%s,%d", apdu, card);
 		if (ClientUtils::sendData(reader->s, cmd) == SOCKET_ERROR)
@@ -461,7 +531,7 @@ CARDREADERCLIENTDLL_API int CardApdu(Reader* reader, char* apdu, SmartCom::strin
 		
 		char buf[1024];
 		memset(buf, 0, sizeof(buf));
-		int size = ClientUtils::receiveData(reader->s, buf, 512);
+		int size = ClientUtils::receiveData(reader->s, buf, 1024);
 		if (size == -1)
 		{
 			ClientUtils::error("数据接收错误!", reader->readerId, "CardApdu");
@@ -491,6 +561,30 @@ CARDREADERCLIENTDLL_API int ShutdownCard(Reader* reader)
 {
 	try
 	{
+		////////////////////////////////// Test connection ////////////////////////////////////////
+		if (ClientUtils::sendData(reader->s, "stillOK") == SOCKET_ERROR)
+		{
+			ClientUtils::error("测试数据发送失败!", reader->readerId, "ShutdownCard");
+			return SEND_ERROR;
+		}
+		
+		char msg[512];
+		memset(msg, 0, sizeof(msg));
+		if (recv(reader->s, msg, 512, 0) == -1)
+		{
+			ClientUtils::error("socket已断开连接!", reader->readerId, "ShutdownCard");
+			return RECV_ERROR;
+		} else {
+			ClientUtils::info("socket连接正常!", reader->readerId, "ShutdownCard");
+		}
+
+		int ret1;
+		if (ClientUtils::receiveData(reader->s, ret1) == -1)
+		{
+			return RECV_ERROR;
+		}
+		////////////////////////////////////////////////////////////////////////// 
+
 		if (ClientUtils::sendData(reader->s, "shutdown") == SOCKET_ERROR)
 		{
 			ClientUtils::error("指令发送错误!", reader->readerId, "ShutdownCard");
