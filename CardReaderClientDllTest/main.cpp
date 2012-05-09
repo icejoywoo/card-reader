@@ -10,8 +10,8 @@ using namespace std;
 
 #pragma comment(lib, "CardReaderClientDll.lib")
 
-#define readerNum (1)
-#define ThreadNum (64)
+#define readerNum (4)
+#define ThreadNum (1)
 
 int errors = 0;
 int okNumber = 0;

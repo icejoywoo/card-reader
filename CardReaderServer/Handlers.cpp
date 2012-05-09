@@ -194,10 +194,35 @@ UINT defaultClientHandler (LPVOID pParam)
 
 	if (client->isAvailable()) // 如果客户端有效就发送
 	{
-		client->sendData("Ready"); // 告诉客户端已经准备就绪可以操作
-		sprintf(log, "[读卡器 %d]开始处理请求...", client->getReaderId());
-		SimpleLog::info(log);
+		if (-1 != client->sendData("Ready")) {// 告诉客户端已经准备就绪可以操作
+			sprintf(log, "[读卡器 %d]开始处理请求...", client->getReaderId());
+			SimpleLog::info(log);
+		} else {
+			sprintf(log, "[读卡器 %d]与服务器的连接已断开", client->getReaderId());
+			SimpleLog::info(log);
+
+			// 释放读卡器
+			Server::getInstance()->releaseReader(readerId);
+			if (client->isAvailable()) 
+			{
+				sprintf(log, "释放[读卡器 %d]", readerId);
+				SimpleLog::info(log);
+			}
+			client->release();
+			delete client; // 不要的指针删掉
+			return -1;
+		}
 	} else {
+		// 释放读卡器
+		Server::getInstance()->releaseReader(readerId);
+		if (client->isAvailable()) 
+		{
+			sprintf(log, "释放[读卡器 %d]", readerId);
+			SimpleLog::info(log);
+		}
+		client->release();
+		delete client; // 不要的指针删掉
+		return -1;
 	}
 	
 	client->updateTimeout();
@@ -229,16 +254,38 @@ UINT defaultClientHandler (LPVOID pParam)
 		} else {
 			sprintf(log, "[读卡器 %d][%s]操作失败, 错误码: %d", readerId, operationName.c_str(), resultCode);
 			SimpleLog::error(log);
+			continue;
 		}
 		client->updateTimeout();
 		// 将结果发送到客户端
 		if (!client->isAvailable() || client->sendData(resultCode) == -1) // 发送数据出错即刻关闭
 		{
-			break;
+			// 释放读卡器
+			Server::getInstance()->releaseReader(readerId);
+			if (client->isAvailable()) 
+			{
+				sprintf(log, "释放[读卡器 %d]", readerId);
+				SimpleLog::info(log);
+			}
+			client->release();
+			delete client; // 不要的指针删掉
+			
+			return -1;
 		}
 		if (operationName.compare("quit") == 0)
 		{
 			clientIsQuit = true;
+			// 释放读卡器
+			Server::getInstance()->releaseReader(readerId);
+			if (client->isAvailable()) 
+			{
+				sprintf(log, "释放[读卡器 %d]", readerId);
+				SimpleLog::info(log);
+			}
+			client->release();
+			delete client; // 不要的指针删掉
+			
+			return -1;
 		}
 		if (operationName.compare("") == 0)
 		{

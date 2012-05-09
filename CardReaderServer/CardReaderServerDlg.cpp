@@ -317,13 +317,23 @@ LRESULT CCardReaderServerDlg::UpdateLog(WPARAM wparam,LPARAM lparam)
 	}
 	EnterCriticalSection(&(Server::getInstance()->clients_cs));
 	// 添加所有客户端到对应读卡器节点
-	for (list<Client*>::iterator iter = Server::getInstance()->clients.begin();
-		iter != Server::getInstance()->clients.end(); ++iter)
+// 	for (list<Client*>::iterator iter = Server::getInstance()->clients.begin();
+// 		iter != Server::getInstance()->clients.end(); ++iter)
+// 	{
+// 		char name[512];
+// 		(*iter)->getName(name);
+// 		// TODO：引起崩溃的一个地方，getReaderId函数
+// 		m_Tree.InsertItem(name, readersTree[(*iter)->getReaderId()]);
+// 	}
+	for (map<int, list<Client*> >::iterator iter = Server::getInstance()->waitList.begin();
+		iter != Server::getInstance()->waitList.end(); ++iter)
 	{
-		char name[512];
-		(*iter)->getName(name);
-		// TODO：引起崩溃的一个地方，getReaderId函数
-		m_Tree.InsertItem(name, readersTree[(*iter)->getReaderId()]);
+		for (list<Client*>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2)
+		{
+			char name[512];
+			(*iter2)->getName(name);
+			m_Tree.InsertItem(name, readersTree[iter->first]);
+		}
 	}
 	LeaveCriticalSection(&(Server::getInstance()->clients_cs));	
 
